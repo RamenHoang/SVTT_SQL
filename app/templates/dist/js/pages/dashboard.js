@@ -179,7 +179,8 @@ let bangdssv = $("#dashboard_bangdssv").DataTable({
     paging: true,
     lengthChange: false,
     searching: true,
-    ordering: true,
+    // ordering: true,
+    order: [[0, 'desc']],
     info: true,
     autoWidth: false,
     responsive: true,
@@ -189,6 +190,7 @@ let bangdssv = $("#dashboard_bangdssv").DataTable({
       dataSrc: "",
     },
     columns: [
+      { data: "id" },
       { data: "mssv" },
       { data: "hoten" },
       { data: "gioitinh" },
@@ -215,7 +217,7 @@ let bangdssv = $("#dashboard_bangdssv").DataTable({
             '" class="btn btn-sm" id="viewBtn"  style="color: green; text-align: center; "><i class="fa-solid fa-eye"></i></a>'
           );
         },
-      },
+      }
     ],
   });
 });
