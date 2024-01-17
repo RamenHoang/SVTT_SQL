@@ -15,7 +15,7 @@ $.ajax({
         html += '<option value="'+val.id+'">'+val.tendetai+'</option>';
       });
     }else{
-      html += '<option value="" selected>Hiện tại chưa có nhóm</option>'
+      html += '<option value="" selected>Hiện tại chưa có nhóm hoặc hết hạn chọn nhóm</option>'
     }
 
     $("#danhsachnhom").append(html);

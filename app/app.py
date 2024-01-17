@@ -419,6 +419,7 @@ async def get_ds_nhom_thuc_tap_con_han_route():
     result = get_ds_nhom_thuc_tap_controller()
     current_date = datetime.datetime.now().date()
     data: list = []
+    print(result)
     for i in result:
         ngay_bat_dau = datetime.datetime.strptime(i['ngaybatdau'], '%d/%m/%Y').date()
         if ngay_bat_dau >= current_date:
