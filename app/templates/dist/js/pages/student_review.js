@@ -273,6 +273,7 @@ function create_table(data) {
       { data: "gioitinh" },
       { data: "nganh" },
       { data: "truong" },
+      { data: "detai" },
       {
         data: "trangthai",
         render: function (data, type, row) {
