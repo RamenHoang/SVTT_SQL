@@ -11,7 +11,6 @@ def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str,
         conn.commit()
         return result
     except Exception as e:
-        print(e)
         return False
     
 def verify_user(username: str, password: str):

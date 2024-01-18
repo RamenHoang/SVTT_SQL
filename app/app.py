@@ -128,7 +128,6 @@ async def home(request: Request, token: str = Cookie(None)):
                 tong_sinh_vien: int = count_all_sinh_vien_controller()
                 ti_le_da_danh_gia: float = ti_le_sinh_vien_da_danh_gia_controller()
                 so_luong_ket_qua: int = so_luong_sinh_vien_dat_ket_qua_controller()
-                print(so_luong_ket_qua)
                 return templates.TemplateResponse('index.html', context={'request': request, 'dashboard_tongsinhvien': tong_sinh_vien, 'dashboard_tiledadanhgia': ti_le_da_danh_gia, 'dashboard_soluongdat': so_luong_ket_qua['dat'], 'dashboard_soluongkhongdat': so_luong_ket_qua['khong_dat']})
         except jwt.PyJWTError:
             pass
@@ -419,7 +418,6 @@ async def get_ds_nhom_thuc_tap_con_han_route():
     result = get_ds_nhom_thuc_tap_controller()
     current_date = datetime.datetime.now().date()
     data: list = []
-    print(result)
     for i in result:
         ngay_bat_dau = datetime.datetime.strptime(i['ngaybatdau'], '%d/%m/%Y').date()
         if ngay_bat_dau >= current_date:
