@@ -27,9 +27,10 @@ $("#danhsachnhom").on('change', function(){
     type: 'GET',
     url: 'get_chi_tiet_nhom_thuc_tap_by_id?id='+$("#danhsachnhom").val(),
     success: function(res){
+      let soluongdangky = String(res.nhomthuctap_dadangky) + '/' + String(res.nhomthuctap_soluong);
       $("#nguoihuongdan").val(res.nguoihuongdan_hoten);
       $("#mota").val(res.detai_mota);
-      $("#soluongsv").val(res.nhomthuctap_soluong);
+      $("#soluongsv").val(soluongdangky);
       $("#profile_nguoihuongdan").attr('href', '/hosonguoihuongdan?id='+res.nguoihuongdan_username);
     }
   });
