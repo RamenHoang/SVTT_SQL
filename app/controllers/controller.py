@@ -78,8 +78,8 @@ def update_chi_tiet_nhom_thuc_tap_by_id_controller(id: str, kytt: str, nguoihd: 
 def update_xoa_nhom_thuc_tap_by_id_controller(id: str):
     return update_xoa_nhom_thuc_tap_by_id(id)
 
-def them_nhom_thuc_tap_controller(nguoihd: str, kytt: str, detai: str, isDeleted: int):
-    return them_nhom_thuc_tap(nguoihd, kytt, detai, isDeleted)
+def them_nhom_thuc_tap_controller(nguoihd: str, kytt: str, detai: str, soluong: int, isDeleted: int):
+    return them_nhom_thuc_tap(nguoihd, kytt, detai, soluong, isDeleted)
 
 def get_chi_tiet_sinh_vien_by_id_controller(id: str):
     return get_chi_tiet_sinh_vien_by_id(id)

@@ -260,7 +260,7 @@ async def get_all_sinh_vien_route(token: str = Cookie(None)):
             username = payload.get("sub")
             if username:
                 result = get_all_sinh_vien_controller()
-                ds: list = [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': 'Nam' if i[3]==1 else 'Nữ', 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'luuy': i[7]} for i in result]
+                ds: list = [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'luuy': i[7]} for i in result]
                 return JSONResponse(status_code=200, content=ds)
         except jwt.PyJWTError:
             pass
@@ -519,13 +519,13 @@ async def update_xoa_nhom_thuc_tap_by_id_route(id: str, token: str = Cookie(None
     return RedirectResponse('/login')
 
 @app.post('/them_nhom_thuc_tap')
-async def them_nhom_thuc_tap_route(nguoihd: str, kytt: str, detai: str, isDeleted: int, token: str = Cookie(None)):
+async def them_nhom_thuc_tap_route(nguoihd: str, kytt: str, detai: str, soluong: int, isDeleted: int, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             if username:
-                result = them_nhom_thuc_tap_controller(nguoihd, kytt, detai, isDeleted)
+                result = them_nhom_thuc_tap_controller(nguoihd, kytt, detai, soluong, isDeleted)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             pass

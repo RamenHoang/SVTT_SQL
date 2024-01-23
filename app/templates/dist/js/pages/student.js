@@ -27,7 +27,7 @@ $.ajax({
     success: function(res){
         let html = '';
         $.each(res, function(idx, val){
-            html += '<option value="'+val+'">'+val+'</option>';
+            html += '<option value="'+val.id+'">'+val.ten+'</option>';
         });
         $("#sinhvien_nganh").append(html);
     }
@@ -39,7 +39,7 @@ $.ajax({
     success: function(res){
         let html = '';
         $.each(res, function(idx, val){
-            html += '<option value="'+val.kyhieu+'">'+val.ten+'</option>';
+            html += '<option value="'+val.id+'">'+val.ten+'</option>';
         });
         $("#sinhvien_truong").append(html);
     }
