@@ -262,7 +262,7 @@ $("#themkythuctap_btn").click(function(){
         let detai = $("#modal_detai_select").val();
         let soluong = $("#modal_soluong_input").val();
         let nhd = $("#modal_nguoihuongdan_select").val();
-        let tennhom = $("#modal_tennhom_select").val();
+        let tennhom = $("#modal_tennhom_input").val();
         let ghichu = $("#modal_ghichu_text").val().replace(/[\r\n]+/g, '<br/>');
     
         $.ajax({
