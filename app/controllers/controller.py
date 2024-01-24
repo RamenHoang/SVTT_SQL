@@ -69,17 +69,20 @@ def get_chi_tiet_nhom_thuc_tap_by_id_controller(id: str):
     result = get_chi_tiet_nhom_thuc_tap_by_id(id)
     return result
 
+def get_all_nguoi_huong_dan_controller():
+    return get_all_nguoi_huong_dan()
+
 def get_chi_tiet_chinh_sua_nhom_controller():
     return get_chi_tiet_chinh_sua_nhom()
 
-def update_chi_tiet_nhom_thuc_tap_by_id_controller(id: str, kytt: str, nguoihd: str, detai: str, isDeleted: int):
-    return update_chi_tiet_nhom_thuc_tap_by_id(id, kytt, nguoihd, detai, isDeleted)
+def update_chi_tiet_nhom_thuc_tap_by_id_controller(id: int, kytt: int, nguoihd: int, detai: int, soluong: int, ghichu: str, isDeleted: int):
+    return update_chi_tiet_nhom_thuc_tap_by_id(id, kytt, nguoihd, detai, soluong, isDeleted, ghichu)
 
 def update_xoa_nhom_thuc_tap_by_id_controller(id: str):
     return update_xoa_nhom_thuc_tap_by_id(id)
 
-def them_nhom_thuc_tap_controller(nguoihd: str, kytt: str, detai: str, soluong: int, isDeleted: int):
-    return them_nhom_thuc_tap(nguoihd, kytt, detai, soluong, isDeleted)
+def them_nhom_thuc_tap_controller(nguoihd: str, kytt: str, detai: str, soluong: int, isDeleted: int, ghichu: str):
+    return them_nhom_thuc_tap(nguoihd, kytt, detai, soluong, isDeleted, ghichu)
 
 def get_chi_tiet_sinh_vien_by_id_controller(id: str):
     return get_chi_tiet_sinh_vien_by_id(id)

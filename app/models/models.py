@@ -168,7 +168,7 @@ def update_xoa_ky_thuc_tap_by_id(id: str):
 def get_ds_nhom_thuc_tap():
     try:
         result = cursor.execute("EXEC GetDSNhomThucTap")
-        data = [{'id': i[0], 'nguoihuongdan': i[2], 'ngaybatdau': i[3], 'tendetai': i[5], 'mota': i[6], 'xoa': i[1]} for i in result]
+        data = [{'id': i[0], 'nguoihuongdan': i[2], 'ngaybatdau': i[3], 'tendetai': i[5], 'mota': i[6], 'xoa': i[1], 'soluong': i[10], 'ghichu': i[11]} for i in result]
         return data
     except Exception as e:
         return e
@@ -176,7 +176,14 @@ def get_ds_nhom_thuc_tap():
 def get_chi_tiet_nhom_thuc_tap_by_id(id: str):
     try:
         i = cursor.execute("EXEC GetChiTietNhomThucTapByID ?", id).fetchone()
-        return {'id': i[0], 'nguoihuongdan_hoten': i[6], 'nguoihuongdan_id': i[1], 'nguoihuongdan_username': i[12], 'kythuctap_id': i[2], 'kythuctap_ngaybatdau': i[7], 'kythuctap_ngayketthuc': i[8], 'detai_id': i[3], 'detai_ten': i[9], 'detai_mota': i[10], 'nhomthuctap_dadangky': i[11], 'nhomthuctap_soluong': i[4]}
+        return {'id': i[0], 'nguoihuongdan_hoten': i[7], 'nguoihuongdan_id': i[1], 'nguoihuongdan_username': i[13], 'kythuctap_id': i[2], 'kythuctap_ngaybatdau': i[8], 'kythuctap_ngayketthuc': i[9], 'detai_id': i[3], 'detai_ten': i[10], 'detai_mota': i[11], 'nhomthuctap_dadangky': i[12], 'nhomthuctap_soluong': i[4], 'xoa': i[14], 'ghichu': i[15]}
+    except Exception as e:
+        return e
+    
+def get_all_nguoi_huong_dan():
+    try:
+        result = cursor.execute("EXEC GetAllNguoiHuongDan").fetchall()
+        return [{'id': i[0], 'hoten': i[1]} for i in result]
     except Exception as e:
         return e
     
@@ -194,9 +201,9 @@ def get_chi_tiet_chinh_sua_nhom():
     except Exception as e:
         return e
     
-def update_chi_tiet_nhom_thuc_tap_by_id(id: str, kytt: str, nguoihd: str, detai: str, isDeleted: int):
+def update_chi_tiet_nhom_thuc_tap_by_id(id: int, kytt: int, nguoihd: int, detai: int, soluong: int, isDeleted: int, ghichu: str):
     try:
-        result = cursor.execute("EXEC UpdateChiTietNhomThucTapByID ?, ?, ?, ?, ?", id, kytt, nguoihd, detai, isDeleted)
+        result = cursor.execute("EXEC UpdateChiTietNhomThucTapByID ?, ?, ?, ?, ?, ?, ?", id, kytt, nguoihd, detai, soluong, isDeleted, ghichu)
         conn.commit()
         return True
     except Exception as e:
@@ -210,9 +217,9 @@ def update_xoa_nhom_thuc_tap_by_id(id: str):
     except Exception as e:
         return e
     
-def them_nhom_thuc_tap(nguoihd: str, kytt: str, detai: str, soluong: int, isDeleted: int):
+def them_nhom_thuc_tap(nguoihd: str, kytt: str, detai: str, soluong: int, isDeleted: int, ghichu: str):
     try:
-        result = cursor.execute("EXEC InsertNhomThucTap ?, ?, ?, ?, ?", nguoihd, kytt, detai, soluong, isDeleted)
+        result = cursor.execute("EXEC InsertNhomThucTap ?, ?, ?, ?, ?, ?", nguoihd, kytt, detai, soluong, isDeleted, ghichu)
         conn.commit()
         return True
     except Exception as e:

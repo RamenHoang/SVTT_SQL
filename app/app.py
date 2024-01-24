@@ -480,6 +480,10 @@ async def get_ds_cong_viec_by_id_nhom_route(id: str, token: str = Cookie(None)):
 async def get_chi_tiet_nhom_thuc_tap_by_id_route(id: str):
     return JSONResponse(status_code=200, content=get_chi_tiet_nhom_thuc_tap_by_id_controller(id))
 
+@app.get('/get_all_nguoi_huong_dan')
+async def get_all_nguoi_huong_dan_route():
+    return JSONResponse(status_code=200, content=get_all_nguoi_huong_dan_controller())
+
 @app.get('/get_chi_tiet_chinh_sua_nhom')
 async def get_chi_tiet_chinh_sua_nhom_route(token: str = Cookie(None)):
     if token:
@@ -493,13 +497,13 @@ async def get_chi_tiet_chinh_sua_nhom_route(token: str = Cookie(None)):
     return RedirectResponse('/login')
 
 @app.post('/update_chi_tiet_nhom_thuc_tap_by_id')
-async def update_chi_tiet_nhom_thuc_tap_by_id_route(id: str, kytt: str, nguoihd: str, detai: str, isDeleted: int, token: str = Cookie(None)):
+async def update_chi_tiet_nhom_thuc_tap_by_id_route(id: int, kytt: int, nguoihd: int, detai: int, soluong: int, isDeleted: int, ghichu: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             if username:
-                result = update_chi_tiet_nhom_thuc_tap_by_id_controller(id, kytt, nguoihd, detai, isDeleted)
+                result = update_chi_tiet_nhom_thuc_tap_by_id_controller(id, kytt, nguoihd, detai, soluong, ghichu, isDeleted)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             pass
@@ -519,13 +523,13 @@ async def update_xoa_nhom_thuc_tap_by_id_route(id: str, token: str = Cookie(None
     return RedirectResponse('/login')
 
 @app.post('/them_nhom_thuc_tap')
-async def them_nhom_thuc_tap_route(nguoihd: str, kytt: str, detai: str, soluong: int, isDeleted: int, token: str = Cookie(None)):
+async def them_nhom_thuc_tap_route(nguoihd: str, kytt: str, detai: str, soluong: int, isDeleted: int, ghichu: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             if username:
-                result = them_nhom_thuc_tap_controller(nguoihd, kytt, detai, soluong, isDeleted)
+                result = them_nhom_thuc_tap_controller(nguoihd, kytt, detai, soluong, isDeleted, ghichu)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             pass

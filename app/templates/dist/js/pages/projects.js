@@ -66,7 +66,7 @@ $("#bangdsdetai").on("click", "#editBtn", function () {
         '<div class="form-group"><label for="modal_tendetai_input">Tên đề tài</label><input type="email" class="form-control" id="modal_tendetai_input" placeholder="Nhập tên đề tài" value="' +
           res.ten +
           '"></div><div class="form-group"><label for="modal_motadetai_input">Mô tả đề tài</label><textarea id="modal_motadetai_input" rows="10" class="form-control" placeholder="Nhập mô tả đề tài">' +
-          res.mota +
+          res.mota.replace(/<br\/>/g, "\r\n") +
           '</textarea></div><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Sử dụng đề tài</label></div>'
       );
       if (res.xoa == 0) {
@@ -85,7 +85,7 @@ $("#bangdsdetai").on("click", "#editBtn", function () {
         let id = $(this).data("id");
 
         let ten = $("#modal_tendetai_input").val();
-        let mota = $("#modal_motadetai_input").val();
+        let mota = $("#modal_motadetai_input").val().replace(/[\r\n]+/g, '<br/>');
         let xoa = $("#modal_hoatdong_check").is(":checked");
         let isDeleted = xoa ? 0 : 1;
 
@@ -175,7 +175,7 @@ $("#themdetai_btn").click(function(){
   
   $("#modal_submit_btn").click(function(){
     let ten = $("#modal_tendetai_input").val();
-    let mota = $("#modal_motadetai_input").val();
+    let mota = $("#modal_motadetai_input").val().replace(/[\r\n]+/g, '<br/>');
     let xoa = $("#modal_hoatdong_check").is(":checked");
     let isDeleted = xoa ? 0 : 1;
   
