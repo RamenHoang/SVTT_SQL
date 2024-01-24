@@ -176,7 +176,7 @@ def get_ds_nhom_thuc_tap():
 def get_chi_tiet_nhom_thuc_tap_by_id(id: str):
     try:
         i = cursor.execute("EXEC GetChiTietNhomThucTapByID ?", id).fetchone()
-        return {'id': i[0], 'nguoihuongdan_hoten': i[7], 'nguoihuongdan_id': i[1], 'nguoihuongdan_username': i[13], 'kythuctap_id': i[2], 'kythuctap_ngaybatdau': i[8], 'kythuctap_ngayketthuc': i[9], 'detai_id': i[3], 'detai_ten': i[10], 'detai_mota': i[11], 'nhomthuctap_dadangky': i[12], 'nhomthuctap_soluong': i[4], 'xoa': i[14], 'ghichu': i[15]}
+        return {'id': i[0], 'nguoihuongdan_hoten': i[7], 'nguoihuongdan_id': i[1], 'nguoihuongdan_username': i[13], 'kythuctap_id': i[2], 'kythuctap_ngaybatdau': i[8], 'kythuctap_ngayketthuc': i[9], 'detai_id': i[3], 'detai_ten': i[10], 'detai_mota': i[11], 'nhomthuctap_dadangky': i[12], 'nhomthuctap_soluong': i[4], 'xoa': i[14], 'ghichu': i[15], 'nhomthuctap_tennhom': i[16]}
     except Exception as e:
         return e
     
