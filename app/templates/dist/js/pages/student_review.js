@@ -274,6 +274,7 @@ function create_table(data) {
       { data: "nganh" },
       { data: "truong" },
       { data: "detai" },
+      { data: "nhom" },
       {
         data: "trangthai",
         render: function (data, type, row) {

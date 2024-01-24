@@ -256,7 +256,7 @@ def get_chi_tiet_sinh_vien_da_danh_gia(id: str):
 def get_ds_sinh_vien_by_username(username: str, kythuctap: str):
     try:
         result = cursor.execute("EXEC GetDSSVByNguoiHuongDanID ?, ?", username, kythuctap)
-        return [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': 'Nam' if i[3]==1 else 'Nữ', 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'detai': i[7]} for i in result]
+        return [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': 'Nam' if i[3]==1 else 'Nữ', 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'detai': i[7], 'nhom': i[8]} for i in result]
     except Exception as e:
         return e
     
