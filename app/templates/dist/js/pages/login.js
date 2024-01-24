@@ -32,7 +32,7 @@ $('#loginBtn').click(function(){
     login();
 });
 
-$('#password').addEventListener("keydown", (event) => {
+document.getElementById('password').addEventListener("keydown", (event) => {
   if (event.keyCode === 13) {
     login();
   }
