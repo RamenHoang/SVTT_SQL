@@ -168,7 +168,7 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
             parseInt(soluong) +
             "&isDeleted=" +
             isDeleted +
-            "&tennhom" +
+            "&tennhom=" +
             tennhom +
             "&ghichu=" +
             ghichu,
