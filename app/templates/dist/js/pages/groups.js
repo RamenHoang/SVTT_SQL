@@ -77,7 +77,7 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
     success: function (res) {
       $("#modal_title").text('Nhóm '+id);
       
-      html = '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_detai_select">Đề tài</label><select id="modal_detai_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_nguoihuongdan_select">Người hướng dẫn</label><select id="modal_nguoihuongdan_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_soluong_input">Số lượng sinh viên</label><input type="number" class="form-control" id="modal_soluong_input" /></div><div class="form-group"><label for="modal_ghichu_text">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Hoạt động?</label></div>';
+      html = '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_detai_select">Đề tài</label><select id="modal_detai_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_nguoihuongdan_select">Người hướng dẫn</label><select id="modal_nguoihuongdan_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_tennhom_input">Tên nhóm</label><input type="text" class="form-control" id="modal_tennhom_input" /></div><div class="form-group"><label for="modal_soluong_input">Số lượng sinh viên</label><input type="number" class="form-control" id="modal_soluong_input" /></div><div class="form-group"><label for="modal_ghichu_text">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Hoạt động?</label></div>';
       $("#modal_body").append(html);
 
       // Danh sách kỳ thực tập
@@ -119,6 +119,9 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
         }
       });
       
+      // Tên nhóm
+      $('#modal_tennhom_input').val(res.nhomthuctap_tennhom);
+
       // Số lượng sinh viên thực tập
       $('#modal_soluong_input').val(res.nhomthuctap_soluong);
       
@@ -148,6 +151,7 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
         let detai = $("#modal_detai_select").val();
         let nhd = $("#modal_nguoihuongdan_select").val();
         let soluong = $("#modal_soluong_input").val();
+        let tennhom = $("#modal_tennhom_input").val();
         let ghichu = $("#modal_ghichu_text").val().replace(/[\r\n]+/g, '<br/>');
         $.ajax({
           type: "POST",
@@ -164,6 +168,8 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
             parseInt(soluong) +
             "&isDeleted=" +
             isDeleted +
+            "&tennhom" +
+            tennhom +
             "&ghichu=" +
             ghichu,
           success: function (data) {
@@ -235,7 +241,7 @@ $("#themkythuctap_btn").click(function(){
     url: "get_chi_tiet_chinh_sua_nhom",
     success: function(res){
       $("#modal_title").text('Thêm nhóm thực tập');
-      html = '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_detai_select">Đề tài</label><select id="modal_detai_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_nguoihuongdan_select">Người hướng dẫn</label><select id="modal_nguoihuongdan_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_soluong_input">Số lượng sinh viên</label><input type="number" class="form-control" id="modal_soluong_input" /></div><div class="form-group"><label for="modal_soluong_input">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div>';
+      html = '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_detai_select">Đề tài</label><select id="modal_detai_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_nguoihuongdan_select">Người hướng dẫn</label><select id="modal_nguoihuongdan_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_tennhom_input">Tên nhóm</label><input type="text" class="form-control" id="modal_tennhom_input" /></div><div class="form-group"><label for="modal_soluong_input">Số lượng sinh viên</label><input type="number" class="form-control" id="modal_soluong_input" /></div><div class="form-group"><label for="modal_soluong_input">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div>';
       $("#modal_body").append(html);
       $.each(res.kythuctap, function(idx, val){
         $('#modal_kythuctap_select').append('<option value="'+val.id+'">'+moment(val.ngay, 'YYYY-MM-DD').format('DD/MM/YYYY')+'</option>');
@@ -256,11 +262,12 @@ $("#themkythuctap_btn").click(function(){
         let detai = $("#modal_detai_select").val();
         let soluong = $("#modal_soluong_input").val();
         let nhd = $("#modal_nguoihuongdan_select").val();
+        let tennhom = $("#modal_tennhom_select").val();
         let ghichu = $("#modal_ghichu_text").val().replace(/[\r\n]+/g, '<br/>');
     
         $.ajax({
           type: 'POST',
-          url: "them_nhom_thuc_tap?kytt=" + parseInt(kytt) + "&nguoihd=" + parseInt(nhd) + "&detai=" + parseInt(detai) + "&soluong=" + parseInt(soluong) + "&isDeleted=0" + "&ghichu=" + ghichu,
+          url: "them_nhom_thuc_tap?kytt=" + parseInt(kytt) + "&nguoihd=" + parseInt(nhd) + "&detai=" + parseInt(detai) + "&soluong=" + parseInt(soluong) + "&tennhom=" + tennhom + "&isDeleted=0" + "&ghichu=" + ghichu,
           success: function(res){
             Toast.fire({
               icon: "success",

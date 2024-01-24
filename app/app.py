@@ -497,13 +497,13 @@ async def get_chi_tiet_chinh_sua_nhom_route(token: str = Cookie(None)):
     return RedirectResponse('/login')
 
 @app.post('/update_chi_tiet_nhom_thuc_tap_by_id')
-async def update_chi_tiet_nhom_thuc_tap_by_id_route(id: int, kytt: int, nguoihd: int, detai: int, soluong: int, isDeleted: int, ghichu: str, token: str = Cookie(None)):
+async def update_chi_tiet_nhom_thuc_tap_by_id_route(id: int, kytt: int, nguoihd: int, detai: int, soluong: int, tennhom: str, isDeleted: int, ghichu: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             if username:
-                result = update_chi_tiet_nhom_thuc_tap_by_id_controller(id, kytt, nguoihd, detai, soluong, ghichu, isDeleted)
+                result = update_chi_tiet_nhom_thuc_tap_by_id_controller(id, kytt, nguoihd, detai, soluong, tennhom, ghichu, isDeleted)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             pass
@@ -523,13 +523,13 @@ async def update_xoa_nhom_thuc_tap_by_id_route(id: str, token: str = Cookie(None
     return RedirectResponse('/login')
 
 @app.post('/them_nhom_thuc_tap')
-async def them_nhom_thuc_tap_route(nguoihd: str, kytt: str, detai: str, soluong: int, isDeleted: int, ghichu: str, token: str = Cookie(None)):
+async def them_nhom_thuc_tap_route(nguoihd: str, kytt: str, detai: str, soluong: int, tennhom: str, isDeleted: int, ghichu: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             if username:
-                result = them_nhom_thuc_tap_controller(nguoihd, kytt, detai, soluong, isDeleted, ghichu)
+                result = them_nhom_thuc_tap_controller(nguoihd, kytt, detai, soluong, tennhom, isDeleted, ghichu)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             pass
