@@ -228,7 +228,7 @@ def get_chi_tiet_sinh_vien_by_id(id: str):
 def get_chi_tiet_sinh_vien_chua_co_nhom(id: str):
     try:
         i = cursor.execute("EXEC GetThongTinChiTietSVChuaCoNhomByID ?", id).fetchone()
-        return {'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': f'0{i[4]}', 'email': i[5], 'diachi': i[6], 'malop': i[7], 'khoa': i[8], 'nganh': i[9], 'truong': i[10]}
+        return {'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': f'0{i[4]}', 'email': i[5], 'diachi': i[6], 'malop': i[7], 'khoa': i[8], 'nganh': i[9], 'id_nganh': i[10], 'truong': i[11], 'id_truong': i[12]}
     except Exception as e:
         return e
     
@@ -350,5 +350,23 @@ def get_dssv_da_danh_gia_by_nguoi_huong_dan(username: str, kythuctap: int):
     try:
         result = cursor.execute("EXEC GetDSSVDanhGiaByNguoiHuongDanUsername ?, ?", username, kythuctap).fetchall()
         return [{'mssv': i[21], 'hoten': i[18], 'malop': i[19], 'nguoihuongdan': i[20], 'ythuckyluat_text': i[4], 'ythuckyluat_number': i[3], 'tuanthuthoigian_text': i[6], 'tuanthuthoigian_number': i[5], 'kienthuc_text': i[8], 'kienthuc_number': i[7], 'kynangnghe_text': i[10], 'kynangnghe_number': i[9], 'khanangdoclap_text': i[12], 'khanangdoclap_number': i[11], 'khanangnhom_text': i[14], 'khanangnhom_number': i[13], 'khananggiaiquyetcongviec_text': i[16], 'khananggiaiquyetcongviec_number': i[15], 'danhgiachung_number': i[17]} for i in result]
+    except Exception as e:
+        return e
+    
+def update_xoa_sinh_vien_by_id(id: int):
+    try:
+        result = cursor.execute("EXEC UpdateXoaSinhVienByID ?", id)
+        r = result.fetchone()[0]
+        cursor.commit()
+        return r
+    except Exception as e:
+        return e
+
+def update_sinh_vien_by_id(id: int, mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, truong: int, nganh: int, khoa: int):
+    try:
+        result = cursor.execute("EXEC UpdateSinhVienByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", id, mssv, hoten, gioitinh, sdt, email, diachi, malop, truong, nganh, khoa)
+        r = cursor.fetchone()[0]
+        cursor.commit()
+        return r
     except Exception as e:
         return e

@@ -150,3 +150,9 @@ def update_nhom_thuc_tap_by_sv_id_controller(idsinhvien: int, idnhom: int):
 
 def get_dssv_da_danh_gia_by_nguoi_huong_dan_controller(username: str, kythuctap: int):
     return get_dssv_da_danh_gia_by_nguoi_huong_dan(username=username, kythuctap=kythuctap)
+
+def update_xoa_sinh_vien_by_id_controller(id: int):
+    return update_xoa_sinh_vien_by_id(id)
+
+def update_sinh_vien_by_id_controller(id: int, mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, truong: int, nganh: int, khoa: int):
+    return update_sinh_vien_by_id(id, mssv, hoten, gioitinh, sdt, email, diachi, malop, truong, nganh, khoa)

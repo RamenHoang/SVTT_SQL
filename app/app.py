@@ -647,6 +647,23 @@ async def thong_tin_sinh_vien_route(sv: ThongTinSV):
     else:
         return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
     
+@app.post('/update_xoa_sinh_vien_by_id')
+async def update_xoa_sinh_vien_by_id(id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            if username:
+                result = update_xoa_sinh_vien_by_id_controller(id)
+                if result:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+        except jwt.PyJWTError:
+            pass
+    else:
+        return RedirectResponse('/login')
+
 @app.get('/get_chi_tiet_sinh_vien_moi_nhap_thong_tin')
 async def get_chi_tiet_sinh_vien_moi_nhap_thong_tin(id: str):
     return JSONResponse(status_code=200, content=get_chi_tiet_sinh_vien_chua_co_nhom_controller(id))
@@ -713,3 +730,20 @@ async def xuat_ds_sinh_vien_da_danh_gia(kythuctap: int, token: str = Cookie(None
         except jwt.PyJWTError:
             pass
     return RedirectResponse('/login')
+
+@app.post('/update_sinh_vien_by_id')
+async def update_sinh_vien_by_id_route(id: int, mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, truong: int, nganh: int, khoa: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            if username:
+                result = update_sinh_vien_by_id_controller(id, mssv, hoten, gioitinh, sdt, email, diachi, malop, truong, nganh, khoa)
+                if result:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+        except jwt.PyJWTError:
+            pass
+    else:
+        return RedirectResponse('/login')

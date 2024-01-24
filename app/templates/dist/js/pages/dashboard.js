@@ -7,6 +7,13 @@
 
 /* global moment:false, Chart:false, Sparkline:false */
 
+var Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+});
+
 $(function () {
   "use strict";
 
@@ -175,7 +182,7 @@ $(function () {
     },
   });
 
-let bangdssv = $("#dashboard_bangdssv").DataTable({
+let dashboard_bangdssv = $("#dashboard_bangdssv").DataTable({
     paging: true,
     lengthChange: false,
     searching: true,
@@ -209,11 +216,11 @@ let bangdssv = $("#dashboard_bangdssv").DataTable({
         data: "trangthai",
         render: function(data, type, row){
           if(data==0){
-            return '<span class="badge badge-danger"><i class="fa-solid fa-triangle-exclamation"></i> Chưa có nhóm</span>';
+            return '<center><span class="badge badge-danger"><i class="fa-solid fa-triangle-exclamation"></i> Chưa có nhóm</span></center>';
           }else if(data==1){
-            return '<span class="badge badge-warning"><i class="fa-solid fa-circle-exclamation"></i> Chưa đánh giá</span>';
+            return '<center><span class="badge badge-warning"><i class="fa-solid fa-circle-exclamation"></i> Chưa đánh giá</span></center>';
           }else{
-            return '<span class="badge badge-success"><i class="fa-solid fa-check"></i> Đã đánh giá</span>';
+            return '<center><span class="badge badge-success"><i class="fa-solid fa-check"></i> Đã đánh giá</span></center>';
           }
         }
       },
@@ -223,14 +230,17 @@ let bangdssv = $("#dashboard_bangdssv").DataTable({
           return (
             '<a data-id="' +
             data +
-            '" class="btn btn-sm" id="viewBtn"  style="color: green; text-align: center; "><i class="fa-solid fa-pencil"></i></a>'
+            '" class="btn btn-sm" id="viewBtn"  style="color: green; text-align: center; "><i class="fa-solid fa-pencil"></i></a>' +
+            '<a data-id="' +
+            data +
+            '" class="btn btn-sm" id="deleteBtn"  style="color: red; text-align: center; "><i class="fa-solid fa-trash"></i></a>'
           );
         },
       }
     ],
   });
 });
-
+// xem/sửa thông tin sinh viên
 $("#dashboard_bangdssv").on('click', '#viewBtn', function(){
   let id = $(this).data('id');
   // Clear modal
@@ -252,9 +262,113 @@ $("#dashboard_bangdssv").on('click', '#viewBtn', function(){
       }else{
         html = '<table class="table" id="thongtinsinhvien"> <tr> <td>Họ tên</td> <td><input type="text" id="hoten_sv" value="'+res.hoten+'" class="form-control"/></td> </tr> <tr> <td>MSSV</td> <td><input type="text" id="mssv" value="'+res.mssv+'" class="form-control"/></td> </tr> <tr> <td>Giới tính</td> <td><select id="gioitinh_sv" class="form-control"><option value="1">Nam</option><option value="0">Nữ</option></select></td> </tr> <tr> <td>SĐT</td> <td><input type="tel" id="sdt_sv" value="'+res.sdt+'" class="form-control"/></td> </tr> <tr> <td>Email</td> <td><input type="email" id="email_sv" value="'+res.email+'" class="form-control"/></td> </tr> <tr> <td>Điạ chỉ</td> <td><input type="text" id="diachi_sv" value="'+res.diachi+'" class="form-control" /></td> </tr> <tr> <td>Mã lớp</td> <td><input type="text" id="malop_sv" value="'+res.malop+'" class="form-control"/></td> </tr> <tr> <td>Khoá</td> <td><input type="number" id="khoa_sv" value="'+res.khoa+'" class="form-control"/></td> </tr> <tr> <td>Ngành</td> <td><select id="nganh_sv" class="form-control select2">'+res.nganh+'</select></td> </tr> <tr> <td>Trường</td> <td><select id="truong_sv" class="form-control select2">'+res.truong+'</select></td> </tr> <tr> <td>Kỳ thực tập</td> <td>'+res.ngaybatdau+'</td> </tr> <tr> <td>Đề tài</td> <td>'+res.tendetai+'</td> </tr> <tr> <td>Người hướng dẫn</td> <td>'+res.nguoihuongdan+'</td> </tr> <tr> <td> Ý thức kỷ luật </td> <td> <span class="badge badge-primary"> '+res.ythuckyluat_number+' </span> '+res.ythuckyluat_text+' </td> </tr> <tr> <td> Tuân thủ thời gian </td> <td> <span class="badge badge-primary"> '+res.tuanthuthoigian_number+' </span> '+res.tuanthuthoigian_text+' </td> </tr> <tr> <td> Kiến thức </td> <td> <span class="badge badge-primary"> '+res.kienthuc_number+' </span> '+res.kienthuc_text+' </td> </tr> <tr> <td> Kỷ năng nghề </td> <td> <span class="badge badge-primary"> '+res.kynangnghe_number+' </span> '+res.kynangnghe_text+' </td> </tr> <tr> <td> Khả năng làm việc độc lập </td> <td> <span class="badge badge-primary"> '+res.khanangdoclap_number+' </span> '+res.khanangdoclap_text+' </td> </tr> <tr> <td> Khả năng làm việc nhóm </td> <td> <span class="badge badge-primary"> '+res.khanangnhom_number+' </span> '+res.khanangnhom_text+' </td> </tr> <tr> <td> Khả năng giải quyết công việc </td> <td> <span class="badge badge-primary"> '+res.khananggiaiquyetcongviec_number+' </span> '+res.khananggiaiquyetcongviec_text+' </td> </tr> <tr> <td> Đánh giá chung </td> <td> <span class="badge badge-primary"> '+res.danhgiachung_number+' </span> </td> </tr> </table>';
       }
+
+      // Select danh sách ngành
+      $.ajax({
+        type: 'GET',
+        url: 'get_danh_sach_nganh',
+        success: function(data) {
+          $.each(data, function(idx, val){
+            $('#nganh_sv').append('<option value="'+val.id+'">'+val.ten+'</option>');
+          });
+          $('#nganh_sv').val(res.id_nganh);        }
+      });
+      
+      // Select danh sách trường
+      $.ajax({
+        type: 'GET',
+        url: 'get_danh_sach_truong',
+        success: function(data) {
+          $.each(data, function(idx, val){
+            $('#truong_sv').append('<option value="'+val.id+'">'+val.ten+'</option>');
+          });
+          $('#truong_sv').val(res.id_truong);
+        }
+      });
+
       $('#modal_body').append(html);
       $("#gioitinh_sv").val(res.gioitinh);
+      $('#modal_footer').append('<button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>  <button type="button" id="modal_save_button" data-id="'+id+'" class="btn btn-primary">Lưu</button>')
       $('#modal_id').modal('show');
+
+      // Chỉnh sửa thông tin
+      $("#modal_save_button").on('click', function() {
+        let id = $(this).data('id');
+      
+        let hoten_sv = $('#hoten_sv').val();
+        let maso_sv = $('#mssv').val();
+        let gioitinh_sv = $('#gioitinh_sv').val();
+        let sdt_sv = $('#sdt_sv').val();
+        let email_sv = $('#email_sv').val();
+        let diachi_sv = $('#diachi_sv').val();
+        let malop_sv = $('#malop_sv').val();
+        let khoa_sv = $('#khoa_sv').val();
+        let nganh_sv = $('#nganh_sv').val();
+        let truong_sv = $('#truong_sv').val();
+      
+        $.ajax({
+          type: 'POST',
+          url: '/update_sinh_vien_by_id?id='+id+'&mssv='+maso_sv+'&hoten='+hoten_sv+'&gioitinh='+gioitinh_sv+'&sdt='+sdt_sv+'&email='+email_sv+'&diachi='+diachi_sv+'&malop='+malop_sv+'&truong='+truong_sv+'&nganh='+nganh_sv+'&khoa='+khoa_sv,
+          success: function (data) {
+            if (data.status == "OK") {
+              $("#modal_id").modal("hide");
+              $("#dashboard_bangdssv").DataTable().ajax.reload();
+              Toast.fire({
+                icon: "success",
+                title: "Cập nhật thành công",
+              });
+            } else {
+              Toast.fire({
+                icon: "error",
+                title: "Đã xãy ra lỗi",
+              });
+            }
+          },
+          error: function (xhr, status, error) {
+            Toast.fire({
+              icon: "error",
+              title: "Đã xãy ra lỗi",
+            });
+          },
+        })
+      
+      });
     }
   })
+});
+
+// Submit sửa thông tin sinh viên
+
+// Xóa thông tin sinh viên
+$("#dashboard_bangdssv").on('click', '#deleteBtn', function(){
+  let id = $(this).data('id');
+
+  Swal.fire({
+    title: "Bạn muốn xoá sinh viên " + id,
+    showDenyButton: false,
+    showCancelButton: true,
+    confirmButtonText: "Xoá",
+    cancelButtonText: "Huỷ",
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      $.ajax({
+        type: "POST",
+        url: "update_xoa_sinh_vien_by_id?id=" + parseInt(id),
+        success: function (res) {
+          Toast.fire({
+            icon: "success",
+            title: "Đã xoá",
+          });
+          $("#dashboard_bangdssv").DataTable().ajax.reload();
+        },
+        error: function (xhr, status, error) {
+          Toast.fire({
+            icon: "error",
+            title: "Xoá không thành công",
+          });
+        },
+      });
+    }
+  });
 });
