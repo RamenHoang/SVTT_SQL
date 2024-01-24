@@ -228,12 +228,11 @@ let dashboard_bangdssv = $("#dashboard_bangdssv").DataTable({
         data: "id",
         render: function (data, type, row) {
           return (
-            '<a data-id="' +
+            '<a class="btn btn-info btn-sm" id="viewBtn" data-id="' +
             data +
-            '" class="btn btn-sm" id="viewBtn"  style="color: green; text-align: center; "><i class="fa-solid fa-pencil"></i></a>' +
-            '<a data-id="' +
+            '"><i class="fas fa-pencil-alt"></i></a>  <a class="btn btn-danger btn-sm" data-id="' +
             data +
-            '" class="btn btn-sm" id="deleteBtn"  style="color: red; text-align: center; "><i class="fa-solid fa-trash"></i></a>'
+            '" id="deleteBtn"><i class="fas fa-trash"></i></a>'
           );
         },
       }
