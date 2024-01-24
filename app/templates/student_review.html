@@ -41,19 +41,11 @@
           <button class="btn btn-primary btn-xs ms-auto" id="uploadBtn"><i class="fa-solid fa-file-excel"></i> Import file excel</button>
           <button class="btn btn-success btn-xs ms-auto" id="downloadBtn"><i class="fa-solid fa-file-zipper"></i> Download đánh giá</button>
           <input type="file" id="fileInput" style="display: none;">
-          <div class="rows">
-            <div class="col-lg-3">
-              <label for="filter_kythuctap">Chọn kỳ thực tập</label>
-              <select name="filter_kythuctap" id="filter_kythuctap" class="form-control select2">
-                <option value="-1" selected>Tất cả</option>
-              </select>
-            </div>
-            <div class="col-lg-3">
-              <label for="filter_nhom">Chọn nhóm thực tập</label>
-              <select name="filter_nhom" id="filter_nhom" class="form-control select2">
-                <option value="-1" selected>Tất cả</option>
-              </select>
-            </div>
+          <div class="col-lg-3">
+            <label for="filter_kythuctap">Chọn kỳ thực tập</label>
+            <select name="filter_kythuctap" id="filter_kythuctap" class="form-control select2">
+              <option value="-1" selected>Tất cả</option>
+            </select>
           </div>
         </div>
         <div class="card-body">
@@ -64,9 +56,8 @@
                 <th scope="col" style="text-align: center;">Họ tên</th>
                 <th scope="col" style="text-align: center;">Giới tính</th>
                 <th scope="col" style="text-align: center;">Chuyên ngành</th>
-                <th scope="col" style="text-align: center;">Trường</th>
                 <th scope="col" style="text-align: center;">Đề tài</th>
-                <th scope="col" style="text-align: center;">Nhóm</th>
+                <th scope="col" style="text-align: center;">Tên nhóm</th>
                 <th scope="col" style="text-align: center;">Trạng thái</th>
                 <th scope="col" style="text-align: center;">Thao tác</th>
               </tr>

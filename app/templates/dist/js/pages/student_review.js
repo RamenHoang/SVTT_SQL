@@ -272,9 +272,8 @@ function create_table(data) {
       { data: "hoten" },
       { data: "gioitinh" },
       { data: "nganh" },
-      { data: "truong" },
       { data: "detai" },
-      { data: "nhom" },
+      { data: "tennhom" },
       {
         data: "trangthai",
         render: function (data, type, row) {
@@ -305,9 +304,6 @@ $(document).ready(function() {
   create_table('-1');
   $('#filter_kythuctap').on('change', function() {
     let id = $('#filter_kythuctap').val();
-
-    // Load danh sách nhóm thực tập theo kỳ
-    
     create_table(id);
   });
   
