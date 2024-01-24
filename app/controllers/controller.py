@@ -52,11 +52,11 @@ def get_all_ky_thuc_tap_controller():
 def get_chi_tiet_ky_thuc_tap_by_id_controller(id: str):
     return get_chi_tiet_ky_thuc_tap_by_id(id)
 
-def update_chi_tiet_ky_thuc_tap_by_id_controller(id: str, ngaybatdau: str, ngayketthuc: str, isDeleted: int):
-    return update_chi_tiet_ky_thuc_tap_by_id(id, ngaybatdau, ngayketthuc, isDeleted)
+def update_chi_tiet_ky_thuc_tap_by_id_controller(id: str, ngaybatdau: str, ngayketthuc: str, isDeleted: int, ghichu: str):
+    return update_chi_tiet_ky_thuc_tap_by_id(id, ngaybatdau, ngayketthuc, isDeleted, ghichu)
 
-def them_ky_thuc_tap_controller(ngaybatdau: str, ngayketthuc: str, isDeleted: int):
-    return them_ky_thuc_tap(ngaybatdau, ngayketthuc, isDeleted)
+def them_ky_thuc_tap_controller(ngaybatdau: str, ngayketthuc: str, isDeleted: int, ghichu: str):
+    return them_ky_thuc_tap(ngaybatdau, ngayketthuc, isDeleted, ghichu)
 
 def update_xoa_ky_thuc_tap_by_id_controller(id: str):
     return update_xoa_ky_thuc_tap_by_id(id)

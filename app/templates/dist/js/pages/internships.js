@@ -19,28 +19,41 @@ let bangdskythuctap = $("#bangdskythuctap").DataTable({
     dataSrc: "",
   },
   columns: [
-    { data: "id" },
-    { data: "ngaybatdau" },
-    { data: "ngayketthuc" },
+    { data: "id",
+      render: function(data, type, row) {
+        return '<center>'+data+'</center>';
+      }
+    },
+    { data: "ngaybatdau",
+      render: function(data, type, row) {
+        return '<center>'+data+'</center>';
+      }
+    },
+    { data: "ngayketthuc",
+      render: function(data, type, row) {
+        return '<center>'+data+'</center>';
+      }
+    },
     {
       data: "thoihan",
       render: function (data, type, row) {
         if (data == 0) {
-          return '<span class="badge badge-success"><i class="fa-solid fa-check"></i> Đang diễn ra</span>';
+          return '<center><span class="badge badge-success"><i class="fa-solid fa-check"></i> Đang diễn ra</span></center>';
         } else {
-          return '<span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> Đã kết thúc</span>';
+          return '<center><span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> Đã kết thúc</span></center>';
         }
       },
     },
+    { data: "ghichu" },
     {
       data: "id",
       render: function (data, type, row) {
         return (
-          '<a class="btn btn-info btn-sm" id="editBtn" data-id="' +
+          '<center><a class="btn btn-info btn-sm" id="editBtn" data-id="' +
           data +
           '"><i class="fas fa-pencil-alt"></i></a>  <a class="btn btn-danger btn-sm" data-id="' +
           data +
-          '" id="deleteBtn"><i class="fas fa-trash"></i></a>'
+          '" id="deleteBtn"><i class="fas fa-trash"></i></a></center>'
         );
       },
     },
@@ -62,9 +75,11 @@ $("#bangdskythuctap").on("click", "#editBtn", function () {
     url: "get_chi_tiet_ky_thuc_tap_by_id?id=" + id,
     success: function (res) {
       $("#modal_title").text('Kỳ thực tập '+res.ngaybatdau);
-      html = '<div class="form-group"><label>Thời gian thực tập:</label><div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div><input type="text" class="form-control float-right" id="reservation"></div></div><script>$("#reservation").daterangepicker();</script><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Sử dụng kỳ thực tập</label></div>';
+      html = '<div class="form-group"><label>Thời gian thực tập:</label><div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div><input type="text" class="form-control float-right" id="reservation"></div></div><script>$("#reservation").daterangepicker();</script><div class="form-group"><label for="modal_ghichu_text">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Sử dụng kỳ thực tập</label></div>';
       
       $("#modal_body").append(html);
+      // Set giá trị ghichu
+      $("#modal_ghichu_text").val(res.ghichu.replace(/<br\/>/g, "\r\n"));
       if (res.xoa == 0) {
         $("#modal_hoatdong_check").prop("checked", true);
       } else {
@@ -75,7 +90,6 @@ $("#bangdskythuctap").on("click", "#editBtn", function () {
           res.id +
           '" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>'
       );
-
       $("#modal_id").modal("show");
       // Tính năng lưu thay đổi
       $("#modal_submit_btn").click(function () {
@@ -86,6 +100,7 @@ $("#bangdskythuctap").on("click", "#editBtn", function () {
         let isDeleted = xoa ? 0 : 1;
         let ngaybatdau = moment(dates[0], 'MM/DD/YYYY').format('YYYY-MM-DD');
         let ngayketthuc = moment(dates[1], 'MM/DD/YYYY').format('YYYY-MM-DD');
+        let ghichu = $("#modal_ghichu_text").val().replace(/[\r\n]+/g, '<br/>');
 
         $.ajax({
           type: "POST",
@@ -97,7 +112,9 @@ $("#bangdskythuctap").on("click", "#editBtn", function () {
             "&ngayketthuc=" +
             ngayketthuc +
             "&isDeleted=" +
-            isDeleted,
+            isDeleted +
+            '&ghichu=' +
+            ghichu,
           success: function (data) {
             if (data.status == "OK") {
               $("#modal_id").modal("hide");
@@ -164,7 +181,7 @@ $("#themkythuctap_btn").click(function(){
   // Clear modal
   clear_modal();
   $("#modal_title").text('Thêm kỳ thực tập');
-  html = '<div class="form-group"><label>Thời gian thực tập:</label><div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div><input type="text" class="form-control float-right" id="reservation"></div></div><script>$("#reservation").daterangepicker();</script><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Sử dụng kỳ thực tập</label></div>';
+  html = '<div class="form-group"><label>Thời gian thực tập:</label><div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div><input type="text" class="form-control float-right" id="reservation"></div></div><script>$("#reservation").daterangepicker();</script><div class="form-group"><label for="modal_ghichu_text">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div>';
   $("#modal_body").append(html);
   $("#modal_footer").append(
     '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'
@@ -173,14 +190,13 @@ $("#themkythuctap_btn").click(function(){
   
   $("#modal_submit_btn").click(function(){
     let dates = $("#reservation").val().split(' - ');
-    let xoa = $("#modal_hoatdong_check").is(":checked");
-    let isDeleted = xoa ? 0 : 1;
     let ngaybatdau = moment(dates[0], 'MM/DD/YYYY').format('YYYY-MM-DD');
     let ngayketthuc = moment(dates[1], 'MM/DD/YYYY').format('YYYY-MM-DD');
+    let ghichu = $("#modal_ghichu_text").val().replace(/[\r\n]+/g, '<br/>');
 
     $.ajax({
       type: 'POST',
-      url: 'them_ky_thuc_tap?ngaybatdau='+ngaybatdau+'&ngayketthuc='+ngayketthuc+'&isDeleted='+isDeleted,
+      url: 'them_ky_thuc_tap?ngaybatdau='+ngaybatdau+'&ngayketthuc='+ngayketthuc+'&isDeleted=0&ghichu='+ghichu,
       success: function(res){
         Toast.fire({
           icon: "success",

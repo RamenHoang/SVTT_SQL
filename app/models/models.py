@@ -129,7 +129,7 @@ def them_de_tai_thuc_tap(ten: str, mota: str, isDeleted: int):
 def get_all_ky_thuc_tap():
     try:
         result = cursor.execute("EXEC GetDSDeTaiTheoThoiHan").fetchall()
-        data = [{'id': i[0], 'ngaybatdau': i[1], 'ngayketthuc': i[2], 'thoihan': i[3]} for i in result]
+        data = [{'id': i[0], 'ngaybatdau': i[1], 'ngayketthuc': i[2], 'thoihan': i[3], 'ghichu': i[4]} for i in result]
         return data
     except Exception as e:
         return e
@@ -137,21 +137,21 @@ def get_all_ky_thuc_tap():
 def get_chi_tiet_ky_thuc_tap_by_id(id: str):
     try:
         result = cursor.execute("EXEC GetChiTietKyThucTapByID ?", id).fetchone()
-        return {'id': result[0], 'ngaybatdau': result[1], 'ngayketthuc': result[2], 'xoa': result[3]}
+        return {'id': result[0], 'ngaybatdau': result[1], 'ngayketthuc': result[2], 'xoa': result[3], 'ghichu': result[4]}
     except Exception as e:
         return e
     
-def update_chi_tiet_ky_thuc_tap_by_id(id: str, ngaybatdau: str, ngayketthuc: str, isDeleted: int):
+def update_chi_tiet_ky_thuc_tap_by_id(id: str, ngaybatdau: str, ngayketthuc: str, isDeleted: int, ghichu: str):
     try:
-        result = cursor.execute("EXEC UpdateChiTietKyThucTapByID ?, ?, ?, ?", id, ngaybatdau, ngayketthuc, isDeleted)
+        result = cursor.execute("EXEC UpdateChiTietKyThucTapByID ?, ?, ?, ?, ?", id, ngaybatdau, ngayketthuc, isDeleted, ghichu)
         conn.commit()
         return True
     except Exception as e:
         return e
     
-def them_ky_thuc_tap(ngaybatdau: str, ngayketthuc: str, isDeleted: int):
+def them_ky_thuc_tap(ngaybatdau: str, ngayketthuc: str, isDeleted: int, ghichu: str):
     try:
-        result = cursor.execute("EXEC InsertKyThucTap ?, ?, ?", ngaybatdau, ngayketthuc, isDeleted)
+        result = cursor.execute("EXEC InsertKyThucTap ?, ?, ?, ?", ngaybatdau, ngayketthuc, isDeleted, ghichu)
         conn.commit()
         return True
     except Exception as e:

@@ -370,26 +370,26 @@ async def get_chi_tiet_ky_thuc_tap_by_id_route(id: str, token: str = Cookie(None
     return RedirectResponse('/login')
 
 @app.post('/update_chi_tiet_ky_thuc_tap_by_id')
-async def update_chi_tiet_ky_thuc_tap_by_id_route(id: str, ngaybatdau: str, ngayketthuc: str, isDeleted: int, token: str = Cookie(None)):
+async def update_chi_tiet_ky_thuc_tap_by_id_route(id: str, ngaybatdau: str, ngayketthuc: str, isDeleted: int, ghichu: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             if username:
-                result = update_chi_tiet_ky_thuc_tap_by_id_controller(id, ngaybatdau, ngayketthuc, isDeleted)
+                result = update_chi_tiet_ky_thuc_tap_by_id_controller(id, ngaybatdau, ngayketthuc, isDeleted, ghichu)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             pass
     return RedirectResponse('/login')
 
 @app.post('/them_ky_thuc_tap')
-async def them_ky_thuc_tap_route(ngaybatdau: str, ngayketthuc: str, isDeleted: int, token: str = Cookie(None)):
+async def them_ky_thuc_tap_route(ngaybatdau: str, ngayketthuc: str, isDeleted: int, ghichu: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             if username:
-                result = them_ky_thuc_tap_controller(ngaybatdau, ngayketthuc, isDeleted)
+                result = them_ky_thuc_tap_controller(ngaybatdau, ngayketthuc, isDeleted, ghichu)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             pass
