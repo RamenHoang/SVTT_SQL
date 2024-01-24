@@ -29,6 +29,11 @@ let bangdsnhomthuctap = $("#bangdsnhomthuctap").DataTable({
         return '<center>'+data+'</center>';
       }
     },
+    { data: "tennhom", 
+      render: function(data, type, row) {
+        return '<center>'+data+'</center>';
+      }
+    },
     { data: "ghichu" },
     {
       data: "xoa",

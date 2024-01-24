@@ -168,7 +168,7 @@ def update_xoa_ky_thuc_tap_by_id(id: str):
 def get_ds_nhom_thuc_tap():
     try:
         result = cursor.execute("EXEC GetDSNhomThucTap")
-        data = [{'id': i[0], 'nguoihuongdan': i[2], 'ngaybatdau': i[3], 'tendetai': i[5], 'mota': i[6], 'xoa': i[1], 'soluong': i[10], 'ghichu': i[11]} for i in result]
+        data = [{'id': i[0], 'nguoihuongdan': i[2], 'ngaybatdau': i[3], 'tendetai': i[5], 'mota': i[6], 'xoa': i[1], 'soluong': i[10], 'ghichu': i[11], 'tennhom': i[12]} for i in result]
         return data
     except Exception as e:
         return e
