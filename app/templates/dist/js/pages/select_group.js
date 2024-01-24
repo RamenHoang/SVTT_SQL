@@ -12,7 +12,7 @@ $.ajax({
     html = '';
     if(res.length>0){
       $.each(res, function(idx, val){
-        html += '<option value="'+val.id+'">'+val.tendetai+'</option>';
+        html += '<option value="'+val.id+'">['+val.id+']\t'+val.tendetai+'</option>';
       });
     }else{
       html += '<option value="" selected>Hiện tại chưa có nhóm hoặc hết hạn chọn nhóm</option>'
@@ -23,17 +23,23 @@ $.ajax({
 });
 
 $("#danhsachnhom").on('change', function(){
-  $.ajax({
-    type: 'GET',
-    url: 'get_chi_tiet_nhom_thuc_tap_by_id?id='+$("#danhsachnhom").val(),
-    success: function(res){
-      let soluongdangky = String(res.nhomthuctap_dadangky) + '/' + String(res.nhomthuctap_soluong);
-      $("#nguoihuongdan").val(res.nguoihuongdan_hoten);
-      $("#mota").val(res.detai_mota);
-      $("#soluongsv").val(soluongdangky);
-      $("#profile_nguoihuongdan").attr('href', '/hosonguoihuongdan?id='+res.nguoihuongdan_username);
-    }
-  });
+  let nhom = $("#danhsachnhom").val();
+  if (nhom != "") {
+    $.ajax({
+      type: 'GET',
+      url: 'get_chi_tiet_nhom_thuc_tap_by_id?id='+ nhom,
+      success: function(res){
+        let soluongdangky = String(res.nhomthuctap_dadangky) + '/' + String(res.nhomthuctap_soluong);
+        $("#nguoihuongdan").val(res.nguoihuongdan_hoten);
+        $("#mota").val(res.detai_mota);
+        $("#soluongsv").val(soluongdangky);
+      }
+    });
+  }else{
+    $("#nguoihuongdan").val("");
+    $("#mota").val("");
+    $("#soluongsv").val("");
+  }
 });
 
 if(document.cookie.indexOf('groupid')!==-1){
