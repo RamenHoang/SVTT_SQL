@@ -271,7 +271,8 @@ $("#dashboard_bangdssv").on('click', '#viewBtn', function(){
           $.each(data, function(idx, val){
             $('#nganh_sv').append('<option value="'+val.id+'">'+val.ten+'</option>');
           });
-          $('#nganh_sv').val(res.id_nganh);        }
+          $('#nganh_sv').val(res.id_nganh);        
+        }
       });
       
       // Select danh sách trường
