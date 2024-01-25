@@ -38,7 +38,7 @@ $("#themconviecviec_btn").click(function(){
         success: function(res){
             $.each(res, function(idx, val){
                 if(val['idcongviec']===null){
-                    $("#dsnhomthuctap").append('<option value="'+val['id']+'" class="form-control">['+val['ngaybatdau']+'] - '+val['tendetai']+'</option>');
+                    $("#dsnhomthuctap").append('<option value="'+val['id']+'" class="form-control">['+val['tennhom']+'] - '+val['tendetai']+'</option>');
                 }
             });
         }

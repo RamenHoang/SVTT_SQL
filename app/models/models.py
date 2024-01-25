@@ -293,7 +293,7 @@ def get_id_nhom_by_sv_id(id: str):
 def get_ds_nhom_chua_co_cong_viec():
     try:
         result = cursor.execute("EXEC GetDSNhomChuaCoCongViec")
-        data = [{'id': i[0], 'ngaybatdau': i[3], 'tendetai': i[5], 'idcongviec': i[7]} for i in result]
+        data = [{'id': i[0], 'ngaybatdau': i[3], 'tendetai': i[5], 'idcongviec': i[7], 'tennhom': i[8]} for i in result]
         return data
     except Exception as e:
         return e
