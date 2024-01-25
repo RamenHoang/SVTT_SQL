@@ -85,24 +85,23 @@ if (document.cookie.indexOf('studentid') == -1){
                 "Content-Type": "application/json"
                 },
             success: function(res){
-                if(res.status=='OK'){
-                    clear_modal();
-                    $("#modal_title").text('Xác thực OTP');
-                    html = '<div class="form-group"> <label>OTP:</label><input type="number" id="otp"/></div>'
-                    $("#modal_body").append(html);
-                    $("#modal_footer").append(
-                        '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Xác thực</button>'
-                    );
-                    $("#modal_id").modal('show');
-    
-                    $("#modal_submit_btn").on('click', function(){
-                        let email = $('#sinhvien_email').val();
-                        let otp = $('#otp').val();
-    
-                        xac_thuc_otp(email, otp);
-                        $('#modal_id').modal('hide');
-                    });
-                }
+                clear_modal();
+                $("#modal_title").text('Xác thực OTP');
+                let email = $('#sinhvien_email').val();
+                let html = '<div class="form-group"><label for="modal_otp_input">Mã OTP đã được gửi đến địa chỉ '+email+'</label><input type="number" class="form-control" id="modal_otp_input" placeholder="Mã OTP"></div>'
+                $("#modal_body").append(html);
+                $("#modal_footer").append(
+                    '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Xác thực</button>'
+                );
+                $("#modal_id").modal('show');
+
+                $("#modal_submit_btn").on('click', function(){
+                    let otp = $('#modal_otp_input').val();
+
+                    xac_thuc_otp(email, otp);
+                    $('#modal_id').modal('hide');
+                });
+                
 
                 disable_input();
             },
@@ -152,6 +151,7 @@ $(document).ready(function() {
 function disable_input(){
     $('input, select').attr('disabled', 'disabled');
     $('#submitBtn').prop('disabled', true);
+    $('#modal_otp_input').prop('disabled', false);
 }
 
 function xac_thuc_otp(email, otp) {

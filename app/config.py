@@ -16,6 +16,7 @@ email_host = os.getenv('EMAIL_HOST')
 email_port = os.getenv('EMAIL_PORT')
 email_username = os.getenv('EMAIL_USERNAME')
 email_password = os.getenv('EMAIL_PASSWORD')
+email_name = os.getenv('EMAIL_NAME')
 
 def create_connection():
     conn = pyodbc.connect(f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password};CHARSET=UTF8')

@@ -67,7 +67,7 @@ $("#bangdsdetai").on("click", "#editBtn", function () {
     success: function (res) {
       $("#modal_title").text(res.ten);
       $("#modal_body").append(
-        '<div class="form-group"><label for="modal_tendetai_input">Tên đề tài</label><input type="email" class="form-control" id="modal_tendetai_input" placeholder="Nhập tên đề tài" value="' +
+        '<div class="form-group"><label for="modal_tendetai_input">Tên đề tài</label><input type="text" class="form-control" id="modal_tendetai_input" placeholder="Nhập tên đề tài" value="' +
           res.ten +
           '"></div><div class="form-group"><label for="modal_motadetai_input">Mô tả đề tài</label><textarea id="modal_motadetai_input" rows="10" class="form-control" placeholder="Nhập mô tả đề tài">' +
           res.mota.replace(/<br\/>/g, "\r\n") +
@@ -170,7 +170,7 @@ $("#themdetai_btn").click(function(){
   // Clear modal
   clear_modal();
   $("#modal_title").text('Thêm đề tài');
-  html = '<div class="form-group"><label for="modal_tendetai_input">Tên đề tài</label><input type="email" class="form-control" id="modal_tendetai_input" placeholder="Nhập tên đề tài"></div><div class="form-group"><label for="modal_motadetai_input">Mô tả đề tài</label><textarea id="modal_motadetai_input" rows="10" class="form-control" placeholder="Nhập mô tả đề tài"></textarea></div><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Sử dụng đề tài</label></div>';
+  html = '<div class="form-group"><label for="modal_tendetai_input">Tên đề tài</label><input type="text" class="form-control" id="modal_tendetai_input" placeholder="Nhập tên đề tài"></div><div class="form-group"><label for="modal_motadetai_input">Mô tả đề tài</label><textarea id="modal_motadetai_input" rows="10" class="form-control" placeholder="Nhập mô tả đề tài"></textarea></div><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Sử dụng đề tài</label></div>';
   $("#modal_body").append(html);
   $("#modal_footer").append(
     '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'

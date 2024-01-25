@@ -1,4 +1,4 @@
-from .config import create_connection, email_host, email_port, email_username, email_password
+from .config import create_connection, email_host, email_port, email_username, email_password, email_name
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -33,7 +33,7 @@ def send_otp_email(email: str, hoten: str):
 
     # Tạo đối tượng MIMEMultipart để xây dựng email
     message = MIMEMultipart()
-    message["From"] = 'TTCNTT-VNPT Vĩnh Long'
+    message["From"] = email_name
     message["To"] = email
     message["Subject"] = "Xác thực OTP"
 

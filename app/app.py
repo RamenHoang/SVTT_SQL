@@ -773,8 +773,8 @@ async def get_danh_sach_nhom_theo_ky_id_route(id: int, token: str = Cookie(None)
         return RedirectResponse('/login')
     
 @app.post('/xac_thuc_otp')
-async def xac_thuc_otp(email: str, otp: int):
-    result = is_otp_valid(email, otp)
+async def xac_thuc_otp(email: str, otp: str):
+    result = is_otp_valid(email=email, entered_otp=otp)
     if result:
         return JSONResponse(status_code=200, content={'status': 'OK'})
     else:
