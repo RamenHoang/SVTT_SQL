@@ -8,3 +8,4 @@ docx-mailmerge
 pandas
 openpyxl
 python-dotenv
+pyotp
