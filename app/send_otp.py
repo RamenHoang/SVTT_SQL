@@ -1,26 +1,15 @@
-from config import create_connection
+from .config import create_connection, email_host, email_port, email_username, email_password
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import pyotp
-import os
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
-from pathlib import Path
-
-dotenv_path = Path('.env')
-load_dotenv(dotenv_path=dotenv_path)
-
-host = os.getenv('EMAIL_HOST')
-port = os.getenv('EMAIL_PORT')
-username = os.getenv('EMAIL_USERNAME')
-password = os.getenv('EMAIL_PASSWORD')
 
 conn = create_connection()
 cursor = conn.cursor()
 
 # Hàm để gửi email với mã OTP và lưu thông tin vào cơ sở dữ liệu
-def send_otp_email(email):
+def send_otp_email(email: str, hoten: str):
     # Tạo một đối tượng TOTP với một secret key mới
     totp = pyotp.TOTP(pyotp.random_base32())
 
@@ -30,11 +19,12 @@ def send_otp_email(email):
     # Lưu thông tin vào cơ sở dữ liệu
     save_otp_to_database(email, otp)
 
+    print(email_host, email_port, email_username, email_password)
     # Nội dung email
     body = f"""
     <html>
     <body>
-        <p>Xin chào,</p>
+        <p>Xin chào {hoten},</p>
         <p>Bạn đã đăng ký thực tập tại Trung tâm Công nghệ Thông tin - VNPT Vĩnh Long thành công. Vui lòng xác thực thông tin bằng cách nhập mã OTP.</p>
         <p>Dưới đây là mã OTP của bạn: <strong>{otp}</strong></p>
         <p>Đây là một email được tạo tự động. Vui lòng không trả lời.</p>
@@ -44,18 +34,18 @@ def send_otp_email(email):
 
     # Tạo đối tượng MIMEMultipart để xây dựng email
     message = MIMEMultipart()
-    message["From"] = username
+    message["From"] = email_username
     message["To"] = email
     message["Subject"] = "Xác thực OTP"
 
-    # Gắn nội dung email
-    message.attach(MIMEText(body, "plain"))
+    # Gắn nội dung email dưới dạng HTML
+    message.attach(MIMEText(body, "html"))
 
     # Kết nối đến máy chủ email (ở đây sử dụng Gmail)
-    with smtplib.SMTP(host, port) as server:
+    with smtplib.SMTP(email_host, email_port) as server:
         server.starttls()
-        server.login(username, password)
-        server.sendmail(username, email, message.as_string())
+        server.login(email_username, email_password)
+        server.sendmail(email_username, email, message.as_string())
 
     return True
 
@@ -105,18 +95,19 @@ def is_otp_valid(email, entered_otp):
             conn.close()
 
 
-# Nhập email từ người dùng
-user_email = input("Nhập địa chỉ email của bạn: ")
+# # Nhập email từ người dùng
+# user_email = input("Nhập địa chỉ email của bạn: ")
+# hoten = input(" Họ tên: ")
 
-# Gửi email chứa mã OTP và lưu thông tin vào cơ sở dữ liệu
-send_otp_email(user_email)
+# # Gửi email chứa mã OTP và lưu thông tin vào cơ sở dữ liệu
+# send_otp_email(user_email, hoten)
 
-# Nhập mã OTP từ người dùng
-entered_otp = input("Nhập mã OTP từ email: ")
+# # Nhập mã OTP từ người dùng
+# entered_otp = input("Nhập mã OTP từ email: ")
 
-# Kiểm tra mã OTP có còn hạn không
-if is_otp_valid(user_email, entered_otp):
-    print("Mã OTP hợp lệ.")
-else:
-    print("Mã OTP không hợp lệ hoặc đã hết hạn.")
+# # Kiểm tra mã OTP có còn hạn không
+# if is_otp_valid(user_email, entered_otp):
+#     print("Mã OTP hợp lệ.")
+# else:
+#     print("Mã OTP không hợp lệ hoặc đã hết hạn.")
 

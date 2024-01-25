@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from hashlib import sha3_256
 from .controllers.controller import *
+from .send_otp import send_otp_email, is_otp_valid
 
 import os
 import jwt
@@ -645,9 +646,11 @@ async def get_danh_sach_truong_route():
 async def thong_tin_sinh_vien_route(sv: ThongTinSV):
     result = insert_sinh_vien_controller(sv.mssv, sv.hoten, sv.gioitinh, sv.sdt, sv.email, sv.diachi, sv.malop, sv.truong, sv.nganh, sv.khoa)
     if result:
-        response = JSONResponse(status_code=200, content={'status': 'OK'})
-        response.set_cookie('studentid', result, max_age=5356800) # Hạn 2 tháng
-        return response
+        sent = send_otp_email(sv.email, sv.hoten)
+        if sent:
+            response = JSONResponse(status_code=200, content={'status': 'OK'})
+            response.set_cookie('studentid', result, max_age=5356800) # Hạn 2 tháng
+            return response
     else:
         return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
     
@@ -768,3 +771,11 @@ async def get_danh_sach_nhom_theo_ky_id_route(id: int, token: str = Cookie(None)
             pass
     else:
         return RedirectResponse('/login')
+    
+@app.post('/gui_mail_xac_thuc')
+async def gui_mail_xac_thuc(email: str, hoten: str):
+    result = send_otp_email(email, hoten)
+    if result:
+        return JSONResponse(status_code=200, content={'status': 'OK'})
+    else:
+        return JSONResponse(status_code=500, content={'status': 'Email system has problem'})

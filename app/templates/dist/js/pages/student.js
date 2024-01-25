@@ -133,3 +133,11 @@ function disable_input(){
     $('input, select').attr('disabled', 'disabled');
     $('#submitBtn').prop('disabled', true);
 }
+
+function verify_email(){
+    // Clear modal
+    clear_modal();
+    $("#modal_title").text('Xác thực OTP');
+
+    content_html = '<>'
+}
