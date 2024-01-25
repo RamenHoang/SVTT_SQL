@@ -19,16 +19,20 @@ let bangdsdetai = $("#bangdsdetai").DataTable({
     dataSrc: "",
   },
   columns: [
-    { data: "id" },
+    { data: "id",
+      render: function(data, type, row) {
+        return '<center>'+data+'</center>';
+      }
+    },
     { data: "ten" },
     { data: "mota" },
     {
       data: "xoa",
       render: function (data, type, row) {
         if (data == 0) {
-          return '<span class="badge badge-success"><i class="fa-solid fa-check"></i> Đang sử dụng</span>';
+          return '<center><span class="badge badge-success"><i class="fa-solid fa-check"></i> Đang sử dụng</span></center>';
         } else {
-          return '<span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> Ngưng sử dụng</span>';
+          return '<center><span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> Ngưng sử dụng</span></center>';
         }
       },
     },
@@ -36,11 +40,11 @@ let bangdsdetai = $("#bangdsdetai").DataTable({
       data: "id",
       render: function (data, type, row) {
         return (
-          '<a class="btn btn-info btn-sm" id="editBtn" data-id="' +
+          '<center><a class="btn btn-info btn-sm" id="editBtn" data-id="' +
           data +
           '"><i class="fas fa-pencil-alt"></i></a>  <a class="btn btn-danger btn-sm" data-id="' +
           data +
-          '" id="deleteBtn"><i class="fas fa-trash"></i></a>'
+          '" id="deleteBtn"><i class="fas fa-trash"></i></a></center>'
         );
       },
     },
