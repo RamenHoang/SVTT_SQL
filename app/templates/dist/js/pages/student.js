@@ -5,7 +5,12 @@ var Toast = Swal.mixin({
     timer: 3000,
   });
 
-
+// Clear modal
+function clear_modal() {
+    $("#modal_title").empty();
+    $("#modal_body").empty();
+    $("#modal_footer").empty();
+  }
 
 $("#sinhvien_diachi").autocomplete({
     source: function(req, res){
