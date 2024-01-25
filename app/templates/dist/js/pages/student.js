@@ -5,6 +5,8 @@ var Toast = Swal.mixin({
     timer: 3000,
   });
 
+
+
 $("#sinhvien_diachi").autocomplete({
     source: function(req, res){
         let url = '/goi_y_dia_chi?q='+req.term;
@@ -120,6 +122,12 @@ if (document.cookie.indexOf('studentid') == -1){
         }
     });
 }
+
+$(document).ready(function() {
+    $(".select2").select2({
+        theme: "bootstrap"
+    });
+});
 
 function disable_input(){
     $('input, select').attr('disabled', 'disabled');
