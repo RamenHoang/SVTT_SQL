@@ -89,10 +89,6 @@ def is_otp_valid(email, entered_otp):
         print("Error:", e)
         return False
 
-    finally:
-        if conn:
-            conn.close()
-
 
 # # Nhập email từ người dùng
 # user_email = input("Nhập địa chỉ email của bạn: ")

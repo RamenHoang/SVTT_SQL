@@ -772,10 +772,10 @@ async def get_danh_sach_nhom_theo_ky_id_route(id: int, token: str = Cookie(None)
     else:
         return RedirectResponse('/login')
     
-@app.post('/gui_mail_xac_thuc')
-async def gui_mail_xac_thuc(email: str, hoten: str):
-    result = send_otp_email(email, hoten)
+@app.post('/xac_thuc_otp')
+async def xac_thuc_otp(email: str, otp: int):
+    result = is_otp_valid(email, otp)
     if result:
         return JSONResponse(status_code=200, content={'status': 'OK'})
     else:
-        return JSONResponse(status_code=500, content={'status': 'Email system has problem'})
+        return JSONResponse(status_code=500, content={'status': 'OTP Expired'})

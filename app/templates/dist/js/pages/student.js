@@ -80,10 +80,42 @@ if (document.cookie.indexOf('studentid') == -1){
                 "Content-Type": "application/json"
                 },
             success: function(res){
-                Toast.fire({
-                    icon: "success",
-                    title: "Đã lưu thông tin thành công",
-                });
+                Swal.fire({
+                    title: "Nhập mã OTP được gửi đến "+$('#sinhvien_email').val(),
+                    input: "number",
+                    inputAttributes: {
+                      autocapitalize: "off"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "Look up",
+                    showLoaderOnConfirm: true,
+                    preConfirm: async (otp) => {
+                      try {
+                        const Url = `
+                          /xac_thuc_otp?email=${$('#sinhvien_email').val()}&otp=${otp}
+                        `;
+                        const response = await fetch(Url);
+                        if (!response.ok) {
+                          return Swal.showValidationMessage(`
+                            ${JSON.stringify(await response.json())}
+                          `);
+                        }
+                        return response.json();
+                      } catch (error) {
+                        Swal.showValidationMessage(`
+                          Request failed: ${error}
+                        `);
+                      }
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      Swal.fire({
+                        title: `${result.value.login}'s avatar`,
+                        imageUrl: result.value.avatar_url
+                      });
+                    }
+                  });
                 disable_input();
             },
             error: function(){
@@ -132,12 +164,4 @@ $(document).ready(function() {
 function disable_input(){
     $('input, select').attr('disabled', 'disabled');
     $('#submitBtn').prop('disabled', true);
-}
-
-function verify_email(){
-    // Clear modal
-    clear_modal();
-    $("#modal_title").text('Xác thực OTP');
-
-    content_html = '<>'
 }
