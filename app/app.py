@@ -142,7 +142,7 @@ async def login(request: Request, token: str = Cookie(None)):
             if username:
                 return RedirectResponse(url='/')
         except jwt.PyJWTError:
-            pass
+            return templates.TemplateResponse('login.html', context={'request': request})
     else:
         return templates.TemplateResponse('login.html', context={'request': request})
 
