@@ -235,21 +235,21 @@ def get_chi_tiet_sinh_vien_by_id(id: str):
 def get_chi_tiet_sinh_vien_chua_co_nhom(id: str):
     try:
         i = cursor.execute("EXEC GetThongTinChiTietSVChuaCoNhomByID ?", id).fetchone()
-        return {'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': f'0{i[4]}', 'email': i[5], 'diachi': i[6], 'malop': i[7], 'khoa': i[8], 'nganh': i[9], 'id_nganh': i[10], 'truong': i[11], 'id_truong': i[12]}
+        return {'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': f'{i[4]}', 'email': i[5], 'diachi': i[6], 'malop': i[7], 'khoa': i[8], 'nganh': i[9], 'id_nganh': i[10], 'truong': i[11], 'id_truong': i[12]}
     except Exception as e:
         return e
     
 def get_chi_tiet_sinh_vien_da_co_nhom(id: str):
     try:
         i = cursor.execute("EXEC GetThongTinChiTietSVDaCoNhomByID ?", id).fetchone()
-        return {'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': f'0{i[4]}', 'email': i[5], 'diachi': i[6], 'malop': i[7], 'khoa': i[8], 'nganh': i[9], 'id_nganh': i[10], 'truong': i[11], 'id_truong': i[12], 'nguoihuongdan': i[13], 'ngaybatdau': i[14], 'tendetai': i[15]}
+        return {'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': f'{i[4]}', 'email': i[5], 'diachi': i[6], 'malop': i[7], 'khoa': i[8], 'nganh': i[9], 'id_nganh': i[10], 'truong': i[11], 'id_truong': i[12], 'nguoihuongdan': i[13], 'ngaybatdau': i[14], 'tendetai': i[15], 'tennhom': i[16]}
     except Exception as e:
         return e
     
 def get_chi_tiet_sinh_vien_da_danh_gia(id: str):
     try:
         i = cursor.execute("EXEC GetThongTinChiTietSVDaDanhGiaByID ?", id).fetchone()
-        return {'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': f'0{i[4]}', 'email': i[5], 'diachi': i[6], 'malop': i[7], 'khoa': i[8], 'nganh': i[9], 'id_nganh': i[10], 'truong': i[11], 'id_truong': i[12], 'nguoihuongdan': i[13], 'ngaybatdau': i[14], 'tendetai': i[15], 'ythuckyluat_number': i[19], 'ythuckyluat_text': i[20], 'tuanthuthoigian_number': i[21], 'tuanthuthoigian_text': i[22], 'kienthuc_number': i[23], 'kienthuc_text': i[24], 'kynangnghe_number': i[25], 'kynangnghe_text': i[26], 'khanangdoclap_number': i[27], 'khanangdoclap_text': i[28], 'khanangnhom_number': i[29], 'khanangnhom_text': i[30], 'khananggiaiquyetcongviec_number': i[31], 'khananggiaiquyetcongviec_text': i[32], 'danhgiachung_number': i[33]}
+        return {'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': f'{i[4]}', 'email': i[5], 'diachi': i[6], 'malop': i[7], 'khoa': i[8], 'nganh': i[9], 'id_nganh': i[10], 'truong': i[11], 'id_truong': i[12], 'nguoihuongdan': i[13], 'ngaybatdau': i[14], 'tendetai': i[15], 'ythuckyluat_number': i[19], 'ythuckyluat_text': i[20], 'tuanthuthoigian_number': i[21], 'tuanthuthoigian_text': i[22], 'kienthuc_number': i[23], 'kienthuc_text': i[24], 'kynangnghe_number': i[25], 'kynangnghe_text': i[26], 'khanangdoclap_number': i[27], 'khanangdoclap_text': i[28], 'khanangnhom_number': i[29], 'khanangnhom_text': i[30], 'khananggiaiquyetcongviec_number': i[31], 'khananggiaiquyetcongviec_text': i[32], 'danhgiachung_number': i[33], 'tennhom': i[34]}
     except Exception as e:
         return e
     
