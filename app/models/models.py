@@ -6,7 +6,7 @@ cursor = conn.cursor()
 
 def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str, DiaChi: str, MaLop: str, Truong: str, Nganh: str, Khoa: int) -> bool:
     try:
-        i = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", MSSV, HoTen, GioiTinh, SDT[1:], Email, DiaChi, MaLop, Truong, Nganh, Khoa).fetchone()
+        i = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", MSSV, HoTen, GioiTinh, SDT[1:], Email, DiaChi, MaLop, Truong, Nganh, Khoa, 0).fetchone()
         result = i[0]
         conn.commit()
         return result
