@@ -159,3 +159,6 @@ def update_xoa_sinh_vien_by_id_controller(id: int):
 
 def update_sinh_vien_by_id_controller(id: int, mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, truong: int, nganh: int, khoa: int):
     return update_sinh_vien_by_id(id, mssv, hoten, gioitinh, sdt, email, diachi, malop, truong, nganh, khoa)
+
+def get_danh_sach_nhom_theo_ky_id_controller(id: int):
+    return get_danh_sach_nhom_theo_ky_id(id)

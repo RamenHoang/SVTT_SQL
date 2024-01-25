@@ -751,3 +751,20 @@ async def update_sinh_vien_by_id_route(id: int, mssv: str, hoten: str, gioitinh:
             pass
     else:
         return RedirectResponse('/login')
+    
+@app.get('/get_danh_sach_nhom_theo_ky_id')
+async def get_danh_sach_nhom_theo_ky_id_route(id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            if username:
+                result = get_danh_sach_nhom_theo_ky_id(id)
+                if result:
+                    return JSONResponse(status_code=200, content=result)
+                else:
+                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+        except jwt.PyJWTError:
+            pass
+    else:
+        return RedirectResponse('/login')

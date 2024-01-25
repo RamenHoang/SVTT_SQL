@@ -5,6 +5,13 @@ var Toast = Swal.mixin({
   timer: 3000,
 });
 
+// Select2
+$(document).ready(function() {
+  $('.select2').select2({
+    theme: "bootstrap"
+  });
+});
+
 function empty_modal() {
   $("#modal_title").empty();
   $("#modal_body").empty();
@@ -270,7 +277,11 @@ function create_table(data) {
     columns: [
       { data: "mssv" },
       { data: "hoten" },
-      { data: "gioitinh" },
+      { data: "gioitinh",
+        render: function (data, type, row) {
+          return '<center>'+data+'</center>';
+        }
+      },
       { data: "nganh" },
       { data: "detai" },
       { data: "tennhom" },
@@ -278,9 +289,9 @@ function create_table(data) {
         data: "trangthai",
         render: function (data, type, row) {
           if (data == 1) {
-            return '<span class="badge badge-warning"><i class="fa-solid fa-circle-exclamation"></i> Chưa đánh giá</span>';
+            return '<center><span class="badge badge-warning"><i class="fa-solid fa-circle-exclamation"></i> Chưa đánh giá</span></center>';
           } else {
-            return '<span class="badge badge-success"><i class="fa-solid fa-check"></i> Đã đánh giá</span>';
+            return '<center><span class="badge badge-success"><i class="fa-solid fa-check"></i> Đã đánh giá</span></center>';
           }
         },
       },
@@ -288,11 +299,11 @@ function create_table(data) {
         data: "id",
         render: function (data, type, row) {
           return (
-            '<a class="btn btn-info btn-sm" id="editBtn" data-id="' +
+            '<center><a class="btn btn-info btn-sm" id="editBtn" data-id="' +
             data +
             '"><i class="fas fa-pencil-alt"></i></a> <a class="btn btn-success btn-sm" id="downloadBtn" data-id="' +
             data +
-            '"><i class="fa-solid fa-download"></i></a>'
+            '"><i class="fa-solid fa-download"></i></a></center>'
           );
         },
       },

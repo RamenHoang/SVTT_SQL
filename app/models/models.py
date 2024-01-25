@@ -377,3 +377,11 @@ def update_sinh_vien_by_id(id: int, mssv: str, hoten: str, gioitinh: int, sdt: s
         return r
     except Exception as e:
         return e
+
+
+def get_danh_sach_nhom_theo_ky_id(id: int):
+    try:
+        result = cursor.execute("EXEC GetDSNhomTheoKyID ?", id)
+        return [{'id': i[0], 'tennhom': i[1], 'tendetai': i[2]} for i in result.fetchall()]
+    except Exception as e:
+        return e
