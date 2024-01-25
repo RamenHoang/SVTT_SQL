@@ -33,7 +33,7 @@ def send_otp_email(email: str, hoten: str):
 
     # Tạo đối tượng MIMEMultipart để xây dựng email
     message = MIMEMultipart()
-    message["From"] = email_username
+    message["From"] = 'TTCNTT-VNPT Vĩnh Long'
     message["To"] = email
     message["Subject"] = "Xác thực OTP"
 
