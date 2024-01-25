@@ -19,7 +19,6 @@ def send_otp_email(email: str, hoten: str):
     # Lưu thông tin vào cơ sở dữ liệu
     save_otp_to_database(email, otp)
 
-    print(email_host, email_port, email_username, email_password)
     # Nội dung email
     body = f"""
     <html>
