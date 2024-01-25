@@ -113,7 +113,7 @@ def update_xoa_de_tai_by_id(id: str):
 def get_nhom_thuc_tap_by_user_id(id: str):
     try:
         result = cursor.execute("EXEC GetNhomThucTapByUserID ?", id).fetchall()
-        data = [{'ngay': i[0], 'id': i[1], 'ten': i[2], 'mota': i[3]} for i in result]
+        data = [{'ngay': i[0], 'id': i[1], 'ten': i[2], 'mota': i[3], 'tennhom': i[5]} for i in result]
         return data
     except Exception as e:
         return e

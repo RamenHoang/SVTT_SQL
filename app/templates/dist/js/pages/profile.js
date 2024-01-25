@@ -26,7 +26,7 @@ $(document).ready(function() {
                 
                 // Lặp qua các đối tượng trong mảng
                 data[ngay].forEach(item => {
-                    html += '<div><i class="fas fa-envelope bg-primary"></i><div class="timeline-item"><h3 class="timeline-header"><b id="tendetai">'+item.ten+'</b></h3><div class="timeline-body" id="mota">'+item.mota+'</div><div class="timeline-footer"></div></div></div>';
+                    html += '<div><i class="fas fa-envelope bg-primary"></i><div class="timeline-item"><h3 class="timeline-header"><b id="tendetai">'+item.ten+' ['+item.tennhom+']</b></h3><div class="timeline-body" id="mota">'+item.mota+'</div><div class="timeline-footer"></div></div></div>';
                     // console.log(`  Tên: ${item.ten}`);
                     // console.log(`  Mô tả: ${item.mota}`);
                 });
