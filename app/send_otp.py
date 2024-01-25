@@ -67,9 +67,6 @@ def save_otp_to_database(email, otp):
     except Exception as e:
         print("Error:", e)
 
-    finally:
-        if conn:
-            conn.close()
 
 # Hàm để kiểm tra xem mã OTP có còn hạn không
 def is_otp_valid(email, entered_otp):    

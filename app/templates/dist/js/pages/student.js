@@ -88,14 +88,14 @@ if (document.cookie.indexOf('studentid') == -1){
                     '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Xác thực</button>'
                 );
                 $("#modal_id").modal('show');
-                
+
                 $("#modal_submit_btn").on('click', function(){
                     let email = $('#sinhvien_email').val();
                     let otp = $('#otp').val();
 
                     xac_thuc_otp(email, otp);
                     $('#modal_id').modal('hide');
-                })
+                });
 
                 disable_input();
             },
