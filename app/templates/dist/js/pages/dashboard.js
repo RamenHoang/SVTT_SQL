@@ -181,64 +181,83 @@ $(function () {
       });
     },
   });
+$(document).ready(function() {
 
-let dashboard_bangdssv = $("#dashboard_bangdssv").DataTable({
-    paging: true,
-    lengthChange: false,
-    searching: true,
-    // ordering: true,
-    order: [[0, 'desc']],
-    info: true,
-    autoWidth: false,
-    responsive: true,
-    ajax: {
-      type: "GET",
-      url: "get_all_sinh_vien",
-      dataSrc: "",
-    },
-    columns: [
-      { data: "id" },
-      { data: "mssv" },
-      { data: "hoten" },
-      { 
-        data: "gioitinh",
-        render: function(data, type, row){
-          if(data==0){
-            return 'Nữ'
-          }else{
-            return 'Nam'
-          }
-        }
+  let dashboard_bangdssv = $("#dashboard_bangdssv").DataTable({
+      paging: true,
+      lengthChange: false,
+      searching: true,
+      // ordering: true,
+      order: [[0, 'desc']],
+      info: true,
+      autoWidth: false,
+      responsive: true,
+      ajax: {
+        type: "GET",
+        url: "get_all_sinh_vien",
+        dataSrc: "",
       },
-      { data: "nganh" },
-      { data: "truong" },
-      {
-        data: "trangthai",
-        render: function(data, type, row){
-          if(data==0){
-            return '<center><span class="badge badge-danger"><i class="fa-solid fa-triangle-exclamation"></i> Chưa có nhóm</span></center>';
-          }else if(data==1){
-            return '<center><span class="badge badge-warning"><i class="fa-solid fa-circle-exclamation"></i> Chưa đánh giá</span></center>';
-          }else{
-            return '<center><span class="badge badge-success"><i class="fa-solid fa-check"></i> Đã đánh giá</span></center>';
+      columns: [
+        { data: "id" },
+        { data: "mssv" },
+        { data: "hoten" },
+        { 
+          data: "gioitinh",
+          render: function(data, type, row){
+            if(data==0){
+              return 'Nữ'
+            }else{
+              return 'Nam'
+            }
           }
-        }
-      },
-      {
-        data: "id",
-        render: function (data, type, row) {
-          return (
-            '<a class="btn btn-info btn-sm" id="viewBtn" data-id="' +
-            data +
-            '"><i class="fas fa-pencil-alt"></i></a>  <a class="btn btn-danger btn-sm" data-id="' +
-            data +
-            '" id="deleteBtn"><i class="fas fa-trash"></i></a>'
-          );
         },
-      }
-    ],
+        { data: "nganh" },
+        { data: "truong" },
+        {
+          data: "trangthai",
+          render: function(data, type, row){
+            if(data==0){
+              return '<center><span class="badge badge-danger"><i class="fa-solid fa-triangle-exclamation"></i> Chưa có nhóm</span></center>';
+            }else if(data==1){
+              return '<center><span class="badge badge-warning"><i class="fa-solid fa-circle-exclamation"></i> Chưa đánh giá</span></center>';
+            }else{
+              return '<center><span class="badge badge-success"><i class="fa-solid fa-check"></i> Đã đánh giá</span></center>';
+            }
+          }
+        },
+        {
+          data: "id",
+          render: function (data, type, row) {
+            return (
+              '<a class="btn btn-info btn-sm" id="viewBtn" data-id="' +
+              data +
+              '"><i class="fas fa-pencil-alt"></i></a>  <a class="btn btn-danger btn-sm" data-id="' +
+              data +
+              '" id="deleteBtn"><i class="fas fa-trash"></i></a>'
+            );
+          }
+        },
+        {
+          data: "luuy"
+        }
+      ],
+      columnDefs: [
+        {
+          targets: 8,
+          visible: false
+        }
+      ],
+      createdRow: function(row, data, dataIndex) {
+        if (data.luuy == 1) {
+            $(row).addClass('luuy-1');
+        }else if (data.luuy == 2) {
+          $(row).addClass('luuy-2');
+        }
+    }
+    });
   });
 });
+
 // xem/sửa thông tin sinh viên
 $("#dashboard_bangdssv").on('click', '#viewBtn', function(){
   let id = $(this).data('id');

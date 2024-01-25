@@ -346,10 +346,16 @@ def get_danh_sach_truong():
     
 def update_nhom_thuc_tap_by_sv_id(idsinhvien: int, idnhom: int):
     try:
-        result = cursor.execute("EXEC UpdateNhomThucTapBySinhVienID ?, ?", idsinhvien, idnhom)
-        r = result.fetchone()[0]
-        cursor.commit()
-        return r
+        # Kiểm tra xem đã đủ số lượng chưa
+        registed = cursor.execute("EXEC GetSoLuongSVDaDangKyByNhomID ?", idnhom).fetchone()[0]
+        quantity = cursor.execute("SELECT SoLuong FROM NHOMHUONGDAN WHERE ID = ?", idnhom).fetchone()[0]
+        if(registed < quantity):
+            result = cursor.execute("EXEC UpdateNhomThucTapBySinhVienID ?, ?", idsinhvien, idnhom)
+            r = result.fetchone()[0]
+            cursor.commit()
+            return True
+        else:
+            return False
     except Exception as e:
         return e
     

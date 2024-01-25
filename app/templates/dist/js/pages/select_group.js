@@ -31,7 +31,7 @@ $("#danhsachnhom").on('change', function(){
       success: function(res){
         let soluongdangky = String(res.nhomthuctap_dadangky) + '/' + String(res.nhomthuctap_soluong);
         $("#nguoihuongdan").val(res.nguoihuongdan_hoten);
-        $("#mota").val(res.detai_mota);
+        $("#mota").val(res.detai_mota.replace(/<br\/>/g, "\r\n"));
         $("#soluongsv").val(soluongdangky);
       }
     });
@@ -62,14 +62,14 @@ if(document.cookie.indexOf('groupid')!==-1){
           }else{
             Toast.fire({
               icon: "error",
-              title: "Đã xảy ra lỗi",
+              title: "Nhóm đã đủ số lượng",
             });
           }
         },
         error: function(){
           Toast.fire({
             icon: "error",
-            title: "Đã xảy ra lỗi",
+            title: "Nhóm đã đủ số lượng.<br/>Vui lòng liên hệ người hướng dẫn.",
           });
         }
       });
