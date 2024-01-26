@@ -162,3 +162,6 @@ def update_sinh_vien_by_id_controller(id: int, mssv: str, hoten: str, gioitinh: 
 
 def get_danh_sach_nhom_theo_ky_id_controller(id: int):
     return get_danh_sach_nhom_theo_ky_id(id)
+
+def get_ho_ten_sv_by_email_controller(email: str):
+    return get_ho_ten_sv_by_email(email)

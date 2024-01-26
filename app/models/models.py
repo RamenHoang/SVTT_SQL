@@ -391,3 +391,10 @@ def get_danh_sach_nhom_theo_ky_id(id: int):
         return [{'id': i[0], 'tennhom': i[1], 'tendetai': i[2]} for i in result.fetchall()]
     except Exception as e:
         return e
+    
+def get_ho_ten_sv_by_email(email: str):
+    try:
+        result = cursor.execute("EXEC GetHoTenSVByEmail ?", email)
+        return result.fetchone()[0]
+    except Exception as e:
+        return e

@@ -779,3 +779,16 @@ async def xac_thuc_otp(email: str, otp: str):
         return JSONResponse(status_code=200, content={'status': 'OK'})
     else:
         return JSONResponse(status_code=500, content={'status': 'OTP Expired'})
+    
+@app.post('/gui_mail_otp')
+async def gui_mail_otp(email: str):
+    try:
+        hoten = get_ho_ten_sv_by_email_controller(email)
+        send_otp_email(email, hoten)
+        return JSONResponse(status_code=200, content={'status': 'OK'})
+    except Exception as e:
+        return JSONResponse(status_code=500, content={'status': 'Email system has problem'})
+    
+@app.get('/sv_login')
+async def sv_login(request: Request):
+    return templates.TemplateResponse('sv_login.html', context={'request': request})

@@ -24,9 +24,12 @@ def send_otp_email(email: str, hoten: str):
     <html>
     <body>
         <p>Xin chào {hoten},</p>
-        <p>Bạn đã đăng ký thực tập tại Trung tâm Công nghệ Thông tin - VNPT Vĩnh Long thành công. Vui lòng xác thực thông tin bằng cách nhập mã OTP.</p>
         <p>Dưới đây là mã OTP của bạn: <strong>{otp}</strong></p>
         <p>Đây là một email được tạo tự động. Vui lòng không trả lời.</p>
+        <br/>
+        <p>---------------</p>
+        <b>Trung tâm CNTT - VNPT Vĩnh Long</b>
+        <p>Số 3, Trưng Nữ Vương, Phường 1, Tp. Vĩnh Long, Vĩnh Long</p>
     </body>
     </html>
     """
