@@ -55,15 +55,15 @@ def send_otp_email(email: str, hoten: str):
 def save_otp_to_database(email, otp):
     try:
         # Kiểm tra xem email đã tồn tại trong bảng chưa
-        cursor.execute("SELECT COUNT(*) FROM OtpTable WHERE Email = ?", email)
+        cursor.execute("SELECT COUNT(*) FROM Temp_OTP WHERE Email = ?", email)
         email_count = cursor.fetchone()[0]
 
         if email_count > 0:
             # Nếu tồn tại, cập nhật mã OTP mới
-            cursor.execute("UPDATE OtpTable SET OtpCode = ?, ExpiryTime = ? WHERE Email = ?", otp, datetime.now() + timedelta(minutes=5), email)
+            cursor.execute("UPDATE Temp_OTP SET OtpCode = ?, ExpiryTime = ?, IsVerified = ? WHERE Email = ?", otp, datetime.now() + timedelta(minutes=5), 0, email)
         else:
             # Nếu chưa tồn tại, thêm mới
-            cursor.execute("INSERT INTO OtpTable (Email, OtpCode, ExpiryTime) VALUES (?, ?, ?)", email, otp, datetime.now() + timedelta(minutes=5))
+            cursor.execute("INSERT INTO Temp_OTP (Email, OtpCode, ExpiryTime, IsVerified) VALUES (?, ?, ?, ?)", email, otp, datetime.now() + timedelta(minutes=5), 0)
 
         conn.commit()
 
@@ -75,13 +75,20 @@ def save_otp_to_database(email, otp):
 def is_otp_valid(email, entered_otp):    
     try:
         # Lấy thông tin về thời gian hết hạn của mã OTP
-        cursor.execute("SELECT ExpiryTime FROM OtpTable WHERE Email = ? AND OtpCode = ?", email, entered_otp)
-        expiry_time = cursor.fetchone()
-
+        cursor.execute("SELECT ExpiryTime, IsVerified FROM Temp_OTP WHERE Email = ? AND OtpCode = ?", email, entered_otp)
+        result = cursor.fetchone()
+        expiry_time = result[0]
+        isVerified = result[1]
+        print(expiry_time, isVerified)
         if expiry_time:
-            expiry_time = expiry_time[0]
-            # Kiểm tra xem thời gian hiện tại có nhỏ hơn thời gian hết hạn hay không
-            return datetime.now() < expiry_time
+            if int(isVerified)==0:
+                # expiry_time[1] = 0 là chưa xác thực thì xác thực rồi cập nhật lại = 1
+                cursor.execute("EXEC UpdateVerifiedOTP ?, ?", email, entered_otp)
+                cursor.commit()
+                # Kiểm tra xem thời gian hiện tại có nhỏ hơn thời gian hết hạn hay không
+                return datetime.now() < expiry_time
+            else:
+                return False
         else:
             return False
 

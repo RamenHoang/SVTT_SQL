@@ -1,4 +1,5 @@
 from ..config import create_connection
+from ..send_otp import is_otp_valid
 import datetime
 
 conn = create_connection()
@@ -19,6 +20,16 @@ def verify_user(username: str, password: str):
         result = cursor.fetchone()
 
         if not result or not result.IsValidUser:
+            return False
+        return True
+    except Exception as e:
+        return e
+
+def verify_student(email: str, otp: int):
+    try:
+        result = is_otp_valid(email, otp)
+
+        if not result:
             return False
         return True
     except Exception as e:
@@ -396,5 +407,30 @@ def get_ho_ten_sv_by_email(email: str):
     try:
         result = cursor.execute("EXEC GetHoTenSVByEmail ?", email)
         return result.fetchone()[0]
+    except Exception as e:
+        return e
+    
+def kiem_tra_loai_tai_khoan(username: str):
+    try:
+        if username:
+            if '@' in username:
+                result = cursor.execute("SELECT ID FROM SINHVIEN WHERE Email = ?", username)
+                if result.fetchone()[0]:
+                    return 2
+            else:
+                result = cursor.execute("SELECT ID FROM NGUOIHUONGDAN WHERE Username = ?", username)
+                if result.fetchone()[0]:
+                    return 1
+        else:
+            return 0
+    except Exception as e:
+        return e
+    
+def xem_thong_tin_sv(email: str):
+    try:
+        result = cursor.execute("EXEC GetChiTietSVByEmail ?", email)
+        if result:
+            i = result.fetchone()
+            return {'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': i[4], 'email': i[5], 'diachi': i[6], 'malop': i[7], 'truong': i[14], 'nganh': i[15], 'khoa': i[10], 'nhomhuongdan': i[16], 'xacnhan': i[12]}
     except Exception as e:
         return e

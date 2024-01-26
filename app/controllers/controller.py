@@ -102,6 +102,9 @@ def get_chi_tiet_sinh_vien_da_danh_gia_controller(id: str):
 def verify_user_controller(username: str, password: str):
     return verify_user(username, password)
 
+def verify_student_controller(email: str, otp: int):
+    return verify_student(email, otp)
+
 def get_ds_sinh_vien_by_username_controller(username: str, kythuctap: str):
     return get_ds_sinh_vien_by_username(username, kythuctap)
 
@@ -165,3 +168,9 @@ def get_danh_sach_nhom_theo_ky_id_controller(id: int):
 
 def get_ho_ten_sv_by_email_controller(email: str):
     return get_ho_ten_sv_by_email(email)
+
+def kiem_tra_loai_tai_khoan_controller(username: str):
+    return kiem_tra_loai_tai_khoan(username)
+
+def xem_thong_tin_sv_controller(email: str):
+    return xem_thong_tin_sv(email)
