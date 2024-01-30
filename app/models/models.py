@@ -341,7 +341,10 @@ def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mo
     try:
         result = cursor.execute("EXEC InsertCongViec ?, ?, ?, ?, ?", id, ngaybatdau, ngayketthuc, ten, mota)
         cursor.commit()
-        return True
+        if result.fetchone()[0]==1:
+            return True
+        else:
+            return False
     except Exception as e:
         return e
     

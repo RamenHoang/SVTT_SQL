@@ -340,9 +340,9 @@ function load_ChiTietCongViec(id_congviec){
           return (
             '<center><a class="btn btn-info btn-sm" id="editBtn" data-id="' +
             data +
-            '"><i class="fas fa-pencil-alt"></i></a> <a class="btn btn-success btn-sm" id="downloadBtn" data-id="' +
+            '"><i class="fas fa-pencil-alt"></i></a> <a class="btn btn-danger btn-sm" id="downloadBtn" data-id="' +
             data +
-            '"><i class="fa-solid fa-download"></i></a></center>'
+            '"><i class="fa-solid fa-trash"></i></a></center>'
           );
         },
       },
