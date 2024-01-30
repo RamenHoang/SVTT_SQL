@@ -36,6 +36,7 @@ $(document).ready(function() {
     let nhomid = filter_chonnhom.val();
     
     load_timeline_congviec(nhomid);
+    $('#bangdscongviec').empty();
   });
 
   function load_timeline_congviec(id){
@@ -290,6 +291,19 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom){
 }
 
 function load_ChiTietCongViec(id_congviec){
+  $('#bangdscongviec').empty();
+  $('#bangdscongviec').append(`
+  <thead>
+    <tr>
+      <th scope="col" style="text-align: center;" width="25%">Công việc</th>
+      <th scope="col" style="text-align: center;" width="15%">Người thực hiện</th>
+      <th scope="col" style="text-align: center;">Ghi chú</th>
+      <th scope="col" style="text-align: center;" width="15%">Trạng thái</th>
+      <th scope="col" style="text-align: center;" width="10%">Thao tác</th>
+    </tr>
+  </thead>
+  `);
+
   let bang_congviec = $('#bangdscongviec').dataTable({
     paging: true,
     lengthChange: false,
