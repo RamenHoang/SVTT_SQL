@@ -127,17 +127,20 @@ def xuat_phieu_danh_gia_controller(id: str):
     except Exception as e:
         return e
     
-def get_ds_nhom_chua_co_cong_viec_controller():
-    return get_ds_nhom_chua_co_cong_viec()
+def get_ds_nhom_chua_co_cong_viec_controller(username: str):
+    return get_ds_nhom_chua_co_cong_viec(username)
 
-def get_ds_nhom_da_co_cong_viec_controller():
-    return get_ds_nhom_da_co_cong_viec()
+def get_ds_cong_viec_nhom_controller():
+    return get_ds_cong_viec_nhom()
 
 def get_ds_cong_viec_by_id_nhom_controller(id: int):
     return get_ds_cong_viec_by_id_nhom(id)
 
-def them_cong_viec_nhom_controller(id: int, tungaytuan_1: str, denngaytuan_1: str, congviectuan_1: str, tungaytuan_2: str, denngaytuan_2: str, congviectuan_2: str, tungaytuan_3: str, denngaytuan_3: str, congviectuan_3: str, tungaytuan_4: str, denngaytuan_4: str, congviectuan_4: str, tungaytuan_5: str, denngaytuan_5: str, congviectuan_5: str, tungaytuan_6: str, denngaytuan_6: str, congviectuan_6: str, tungaytuan_7: str, denngaytuan_7: str, congviectuan_7: str, tungaytuan_8: str, denngaytuan_8: str, congviectuan_8: str):
-    return them_cong_viec_nhom(id, tungaytuan_1, denngaytuan_1, congviectuan_1, tungaytuan_2, denngaytuan_2, congviectuan_2, tungaytuan_3, denngaytuan_3, congviectuan_3, tungaytuan_4, denngaytuan_4, congviectuan_4, tungaytuan_5, denngaytuan_5, congviectuan_5, tungaytuan_6, denngaytuan_6, congviectuan_6, tungaytuan_7, denngaytuan_7, congviectuan_7, tungaytuan_8, denngaytuan_8, congviectuan_8)
+def get_dssv_by_nhom_id_controller(id: int):
+    return get_dssv_by_nhom_id(id)
+
+def them_cong_viec_nhom_controller(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str):
+    return them_cong_viec_nhom(id, ngaybatdau, ngayketthuc, ten, mota)
 
 def get_goi_y_xa_phuong_controller(q: str):
     return get_goi_y_xa_phuong(q)
@@ -174,3 +177,9 @@ def kiem_tra_loai_tai_khoan_controller(username: str):
 
 def xem_thong_tin_sv_controller(email: str):
     return xem_thong_tin_sv(email)
+
+def them_chi_tiet_cong_viec_controller(id_congviec: int, id_sinhvien: int, trangthai: int, ghichu: str):
+    return them_chi_tiet_cong_viec(id_congviec, id_sinhvien, trangthai, ghichu)
+
+def get_chi_tiet_cong_viec_by_id_cong_viec_controller(id: int):
+    return get_chi_tiet_cong_viec_by_id_cong_viec(id)

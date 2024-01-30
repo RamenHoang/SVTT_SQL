@@ -181,7 +181,69 @@ $("#themkythuctap_btn").click(function(){
   // Clear modal
   clear_modal();
   $("#modal_title").text('Thêm kỳ thực tập');
-  html = '<div class="form-group"><label>Thời gian thực tập:</label><div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div><input type="text" class="form-control float-right" id="reservation"></div></div><script>$("#reservation").daterangepicker();</script><div class="form-group"><label for="modal_ghichu_text">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div>';
+  html = `<div class="form-group">
+            <label>Thời gian thực tập:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="far fa-calendar-alt"></i>
+                </span>
+              </div>
+              <input type="text" class="form-control float-right" id="reservation">
+            </div>
+          </div>
+          <script>
+            $("#reservation").daterangepicker({
+              "opens": "right",
+              "alwaysShowCalendars": true,
+              "drops": "auto",
+              "ranges": {
+                  'Hôm nay': [moment(), moment()],
+                  '7 Ngày sau': [moment(), moment().add(6, 'days')],
+                  '7 Ngày trước': [moment().subtract(6, 'days'), moment()],
+                  '3 Ngày sau': [moment().add(29, 'days'), moment()],
+                  '30 ngày trước': [moment(), moment().add(29, 'days')]
+              },
+              "locale": {
+                "format": "DD/MM/YYYY",
+                "separator": " - ",
+                "applyLabel": "Chọn",
+                "cancelLabel": "Hủy",
+                "fromLabel": "Từ ngày",
+                "toLabel": "Đến ngày",
+                "customRangeLabel": "Custom",
+                "weekLabel": "W",
+                "daysOfWeek": [
+                    "CN",
+                    "T2",
+                    "T3",
+                    "T4",
+                    "T5",
+                    "T6",
+                    "T7"
+                ],
+                "monthNames": [
+                    "Tháng 1",
+                    "Tháng 2",
+                    "Tháng 3",
+                    "Tháng 4",
+                    "Tháng 5",
+                    "Tháng 6",
+                    "Tháng 7",
+                    "Tháng 8",
+                    "Tháng 9",
+                    "Tháng 10",
+                    "Tháng 11",
+                    "Tháng 12"
+                ],
+                "firstDay": 1
+            }
+            });
+          </script>
+          <div class="form-group">
+            <label for="modal_ghichu_text">Ghi chú</label>
+            <textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea>
+          </div>`;
   $("#modal_body").append(html);
   $("#modal_footer").append(
     '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'

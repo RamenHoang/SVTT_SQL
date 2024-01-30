@@ -12,113 +12,199 @@ function clear_modal() {
     $("#modal_footer").empty();
   }
 
-// Modal thêm Công việc
-$("#themconviecviec_btn").click(function(){
+
+$(document).ready(function() {
+  // Select2
+  $('.select2').select2({
+    theme: "bootstrap"
+  });
+
+  // Get danh sách các nhóm
+  let filter_chonnhom = $("#filter_chonnhom");
+  $.ajax({
+    type: 'GET',
+    url: '/get_ds_nhom_thuc_tap',
+    success: function(res) {
+      $.each(res, function(idx, val) {
+        filter_chonnhom.append('<option value="'+val.id+'">'+val.tennhom+'</option>')
+      });
+    }
+  });
+
+  // Bắt sự kiện khi chọn nhóm thực tập
+  filter_chonnhom.on('change', function() {
+    let nhomid = filter_chonnhom.val();
+    
+    load_timeline_congviec(nhomid);
+  });
+
+  function load_timeline_congviec(id){
+    let timeline = $("#dscongviec");
+    // Get danh sách công việc bằng ID nhóm
+    $.ajax({
+      type: 'GET',
+      url: '/get_ds_cong_viec_by_id_nhom?id='+id,
+      success: function(data) {
+        let timeline_html = '';
+        let count = 1;
+
+        timeline.empty();
+
+        $.each(data, function(idx, val) {
+          let bg_color = '';
+          let header_color = '';
+          let btn_color = '';
+          if(moment(val.ngayketthuc, "DD/MM/YYYY").isBefore(moment())){
+            header_color = 'bg-danger';
+            bg_color = '#ef99a1';
+            btn_color = 'btn-danger'
+          }else{
+            header_color = 'bg-success';
+            bg_color = '#a9f5bb';
+            btn_color = 'btn-success'
+          }
+          timeline_html += `<div class="time-label">\
+                              <span class="bg-info" id="thutu">Công việc #${count}</span>\
+                            </div>\
+                            <div onclick="load_ChiTietCongViec(${val.id})">\
+                              <i class="fas fa-arrow-right bg-primary"></i>\
+                              <div class="timeline-item">\
+                                <h3 class="timeline-header ${header_color} row">\
+                                  <b id="ngay" class="col-lg-10">${val.ngaybatdau} <i class="fa-solid fa-arrow-right"></i> ${val.ngayketthuc}</b>\
+                                  <div class="btn-group dropright col-lg-2">
+                                    <button type="button" class="btn btn-sm ${btn_color} dropdown-toggle ms-auto" data-toggle="dropdown" aria-expanded="false">
+                                      <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                      <a class="dropdown-item" id="themchitiet" onclick="createModal_ChiTietCongViec(${val.id}, ${id});">Thêm chi tiết công việc</a>
+                                      <a class="dropdown-item" id="suacongviec" onclick="">Sửa</a>
+                                      <a class="dropdown-item" id="xoacongviec" onclick="">Xóa</a>
+                                    </div>
+                                  </div>\
+                                </h3>\
+                              <div class="timeline-body" id="congviec" style="background-color:${bg_color} !important;"> \
+                                <strong>${val.ten}</strong><br/><br/> \
+                                <p>${val.mota}</p>\
+                              </div>\
+                              </div>\
+                            </div>`;
+          count++;
+        });
+        timeline.append(timeline_html);
+      }
+    });
+  }
+
+
+  // Modal thêm Công việc
+  $("#themconviecviec_btn").click(function(){
     // Clear modal
     clear_modal();
     $("#modal_title").text('Thêm công việc');
-    html = '<div class="form-group"> <label>Nhóm thực tập:</label> <div class="input-group"> <select class="form-control" id="dsnhomthuctap" style="width: 100%;"></select> </div> </div><div class="form-group"><label>Thời gian tuần 1:</label> <div class="input-group"> <div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span> </div><input type="text" class="form-control float-right" id="thoigiantuan_1"> </div> </div> <div class="form-group"><label>Công việc tuần 1:</label> <div class="input-group"> <textarea class="form-control" id="congviectuan_1" rows="5"></textarea> </div> </div> <div class="form-group"><label>Thời gian tuần 2:</label> <div class="input-group"> <div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span> </div><input type="text" class="form-control float-right" id="thoigiantuan_2"> </div> </div> <div class="form-group"><label>Công việc tuần 2:</label> <div class="input-group"> <textarea class="form-control" id="congviectuan_2" rows="5"></textarea> </div> </div> <div class="form-group"><label>Thời gian tuần 3:</label> <div class="input-group"> <div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span> </div><input type="text" class="form-control float-right" id="thoigiantuan_3"> </div> </div> <div class="form-group"><label>Công việc tuần 3:</label> <div class="input-group"> <textarea class="form-control" id="congviectuan_3" rows="5"></textarea> </div> </div> <div class="form-group"><label>Thời gian tuần 4:</label> <div class="input-group"> <div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span> </div><input type="text" class="form-control float-right" id="thoigiantuan_4"> </div> </div> <div class="form-group"><label>Công việc tuần 4:</label> <div class="input-group"> <textarea class="form-control" id="congviectuan_4" rows="5"></textarea> </div> </div> <div class="form-group"><label>Thời gian tuần 5:</label> <div class="input-group"> <div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span> </div><input type="text" class="form-control float-right" id="thoigiantuan_5"> </div> </div> <div class="form-group"><label>Công việc tuần 5:</label> <div class="input-group"> <textarea class="form-control" id="congviectuan_5" rows="5"></textarea> </div> </div> <div class="form-group"><label>Thời gian tuần 6:</label> <div class="input-group"> <div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span> </div><input type="text" class="form-control float-right" id="thoigiantuan_6"> </div> </div> <div class="form-group"><label>Công việc tuần 6:</label> <div class="input-group"> <textarea class="form-control" id="congviectuan_6" rows="5"></textarea> </div> </div> <div class="form-group"><label>Thời gian tuần 7:</label> <div class="input-group"> <div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span> </div><input type="text" class="form-control float-right" id="thoigiantuan_7"> </div> </div> <div class="form-group"><label>Công việc tuần 7:</label> <div class="input-group"> <textarea class="form-control" id="congviectuan_7" rows="5"></textarea> </div> </div> <div class="form-group"><label>Thời gian tuần 8:</label> <div class="input-group"> <div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span> </div><input type="text" class="form-control float-right" id="thoigiantuan_8"> </div> </div> <div class="form-group"><label>Công việc tuần 8:</label> <div class="input-group"> <textarea class="form-control" id="congviectuan_8" rows="5"></textarea> </div> </div>';
+    html = `<div class="form-group">\
+              <label>Thời gian:</label> \
+              <div class="input-group"> \
+                <div class="input-group-prepend">\
+                  <span class="input-group-text">\
+                    <i class="far fa-calendar-alt"></i>\
+                  </span> \
+                </div>\
+                <input type="text" class="form-control float-right" id="thoigian"> \
+              </div> \
+            </div> \
+            <div class="form-group">\
+              <label>Tên công việc:</label> \
+              <div class="input-group"> \
+                <input class="form-control" id="tencongviec" type="text"/> \
+              </div> 
+            </div>
+            <div class="form-group">
+              <label>Mô tả:</label> 
+              <div class="input-group"> 
+                <textarea class="form-control" id="mota" rows="5"></textarea> 
+              </div> 
+            </div>`;
     $("#modal_body").append(html);
     $("#modal_footer").append(
       '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'
     );
 
-    $("#thoigiantuan_1").daterangepicker();
-    $("#thoigiantuan_2").daterangepicker();
-    $("#thoigiantuan_3").daterangepicker();
-    $("#thoigiantuan_4").daterangepicker();
-    $("#thoigiantuan_5").daterangepicker();
-    $("#thoigiantuan_6").daterangepicker();
-    $("#thoigiantuan_7").daterangepicker();
-    $("#thoigiantuan_8").daterangepicker();
-    
-    $.ajax({
-        url: '/get_ds_nhom_chua_co_cong_viec',
-        type: 'GET',
-        success: function(res){
-            $.each(res, function(idx, val){
-                if(val['idcongviec']===null){
-                    $("#dsnhomthuctap").append('<option value="'+val['id']+'" class="form-control">['+val['tennhom']+'] - '+val['tendetai']+'</option>');
-                }
-            });
-        }
-    })
+    $("#thoigian").daterangepicker({
+      "opens": "right",
+      "alwaysShowCalendars": true,
+      "drops": "auto",
+      "ranges": {
+          'Hôm nay': [moment(), moment()],
+          '7 Ngày sau': [moment(), moment().add(6, 'days')],
+          '7 Ngày trước': [moment().subtract(6, 'days'), moment()],
+          '3 Ngày sau': [moment().add(29, 'days'), moment()],
+          '30 ngày trước': [moment(), moment().add(29, 'days')]
+      },
+      "locale": {
+        "format": "DD/MM/YYYY",
+        "separator": " - ",
+        "applyLabel": "Chọn",
+        "cancelLabel": "Hủy",
+        "fromLabel": "Từ ngày",
+        "toLabel": "Đến ngày",
+        "customRangeLabel": "Custom",
+        "weekLabel": "W",
+        "daysOfWeek": [
+            "CN",
+            "T2",
+            "T3",
+            "T4",
+            "T5",
+            "T6",
+            "T7"
+        ],
+        "monthNames": [
+            "Tháng 1",
+            "Tháng 2",
+            "Tháng 3",
+            "Tháng 4",
+            "Tháng 5",
+            "Tháng 6",
+            "Tháng 7",
+            "Tháng 8",
+            "Tháng 9",
+            "Tháng 10",
+            "Tháng 11",
+            "Tháng 12"
+        ],
+        "firstDay": 1
+    }
+    });
 
     $("#modal_id").modal('show');
     
     $("#modal_submit_btn").click(function(){
-      let idnhom = $("#dsnhomthuctap").val();
-      let tuan_1 = $("#thoigiantuan_1").val().split(' - ');
-      let tuan_1_bd = moment(tuan_1[0], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_1_kt = moment(tuan_1[1], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_1_cv = $("#congviectuan_1").val();
-      let tuan_2 = $("#thoigiantuan_2").val().split(' - ');
-      let tuan_2_bd = moment(tuan_2[0], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_2_kt = moment(tuan_2[1], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_2_cv = $("#congviectuan_2").val();
-      let tuan_3 = $("#thoigiantuan_3").val().split(' - ');
-      let tuan_3_bd = moment(tuan_3[0], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_3_kt = moment(tuan_3[1], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_3_cv = $("#congviectuan_3").val();
-      let tuan_4 = $("#thoigiantuan_4").val().split(' - ');
-      let tuan_4_bd = moment(tuan_4[0], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_4_kt = moment(tuan_4[1], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_4_cv = $("#congviectuan_4").val();
-      let tuan_5 = $("#thoigiantuan_5").val().split(' - ');
-      let tuan_5_bd = moment(tuan_5[0], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_5_kt = moment(tuan_5[1], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_5_cv = $("#congviectuan_5").val();
-      let tuan_6 = $("#thoigiantuan_6").val().split(' - ');
-      let tuan_6_bd = moment(tuan_6[0], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_6_kt = moment(tuan_6[1], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_6_cv = $("#congviectuan_6").val();
-      let tuan_7 = $("#thoigiantuan_7").val().split(' - ');
-      let tuan_7_bd = moment(tuan_7[0], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_7_kt = moment(tuan_7[1], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_7_cv = $("#congviectuan_7").val();
-      let tuan_8 = $("#thoigiantuan_8").val().split(' - ');
-      let tuan_8_bd = moment(tuan_8[0], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_8_kt = moment(tuan_8[1], 'MM/DD/YYYY').format('YYYY-MM-DD');
-      let tuan_8_cv = $("#congviectuan_8").val();
+      let thoigian = $("#thoigian").val().split(' - ');
+      let thoigian_bd = thoigian[0];
+      let thoigian_kt = thoigian[1];
+      let tencongviec = $("#tencongviec").val();
+      let mota = $("#mota").val().replace(/[\r\n]+/g, '<br/>');
+      let nhomid = $("#filter_chonnhom").val();
+      
 
       $.ajax({
         type: 'POST',
-        url: 'them_cong_viec_nhom?id='+idnhom
-        +'&tungaytuan_1='+tuan_1_bd
-        +'&denngaytuan_1='+tuan_1_kt
-        +'&congviectuan_1='+tuan_1_cv
-        +'&tungaytuan_2='+tuan_2_bd
-        +'&denngaytuan_2='+tuan_2_kt
-        +'&congviectuan_2='+tuan_2_cv
-        +'&tungaytuan_3='+tuan_3_bd
-        +'&denngaytuan_3='+tuan_3_kt
-        +'&congviectuan_3='+tuan_3_cv
-        +'&tungaytuan_4='+tuan_4_bd
-        +'&denngaytuan_4='+tuan_4_kt
-        +'&congviectuan_4='+tuan_4_cv
-        +'&tungaytuan_5='+tuan_5_bd
-        +'&denngaytuan_5='+tuan_5_kt
-        +'&congviectuan_5='+tuan_5_cv
-        +'&tungaytuan_6='+tuan_6_bd
-        +'&denngaytuan_6='+tuan_6_kt
-        +'&congviectuan_6='+tuan_6_cv
-        +'&tungaytuan_7='+tuan_7_bd
-        +'&denngaytuan_7='+tuan_7_kt
-        +'&congviectuan_7='+tuan_7_cv
-        +'&tungaytuan_8='+tuan_8_bd
-        +'&denngaytuan_8='+tuan_8_kt
-        +'&congviectuan_8='+tuan_8_cv,
+        url: 'them_cong_viec_nhom?id='+nhomid
+        +'&ngaybatdau='+thoigian_bd
+        +'&ngayketthuc='+thoigian_kt
+        +'&ten='+tencongviec
+        +'&mota='+mota,
         success: function(res){
             if(res.status == 'OK'){
                 Toast.fire({
                   icon: "success",
-                  title: "Đã công việc thực tập",
+                  title: "Đã thêm công việc",
                 });
-                bangdskythuctap.ajax.reload();
+                load_timeline_congviec(nhomid);
             }else{
                 Toast.fire({
                     icon: "error",
-                    title: "Thêm công việc thực tập không thành công",
+                    title: "Thêm công việc không thành công",
                 });      
             }
         },
@@ -132,35 +218,122 @@ $("#themconviecviec_btn").click(function(){
       $("#modal_id").modal('hide');    
     });
   });
-
-// DS nhóm đã có công việc
-$.ajax({
-    type: 'GET',
-    url: 'get_ds_nhom_da_co_cong_viec',
-    success: function(res){
-        $.each(res, function(idx, val){
-            $("#dsnhomdacoviec").append('<option value="'+val.id+'">['+val.ngaybatdau+'] - '+val.tendetai+'</option>');
-        });
-    }
 });
 
-$("#dsnhomdacoviec").on('change', function(){
-    let id = $("#dsnhomdacoviec").val();
-    $("#dscongviec").empty();
+function createModal_ChiTietCongViec(id_congviec, id_nhom){
+  clear_modal();
+  $("#modal_title").text(`Thêm chi tiết công việc ${id_congviec}`);
+  let body = `
+  <div class="form-group">
+    <label for="modal_sinhvien_select">Sinh viên thực hiện</label>
+    <div class="input-group">
+      <select id="modal_sinhvien_select" class="form-control select2" style="width: 300px !important;" name="sinhvien[]" multiple="multiple"></select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Ghi chú</label> 
+    <div class="input-group"> 
+      <textarea class="form-control" id="modal_ghichu_text" rows="5"></textarea> 
+    </div> 
+  </div>
+  <script>
+  $(document).ready(function() {
+    $("#modal_sinhvien_select").select2({
+        dropdownParent: $("#modal_id")
+    });
+  });
+  </script>`;
+  $("#modal_body").append(body);
+  $("#modal_footer").append(
+    '<button type="button" class="btn btn-primary" id="modal_luuchitiet_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'
+  );
+  
+  // Hiển thị tất cả sinh viên trong nhóm
+  $.ajax({
+    type: 'GET',
+    url: '/get_dssv_by_nhom_id?id='+id_nhom,
+    success: function(res) {
+      $.each(res, function(idx, val){
+        $('#modal_sinhvien_select').append(`<option value="${val.id}">${val.hoten}</option>`);
+      });
+    }
+  });
+
+  $("#modal_id").modal('show');
+
+  $('#modal_luuchitiet_btn').on('click', function(){
+    let dssv_select = $('#modal_sinhvien_select').val();
+    let ghichu = $('#modal_ghichu_text').val();
+    let reqUrl = `/them_chi_tiet_cong_viec?id_congviec=${id_congviec}&ghichu=${ghichu}`;
+    $.each(dssv_select, function(idx, val){
+      reqUrl += `&sinhvien=${val}`;
+    });
 
     $.ajax({
-        type: 'GET',
-        url: 'get_ds_cong_viec_by_id_nhom?id='+id,
-        success: function(res){
-            let html = '';
-            for (var i = res.length -1; i >= 0; i--){
-                if(res[i]['congviectuan'] !== ''){
-                    html += '<div class="time-label"><span class="bg-success" id="tuan">Tuần '+(i+1)+'</span></div>';
-                    html += '<div><i class="fas fa-arrow-right bg-primary"></i><div class="timeline-item"><h3 class="timeline-header"><b id="ngay">'+res[i]['tungaytuan']+' - '+res[i]['denngaytuan']+'</b></h3><div class="timeline-body" id="congviec">'+res[i]['congviectuan']+'</div><div class="timeline-footer"></div></div></div>';
-                }
-            };
-            html += '<div><i class="far fa-clock bg-gray"></i></div>';
-            $("#dscongviec").append(html);
-        }
+      type: 'POST',
+      url: reqUrl,
+      success: function(){
+        Toast.fire({
+          icon: "success",
+          title: "Đã giao việc",
+        });
+        $('#modal_id').modal('hide');
+      },
+      error: function(){
+        Toast.fire({
+          icon: "error",
+          title: "Giao việc không thành công",
+        });
+      }
     });
-});
+  });
+}
+
+function load_ChiTietCongViec(id_congviec){
+  let bang_congviec = $('#bangdscongviec').dataTable({
+    paging: true,
+    lengthChange: false,
+    searching: true,
+    ordering: true,
+    info: true,
+    destroy: true,
+    autoWidth: false,
+    responsive: true,
+    ajax: {
+          type: "GET",
+          url: 'get_chi_tiet_cong_viec_by_id_cong_viec?id='+id_congviec,
+          dataSrc: "",
+        },
+    columns: [
+      { data: "tencongviec" },
+      { data: "nguoithuchien" },
+      { data: "ghichu" },
+      {
+        data: "trangthai",
+        render: function (data, type, row) {
+          if (data == 0) {
+            return '<center><span class="badge badge-warning"><i class="fa-solid fa-circle-exclamation"></i> Đang thực hiện</span></center>';
+          } else if (data==1) {
+            return '<center><span class="badge badge-success"><i class="fa-solid fa-check"></i> Hoàn thành</span></center>';
+          }else{
+            return '<center><span class="badge badge-danger"><i class="fa-solid fa-bell"></i> Trễ hạn</span></center>';
+          }
+        },
+      },
+      {
+        data: "id",
+        render: function (data, type, row) {
+          return (
+            '<center><a class="btn btn-info btn-sm" id="editBtn" data-id="' +
+            data +
+            '"><i class="fas fa-pencil-alt"></i></a> <a class="btn btn-success btn-sm" id="downloadBtn" data-id="' +
+            data +
+            '"><i class="fa-solid fa-download"></i></a></center>'
+          );
+        },
+      },
+    ],
+  });
+
+  bang_congviec.prop('hidden', false);
+}

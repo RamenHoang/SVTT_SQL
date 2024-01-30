@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Depends, HTTPException, Cookie, UploadFile, File
+from fastapi import FastAPI, Request, Depends, HTTPException, Cookie, UploadFile, File, Query
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import Response, JSONResponse, RedirectResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -461,36 +461,50 @@ async def get_ds_nhom_chua_co_cong_viec_route(token: str = Cookie(None)):
             username = payload.get("sub")
             isAdmin = kiem_tra_loai_tai_khoan_controller(username)
             if isAdmin == 1:
-                return get_ds_nhom_chua_co_cong_viec_controller()
+                return get_ds_nhom_chua_co_cong_viec_controller(username)
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
 
-@app.get('/get_ds_nhom_da_co_cong_viec')
-async def get_ds_nhom_da_co_cong_viec_route(token: str = Cookie(None)):
+@app.get('/get_ds_cong_viec_nhom')
+async def get_ds_cong_viec_nhom_route(token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             isAdmin = kiem_tra_loai_tai_khoan_controller(username)
-            if isAdmin == 1:                return get_ds_nhom_da_co_cong_viec_controller()
+            if isAdmin == 1:                
+                return get_ds_cong_viec_nhom_controller()
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
 
 @app.post('/them_cong_viec_nhom')
-async def them_cong_viec_nhom_route(id: int, tungaytuan_1: str, denngaytuan_1: str, congviectuan_1: str, tungaytuan_2: str, denngaytuan_2: str, congviectuan_2: str, tungaytuan_3: str, denngaytuan_3: str, congviectuan_3: str, tungaytuan_4: str, denngaytuan_4: str, congviectuan_4: str, tungaytuan_5: str, denngaytuan_5: str, congviectuan_5: str, tungaytuan_6: str, denngaytuan_6: str, congviectuan_6: str, tungaytuan_7: str, denngaytuan_7: str, congviectuan_7: str, tungaytuan_8: str, denngaytuan_8: str, congviectuan_8: str, token: str = Cookie(None)):
+async def them_cong_viec_nhom_route(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             isAdmin = kiem_tra_loai_tai_khoan_controller(username)
             if isAdmin == 1:
-                result = them_cong_viec_nhom_controller(id, tungaytuan_1, denngaytuan_1, congviectuan_1, tungaytuan_2, denngaytuan_2, congviectuan_2, tungaytuan_3, denngaytuan_3, congviectuan_3, tungaytuan_4, denngaytuan_4, congviectuan_4, tungaytuan_5, denngaytuan_5, congviectuan_5, tungaytuan_6, denngaytuan_6, congviectuan_6, tungaytuan_7, denngaytuan_7, congviectuan_7, tungaytuan_8, denngaytuan_8, congviectuan_8)
+                result = them_cong_viec_nhom_controller(id, ngaybatdau, ngayketthuc, ten, mota)
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=400, content={'status': 'BAD REQUEST'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+@app.get('/get_dssv_by_nhom_id')
+async def get_dssv_by_nhom_id_route(id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            isAdmin = kiem_tra_loai_tai_khoan_controller(username)
+            if isAdmin == 1:
+                return get_dssv_by_nhom_id_controller(id)
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
@@ -846,3 +860,26 @@ async def sv_index(request: Request):
 @app.get('/xem_thong_tin_sv')
 async def xem_thong_tin_sv_route(email: str):
     return JSONResponse(status_code=200, content=xem_thong_tin_sv_controller(email))
+
+@app.post('/them_chi_tiet_cong_viec')
+async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien: list[int] = Query(..., description="Danh sách sinh viên"), token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            isAdmin = kiem_tra_loai_tai_khoan_controller(username)
+            if isAdmin == 1:
+                for i in sinhvien:
+                    result = them_chi_tiet_cong_viec_controller(id_congviec=id_congviec, id_sinhvien=int(i), trangthai=0, ghichu=ghichu)
+                if result:
+                    return JSONResponse(status_code=200, content=result)
+                else:
+                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    else:
+        return RedirectResponse('/login')
+    
+@app.get('/get_chi_tiet_cong_viec_by_id_cong_viec')
+async def get_chi_tiet_cong_viec_by_id_cong_viec_route(id: int):
+    return JSONResponse(status_code=200, content=get_chi_tiet_cong_viec_by_id_cong_viec_controller(id))

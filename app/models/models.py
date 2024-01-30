@@ -301,36 +301,62 @@ def get_id_nhom_by_sv_id(id: str):
     except Exception as e:
         return e
     
-def get_ds_nhom_chua_co_cong_viec():
+def get_ds_nhom_chua_co_cong_viec(username: str):
+    """
+        Get danh sách nhóm chưa có công việc bằng ID người hướng dẫn
+    """
     try:
-        result = cursor.execute("EXEC GetDSNhomChuaCoCongViec")
+        result = cursor.execute("EXEC [GetDSNhomChuaCoCongViecByNguoiHDUsername] ?", username)
         data = [{'id': i[0], 'ngaybatdau': i[3], 'tendetai': i[5], 'idcongviec': i[7], 'tennhom': i[8]} for i in result]
         return data
     except Exception as e:
         return e
     
 
-def get_ds_nhom_da_co_cong_viec():
+def get_ds_cong_viec_nhom():
     try:
-        result = cursor.execute("EXEC GetDSNhomDaCoCongViec")
-        data = [{'id': i[0], 'ngaybatdau': i[3], 'tendetai': i[5], 'idcongviec': i[7]} for i in result]
+        result = cursor.execute("EXEC GetDSCongViecNhom").fetchall()
+        data = [{'id': i[0], 'ten_nhom': i[1], 'ngaybatdau': i[2], 'ngayketthuc': i[3], 'ten': i[4], 'mota': i[5]} for i in result]
         return data
     except Exception as e:
         return e
     
 def get_ds_cong_viec_by_id_nhom(id: int):
     try:
-        i = cursor.execute("EXEC GetCongViecByIDNhom ?", id).fetchone()
-        data = [{'tungaytuan': i[1], 'denngaytuan': i[2], 'congviectuan': i[3]}, {'tungaytuan': i[5], 'denngaytuan': i[6], 'congviectuan': i[7]}, {'tungaytuan': i[9], 'denngaytuan': i[10], 'congviectuan': i[11]}, {'tungaytuan': i[13], 'denngaytuan': i[14], 'congviectuan': i[15]}, {'tungaytuan': i[17], 'denngaytuan': i[18], 'congviectuan': i[19]}, {'tungaytuan': i[21], 'denngaytuan': i[22], 'congviectuan': i[23]}, {'tungaytuan': i[25], 'denngaytuan': i[26], 'congviectuan': i[27]}, {'tungaytuan': i[29], 'denngaytuan': i[30], 'congviectuan': i[31]}]
+        result = cursor.execute("EXEC GetCongViecByIDNhom ?", id).fetchall()
+        data = [{'id': i[0], 'ngaybatdau': i[1], 'ngayketthuc': i[2], 'ten': i[3], 'mota': i[4]} for i in result]
         return data
     except Exception as e:
         return e
 
-def them_cong_viec_nhom(id: int, tungaytuan_1: str, denngaytuan_1: str, congviectuan_1: str, tungaytuan_2: str, denngaytuan_2: str, congviectuan_2: str, tungaytuan_3: str, denngaytuan_3: str, congviectuan_3: str, tungaytuan_4: str, denngaytuan_4: str, congviectuan_4: str, tungaytuan_5: str, denngaytuan_5: str, congviectuan_5: str, tungaytuan_6: str, denngaytuan_6: str, congviectuan_6: str, tungaytuan_7: str, denngaytuan_7: str, congviectuan_7: str, tungaytuan_8: str, denngaytuan_8: str, congviectuan_8: str):
+def get_chi_tiet_cong_viec_by_id_cong_viec(id: int):
     try:
-        result = cursor.execute("EXEC InsertCongViec ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", id,tungaytuan_1,denngaytuan_1,congviectuan_1,tungaytuan_2,denngaytuan_2,congviectuan_2,tungaytuan_3,denngaytuan_3,congviectuan_3,tungaytuan_4,denngaytuan_4,congviectuan_4,tungaytuan_5,denngaytuan_5,congviectuan_5,tungaytuan_6,denngaytuan_6,congviectuan_6,tungaytuan_7,denngaytuan_7,congviectuan_7,tungaytuan_8,denngaytuan_8,congviectuan_8)
+        result = cursor.execute("EXEC GetChiTietCongViecByIDCongViec ?", id).fetchall()
+        data = [{'id': i[0], 'id_congviec': i[1], 'id_sinhvien': i[2], 'trangthai': i[3], 'ghichu': i[4], 'tencongviec': i[5], 'nguoithuchien': i[6]} for i in result]
+        return data
+    except Exception as e:
+        return e
+
+def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str):
+    try:
+        result = cursor.execute("EXEC InsertCongViec ?, ?, ?, ?, ?", id, ngaybatdau, ngayketthuc, ten, mota)
         cursor.commit()
         return True
+    except Exception as e:
+        return e
+    
+def them_chi_tiet_cong_viec(id_congviec: int, id_sinhvien: int, trangthai: int, ghichu: str):
+    try:
+        result = cursor.execute("EXEC InsertChiTietCongViec ?, ?, ?, ?", id_congviec, id_sinhvien, trangthai, ghichu)
+        cursor.commit()
+        return True
+    except Exception as e:
+        return e
+
+def get_dssv_by_nhom_id(id: int):
+    try:
+        result = cursor.execute("EXEC GetDSSVByNhomID ?", id).fetchall()
+        return [{'id': i[0], 'hoten': i[1]} for i in result]
     except Exception as e:
         return e
     
