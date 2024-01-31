@@ -64,30 +64,29 @@ $(document).ready(function() {
             bg_color = '#a9f5bb';
             btn_color = 'btn-success'
           }
-          timeline_html += `<div class="time-label">\
-                              <span class="bg-info" id="thutu">Công việc #${count}</span>\
-                            </div>\
-                            <div onclick="load_ChiTietCongViec(${val.id})">\
-                              <i class="fas fa-arrow-right bg-primary"></i>\
-                              <div class="timeline-item">\
-                                <h3 class="timeline-header ${header_color} row">\
-                                  <b id="ngay" class="col-lg-10">${val.ngaybatdau} <i class="fa-solid fa-arrow-right"></i> ${val.ngayketthuc}</b>\
+          timeline_html += `<div class="time-label">
+                              <span class="bg-info" id="thutu">Công việc #${count}</span>
+                            </div>
+                            <div>
+                              <i class="fas fa-arrow-right bg-primary"></i>
+                              <div class="timeline-item">
+                                <h3 class="timeline-header ${header_color} row">
+                                  <b id="ngay" class="col-lg-10">${val.ngaybatdau} <i class="fa-solid fa-arrow-right"></i> ${val.ngayketthuc}</b>
                                   <div class="btn-group dropright col-lg-2">
                                     <button type="button" class="btn btn-sm ${btn_color} dropdown-toggle ms-auto" data-toggle="dropdown" aria-expanded="false">
                                       <i class="fa-solid fa-ellipsis-vertical"></i>
                                     </button>
                                     <div class="dropdown-menu">
                                       <a class="dropdown-item" id="themchitiet" onclick="createModal_ChiTietCongViec(${val.id}, ${id});">Thêm chi tiết công việc</a>
-                                      <a class="dropdown-item" id="suacongviec" onclick="">Sửa</a>
-                                      <a class="dropdown-item" id="xoacongviec" onclick="">Xóa</a>
+                                      <a class="dropdown-item" id="xoacongviec" onclick="xoaCongViecByID(${val.id})">Xóa</a>
                                     </div>
-                                  </div>\
-                                </h3>\
-                              <div class="timeline-body" id="congviec" style="background-color:${bg_color} !important;"> \
-                                <strong>${val.ten}</strong><br/><br/> \
-                                <p>${val.mota}</p>\
-                              </div>\
-                              </div>\
+                                  </div>
+                                </h3>
+                              <div class="timeline-body" id="congviec" style="background-color:${bg_color} !important; cursor: pointer;" onclick="load_ChiTietCongViec(${val.id})">
+                                <strong>${val.ten}</strong><br/><br/> 
+                                <p>${val.mota}</p>
+                              </div>
+                              </div>
                             </div>`;
           count++;
         });
@@ -264,7 +263,7 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom){
 
   $('#modal_luuchitiet_btn').on('click', function(){
     let dssv_select = $('#modal_sinhvien_select').val();
-    let ghichu = $('#modal_ghichu_text').val();
+    let ghichu = $('#modal_ghichu_text').val().replace(/[\r\n]+/g, '<br/>');
     let reqUrl = `/them_chi_tiet_cong_viec?id_congviec=${id_congviec}&ghichu=${ghichu}`;
     $.each(dssv_select, function(idx, val){
       reqUrl += `&sinhvien=${val}`;
@@ -305,11 +304,11 @@ function load_ChiTietCongViec(id_congviec){
   `);
 
   let bang_congviec = $('#bangdscongviec').dataTable({
-    paging: true,
+    paging: false,
     lengthChange: false,
-    searching: true,
-    ordering: true,
-    info: true,
+    searching: false,
+    ordering: false,
+    info: false,
     destroy: true,
     autoWidth: false,
     responsive: true,
@@ -338,11 +337,14 @@ function load_ChiTietCongViec(id_congviec){
         data: "id",
         render: function (data, type, row) {
           return (
-            '<center><a class="btn btn-info btn-sm" id="editBtn" data-id="' +
-            data +
-            '"><i class="fas fa-pencil-alt"></i></a> <a class="btn btn-danger btn-sm" id="downloadBtn" data-id="' +
-            data +
-            '"><i class="fa-solid fa-trash"></i></a></center>'
+            `<center>
+              <a class="btn btn-info btn-sm" id="editBtn" onclick="capNhatChiTietCongViec(${data})">
+                <i class="fas fa-pencil-alt"></i>
+              </a>
+              <a class="btn btn-danger btn-sm" id="deleteBtn" onclick="${data}">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </center>`
           );
         },
       },
@@ -350,4 +352,109 @@ function load_ChiTietCongViec(id_congviec){
   });
 
   bang_congviec.prop('hidden', false);
+}
+
+function xoaCongViecByID(id){
+  $.ajax({
+    type: 'POST',
+    url: `/xoa_cong_viec_by_id?id=${id}`,
+    success: function(){
+      Toast.fire({
+        icon: "success",
+        title: "Đã xóa công việc",
+      });
+      let nhomid = filter_chonnhom.val();
+    
+      load_timeline_congviec(nhomid);
+      $('#bangdscongviec').empty();
+    },
+    error: function(){
+      Toast.fire({
+        icon: "error",
+        title: "Xóa công việc không thành công",
+      });
+    }
+  });
+}
+
+function capNhatChiTietCongViec(id_congviec){
+  clear_modal();
+  // Tạo modal hiển thị chi tiết công việc
+  $('#modal_title').text(`Cập nhật công việc`);
+  let body = `
+  <div class="form-group">
+    <label for="modal_edit_sinhvien_select">Sinh viên thực hiện</label>
+    <div class="input-group">
+      <select id="modal_edit_sinhvien_select" class="form-control"></select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Ghi chú</label> 
+    <div class="input-group"> 
+      <textarea class="form-control" id="modal_edit_ghichu_text" rows="5"></textarea> 
+    </div> 
+  </div>
+  <div class="form-group">
+    <label for="modal_edit_trangthai_select">Trạng thái</label>
+    <div class="input-group">
+      <select id="modal_edit_trangthai_select" class="form-control">
+        <option value="0">Đang thực hiện</option>
+        <option value="1">Hoàn thành</option>
+        <option value="2">Trễ hạn</option>
+      </select>
+    </div>
+  </div>
+  `;
+  $('#modal_body').append(body);
+  $("#modal_footer").append(`<button type="button" class="btn btn-primary" id="modal_edit_luuchitiet_btn">
+                              <i class="fa-solid fa-floppy-disk"></i> Lưu</button>`);
+  $('#modal_id').modal('show');
+
+  // Tạo danh sách sinh viên 
+  $.ajax({
+    type: 'GET',
+    url: `/get_dssv_by_id_cong_viec?id=${id_congviec}`,
+    success: function(res) {
+      $.each(res, function(idx, val) {
+        $('#modal_edit_sinhvien_select').append(`<option value="${val.id}">${val.hoten}</option>`);
+      });
+      // Get chi tiết công việc bằng id công việc
+      $.ajax({
+        type: 'GET',
+        url: `get_chi_tiet_cong_viec_by_id?id=${id_congviec}`,
+        success: function(res) {
+          $('#modal_edit_sinhvien_select').val(res[0].id_sinhvien);
+          $('#modal_edit_ghichu_text').val(res[0].ghichu.replace(/<br\/>/g, "\r\n"));
+          $('#modal_edit_trangthai_select').val(res[0].trangthai);
+        }
+      });
+    }
+  });
+
+  // Bắt sự kiện nút lưu
+  $('#modal_edit_luuchitiet_btn').on('click', function() {
+    let id_sinhvien = $('#modal_edit_sinhvien_select').val();
+    let ghichu = $('#modal_edit_ghichu_text').val().replace(/[\r\n]+/g, '<br/>');
+    let trangthai = $('#modal_edit_trangthai_select').val();
+
+    $.ajax({
+      type: 'POST',
+      url: `update_chi_tiet_cong_viec_by_id?id=${id_congviec}&svid=${id_sinhvien}&trangthai=${trangthai}&ghichu=${ghichu}`,
+      success: function(){
+        Toast.fire({
+          icon: "success",
+          title: "Đã cập nhật chi tiết công việc",
+        });
+        $('#modal_id').modal('hide');
+        load_ChiTietCongViec(id_congviec);
+      },
+      error: function(){
+        Toast.fire({
+          icon: "error",
+          title: "Cập nhật chi tiết công việc không thành công",
+        });
+      }
+    });
+  });
+
 }

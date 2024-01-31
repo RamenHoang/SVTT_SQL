@@ -183,3 +183,18 @@ def them_chi_tiet_cong_viec_controller(id_congviec: int, id_sinhvien: int, trang
 
 def get_chi_tiet_cong_viec_by_id_cong_viec_controller(id: int):
     return get_chi_tiet_cong_viec_by_id_cong_viec(id)
+
+def get_chi_tiet_cong_viec_by_id_controller(id: int):
+    return get_chi_tiet_cong_viec_by_id(id)
+
+def xoa_cong_viec_by_id_controller(id: int):
+    return xoa_cong_viec_by_id(id)
+
+def get_dssv_by_id_cong_viec_controller(id: int):
+    return get_dssv_by_id_cong_viec(id)
+
+def xoa_chi_tiet_cong_viec_by_id_controller(id: int):
+    return xoa_chi_tiet_cong_viec_by_id(id)
+
+def update_chi_tiet_cong_viec_by_id_controller(id: int, svid: int, trangthai: int, ghichu: str):
+    return update_chi_tiet_cong_viec_by_id(id, svid, trangthai, ghichu)

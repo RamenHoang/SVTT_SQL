@@ -883,3 +883,69 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
 @app.get('/get_chi_tiet_cong_viec_by_id_cong_viec')
 async def get_chi_tiet_cong_viec_by_id_cong_viec_route(id: int):
     return JSONResponse(status_code=200, content=get_chi_tiet_cong_viec_by_id_cong_viec_controller(id))
+
+@app.get('/get_chi_tiet_cong_viec_by_id')
+async def get_chi_tiet_cong_viec_by_id_route(id: int):
+    return JSONResponse(status_code=200, content=get_chi_tiet_cong_viec_by_id_controller(id))
+
+@app.post('/xoa_cong_viec_by_id')
+async def xoa_cong_viec_by_id_route(id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            isAdmin = kiem_tra_loai_tai_khoan_controller(username)
+            if isAdmin == 1:
+                result = xoa_cong_viec_by_id_controller(id)
+                if result:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    else:
+        return RedirectResponse('/login')
+    
+@app.post('/xoa_chi_tiet_cong_viec_by_id')
+async def xoa_chi_tiet_cong_viec_by_id_route(id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            isAdmin = kiem_tra_loai_tai_khoan_controller(username)
+            if isAdmin == 1:
+                result = xoa_chi_tiet_cong_viec_by_id_controller(id)
+                if result:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    else:
+        return RedirectResponse('/login')
+    
+@app.post('/update_chi_tiet_cong_viec_by_id')
+async def update_chi_tiet_cong_viec_by_id_route(id: int, svid: int, trangthai: int, ghichu: str, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            isAdmin = kiem_tra_loai_tai_khoan_controller(username)
+            if isAdmin == 1:
+                result = update_chi_tiet_cong_viec_by_id_controller(id, svid, trangthai, ghichu)
+                if result:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    else:
+        return RedirectResponse('/login')
+    
+@app.get('/get_dssv_by_id_cong_viec')
+async def get_dssv_by_id_cong_viec_route(id: int):
+    result = get_dssv_by_id_cong_viec_controller(id)
+    if result:
+        return JSONResponse(status_code=200, content=result)
+    else:
+        return JSONResponse(status_code=200, content={'status': 'BADDDD REQUEST'})

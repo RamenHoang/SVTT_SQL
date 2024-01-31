@@ -337,6 +337,47 @@ def get_chi_tiet_cong_viec_by_id_cong_viec(id: int):
     except Exception as e:
         return e
 
+def get_chi_tiet_cong_viec_by_id(id: int):
+    try:
+        result = cursor.execute("EXEC GetChiTietCongViecByID ?", id).fetchall()
+        data = [{'id': i[0], 'id_congviec': i[1], 'id_sinhvien': i[2], 'trangthai': i[3], 'ghichu': i[4]} for i in result]
+        return data
+    except Exception as e:
+        return e
+
+def update_chi_tiet_cong_viec_by_id(id: int, svid: int, trangthai: int, ghichu: str):
+    try:
+        result = cursor.execute("EXEC UpdateChiTietCongViecByID ?, ?, ?, ?", id, svid, trangthai, ghichu)
+        cursor.commit()
+        if result.fetchone()[0]==1:
+            return True
+        else:
+            return False
+    except Exception as e:
+        return e
+
+def xoa_chi_tiet_cong_viec_by_id(id: int):
+    try:
+        result = cursor.execute("EXEC UpdateXoaChiTietCongViecByID ?", id)
+        cursor.commit()
+        if result.fetchone()[0]==1:
+            return True
+        else:
+            return False
+    except Exception as e:
+        return e
+
+def xoa_cong_viec_by_id(id: int):
+    try:
+        result = cursor.execute("EXEC UpdateXoaCongViecByID ?", id)
+        cursor.commit()
+        if result.fetchone()[0]==1:
+            return True
+        else:
+            return False
+    except Exception as e:
+        return e
+
 def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str):
     try:
         result = cursor.execute("EXEC InsertCongViec ?, ?, ?, ?, ?", id, ngaybatdau, ngayketthuc, ten, mota)
@@ -353,6 +394,13 @@ def them_chi_tiet_cong_viec(id_congviec: int, id_sinhvien: int, trangthai: int, 
         result = cursor.execute("EXEC InsertChiTietCongViec ?, ?, ?, ?", id_congviec, id_sinhvien, trangthai, ghichu)
         cursor.commit()
         return True
+    except Exception as e:
+        return e
+
+def get_dssv_by_id_cong_viec(id: int):
+    try:
+        result = cursor.execute("EXEC GetDSSVByIDCongViec ?", id).fetchall()
+        return [{'id': i[0], 'hoten': i[1]} for i in result]
     except Exception as e:
         return e
 
