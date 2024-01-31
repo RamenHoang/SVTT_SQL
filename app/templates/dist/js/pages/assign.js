@@ -338,10 +338,10 @@ function load_ChiTietCongViec(id_congviec){
         render: function (data, type, row) {
           return (
             `<center>
-              <a class="btn btn-info btn-sm" id="editBtn" onclick="capNhatChiTietCongViec(${data})">
+              <a class="btn btn-info btn-sm" id="editBtn" onclick="capNhatChiTietCongViec(${id_congviec}, ${data})">
                 <i class="fas fa-pencil-alt"></i>
               </a>
-              <a class="btn btn-danger btn-sm" id="deleteBtn" onclick="${data}">
+              <a class="btn btn-danger btn-sm" id="deleteBtn" onclick="xoaChiTietCongViec(${id_congviec}, ${data})">
                 <i class="fa-solid fa-trash"></i>
               </a>
             </center>`
@@ -377,7 +377,7 @@ function xoaCongViecByID(id){
   });
 }
 
-function capNhatChiTietCongViec(id_congviec){
+function capNhatChiTietCongViec(id_congviec, id_chitiet){
   clear_modal();
   // Tạo modal hiển thị chi tiết công việc
   $('#modal_title').text(`Cập nhật công việc`);
@@ -413,7 +413,7 @@ function capNhatChiTietCongViec(id_congviec){
   // Tạo danh sách sinh viên 
   $.ajax({
     type: 'GET',
-    url: `/get_dssv_by_id_cong_viec?id=${id_congviec}`,
+    url: `/get_dssv_by_id_cong_viec?id=${id_chitiet}`,
     success: function(res) {
       $.each(res, function(idx, val) {
         $('#modal_edit_sinhvien_select').append(`<option value="${val.id}">${val.hoten}</option>`);
@@ -421,7 +421,7 @@ function capNhatChiTietCongViec(id_congviec){
       // Get chi tiết công việc bằng id công việc
       $.ajax({
         type: 'GET',
-        url: `get_chi_tiet_cong_viec_by_id?id=${id_congviec}`,
+        url: `get_chi_tiet_cong_viec_by_id?id=${id_chitiet}`,
         success: function(res) {
           $('#modal_edit_sinhvien_select').val(res[0].id_sinhvien);
           $('#modal_edit_ghichu_text').val(res[0].ghichu.replace(/<br\/>/g, "\r\n"));
@@ -439,7 +439,7 @@ function capNhatChiTietCongViec(id_congviec){
 
     $.ajax({
       type: 'POST',
-      url: `update_chi_tiet_cong_viec_by_id?id=${id_congviec}&svid=${id_sinhvien}&trangthai=${trangthai}&ghichu=${ghichu}`,
+      url: `update_chi_tiet_cong_viec_by_id?id=${id_chitiet}&svid=${id_sinhvien}&trangthai=${trangthai}&ghichu=${ghichu}`,
       success: function(){
         Toast.fire({
           icon: "success",
@@ -458,15 +458,16 @@ function capNhatChiTietCongViec(id_congviec){
   });
 }
 
-function xoaChiTietCongViec(id_congviec){
+function xoaChiTietCongViec(id_congviec, id_chitiet){
   $.ajax({
     type: 'POST',
-    url: `/xoa_chi_tiet_cong_viec_by_id?id=${id_congviec}`,
+    url: `/xoa_chi_tiet_cong_viec_by_id?id=${id_chitiet}`,
     success: function(){
       Toast.fire({
         icon: "success",
         title: "Đã xóa công việc",
       });
+      load_ChiTietCongViec(id_congviec);
     },
     error: function(){
       Toast.fire({
