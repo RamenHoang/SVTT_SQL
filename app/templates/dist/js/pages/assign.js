@@ -456,5 +456,23 @@ function capNhatChiTietCongViec(id_congviec){
       }
     });
   });
+}
 
+function xoaChiTietCongViec(id_congviec){
+  $.ajax({
+    type: 'POST',
+    url: `/xoa_chi_tiet_cong_viec_by_id?id=${id_congviec}`,
+    success: function(){
+      Toast.fire({
+        icon: "success",
+        title: "Đã xóa công việc",
+      });
+    },
+    error: function(){
+      Toast.fire({
+        icon: "error",
+        title: "Xóa công việc không thành công",
+      });
+    }
+  });
 }
