@@ -318,7 +318,7 @@ $("#themkythuctap_btn").click(function(){
   
   $("#modal_submit_btn").click(function(){
     let dates = $("#reservation").val().split(' - ');
-    let ngaybatdau = date[0];
+    let ngaybatdau = dates[0];
     let ngayketthuc = dates[1];
     let ghichu = $("#modal_ghichu_text").val().replace(/[\r\n]+/g, '<br/>');
 
