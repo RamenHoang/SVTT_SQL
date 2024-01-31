@@ -43,8 +43,94 @@ $("#dashboard_bangdssv").on("click", "#editBtn", function () {
     success: function (res) {
       $(".modal-dialog").addClass("modal-lg");
       $("#modal_title").text("Đánh giá sinh viên");
-      let html =
-        '<form id="editForm"> <div class="form-group row"> <div class="col-sm-10"> <label for="ythuckyluat" class="col-form-label">Ý thức kỷ luật, tuân thủ nội quy</label> </div> <div class="col-sm-2"> <input type="number" class="form-control" id="ythuckyluat_number" name="ythuckyluat_number" min="0" max="100" value="0"> </div> <div class="col-sm mt-4"> <textarea id="ythuckyluat_text" class="form-control" rows="3"></textarea> </div> </div> <div class="form-group row mt-4"> <div class="col-sm-10"> <label for="tuanthuthoigian" class="col-form-label">Tuân thủ thời gian</label> </div> <div class="col-sm-2"> <input type="number" class="form-control" id="tuanthuthoigian_number" name="tuanthuthoigian_number" min="0" max="100" value="0"> </div> <div class="col-sm mt-4"> <textarea id="tuanthuthoigian_text" class="form-control" rows="3"></textarea> </div> </div> <div class="form-group row mt-4"> <div class="col-sm-10"> <label for="kienthuc" class="col-form-label">Kiến thức</label> </div> <div class="col-sm-2"> <input type="number" class="form-control" id="kienthuc_number" name="kienthuc_number" min="0" max="100" value="0"> </div> <div class="col-sm mt-4"> <textarea id="kienthuc_text" class="form-control" rows="3"></textarea> </div> </div> <div class="form-group row mt-4"> <div class="col-sm-10"> <label for="kynangnghe" class="col-form-label">Kỹ năng nghề</label> </div> <div class="col-sm-2"> <input type="number" class="form-control" id="kynangnghe_number" name="kynangnghe_number" min="0" max="100" value="0"> </div> <div class="col-sm mt-4"> <textarea id="kynangnghe_text" class="form-control" rows="3"></textarea> </div> </div> <div class="form-group row mt-4"> <div class="col-sm-10"> <label for="khanangdoclap" class="col-form-label">Khả năng làm việc độc lập</label> </div> <div class="col-sm-2"> <input type="number" class="form-control" id="khanangdoclap_number" name="khanangdoclap_number" min="0" max="100" value="0"> </div> <div class="col-sm mt-4"> <textarea id="khanangdoclap_text" class="form-control" rows="3"></textarea> </div> </div> <div class="form-group row mt-4"> <div class="col-sm-10"> <label for="khanangnhom" class="col-form-label">Khả năng làm việc nhóm</label> </div> <div class="col-sm-2"> <input type="number" class="form-control" id="khanangnhom_number" name="khanangnhom_number" min="0" max="100" value="0"> </div> <div class="col-sm mt-4"> <textarea id="khanangnhom_text" class="form-control" rows="3"></textarea> </div> </div> <div class="form-group row mt-4"> <div class="col-sm-10"> <label for="khananggiaiquyetcongviec" class="col-form-label">Khả năng giải quyết công việc</label> </div> <div class="col-sm-2"> <input type="number" class="form-control" id="khananggiaiquyetcongviec_number" name="khananggiaiquyetcongviec_number" min="0" max="100" value="0"> </div> <div class="col-sm mt-4"> <textarea id="khananggiaiquyetcongviec_text" class="form-control" rows="3"></textarea> </div> </div> <div class="form-group row mt-4"> <div class="col-sm-10"> <label for="danhgiachung" class="col-form-label">Đánh giá chung</label> </div> <div class="col-sm-2"> <input type="number" class="form-control" id="danhgiachung_number" name="danhgiachung_number" min="0" max="100" value="0"> </div> </div> </form>';
+      let html =`
+        <form id="editForm">
+          <div class="form-group row"> 
+            <div class="col-sm-10"> 
+              <label for="ythuckyluat" class="col-form-label">Ý thức kỷ luật, tuân thủ nội quy</label> 
+            </div> 
+            <div class="col-sm-2"> 
+              <input type="number" class="form-control" id="ythuckyluat_number" name="ythuckyluat_number" min="0" max="100" value="0"> 
+            </div> 
+            <div class="col-sm mt-4"> 
+              <textarea id="ythuckyluat_text" class="form-control" rows="3"></textarea> 
+            </div> 
+          </div> 
+          <div class="form-group row mt-4"> 
+            <div class="col-sm-10"> 
+              <label for="tuanthuthoigian" class="col-form-label">Tuân thủ thời gian</label> 
+            </div> 
+            <div class="col-sm-2"> 
+              <input type="number" class="form-control" id="tuanthuthoigian_number" name="tuanthuthoigian_number" min="0" max="100" value="0"> 
+            </div> 
+            <div class="col-sm mt-4"> 
+              <textarea id="tuanthuthoigian_text" class="form-control" rows="3"></textarea> 
+            </div> 
+          </div> 
+          <div class="form-group row mt-4"> 
+            <div class="col-sm-10"> 
+              <label for="kienthuc" class="col-form-label">Kiến thức</label> 
+            </div> 
+          <div class="col-sm-2"> 
+            <input type="number" class="form-control" id="kienthuc_number" name="kienthuc_number" min="0" max="100" value="0"> 
+          </div> 
+          <div class="col-sm mt-4"> 
+            <textarea id="kienthuc_text" class="form-control" rows="3"></textarea> 
+          </div>
+        </div> 
+        <div class="form-group row mt-4"> 
+          <div class="col-sm-10"> 
+            <label for="kynangnghe" class="col-form-label">Kỹ năng nghề</label> 
+          </div> 
+          <div class="col-sm-2"> 
+            <input type="number" class="form-control" id="kynangnghe_number" name="kynangnghe_number" min="0" max="100" value="0"> 
+          </div> 
+          <div class="col-sm mt-4"> 
+            <textarea id="kynangnghe_text" class="form-control" rows="3"></textarea> 
+          </div> 
+        </div> 
+        <div class="form-group row mt-4"> 
+          <div class="col-sm-10"> 
+            <label for="khanangdoclap" class="col-form-label">Khả năng làm việc độc lập</label> 
+          </div> 
+          <div class="col-sm-2"> 
+            <input type="number" class="form-control" id="khanangdoclap_number" name="khanangdoclap_number" min="0" max="100" value="0"> 
+          </div> 
+          <div class="col-sm mt-4"> 
+            <textarea id="khanangdoclap_text" class="form-control" rows="3"></textarea> 
+          </div> 
+        </div> 
+        <div class="form-group row mt-4"> 
+          <div class="col-sm-10"> 
+            <label for="khanangnhom" class="col-form-label">Khả năng làm việc nhóm</label> 
+          </div> 
+          <div class="col-sm-2"> 
+            <input type="number" class="form-control" id="khanangnhom_number" name="khanangnhom_number" min="0" max="100" value="0"> 
+          </div> 
+          <div class="col-sm mt-4"> 
+            <textarea id="khanangnhom_text" class="form-control" rows="3"></textarea> 
+          </div> 
+        </div> 
+        <div class="form-group row mt-4"> 
+          <div class="col-sm-10"> 
+            <label for="khananggiaiquyetcongviec" class="col-form-label">Khả năng giải quyết công việc</label> 
+          </div> 
+          <div class="col-sm-2"> 
+            <input type="number" class="form-control" id="khananggiaiquyetcongviec_number" name="khananggiaiquyetcongviec_number" min="0" max="100" value="0">
+          </div> 
+          <div class="col-sm mt-4"> 
+            <textarea id="khananggiaiquyetcongviec_text" class="form-control" rows="3"></textarea> 
+          </div> 
+        </div> 
+        <div class="form-group row mt-4"> 
+          <div class="col-sm-10"> 
+            <label for="danhgiachung" class="col-form-label">Đánh giá chung</label> 
+          </div> 
+          <div class="col-sm-2"> 
+            <input type="number" class="form-control" id="danhgiachung_number" name="danhgiachung_number" min="0" max="100" value="0"> 
+          </div> 
+        </div> 
+      </form>`;
       $("#modal_body").append(html);
 
       $("input, textarea").val("");
