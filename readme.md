@@ -10,7 +10,5 @@
 
 ## DEVELOPING
 - Cho người dùng chỉnh sửa profile
-- Chỉnh sửa/xóa công việc trong phần giao việc cho sinh viên
-
 
 ### LƯU Ý: VUI LÒNG KHÔNG SHARE DỮ LIỆU RA BÊN NGOÀI DƯỚI MỌI HÌNH THỨC
