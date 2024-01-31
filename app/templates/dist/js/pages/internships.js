@@ -164,8 +164,8 @@ $("#bangdskythuctap").on("click", "#editBtn", function () {
         let dates = $("#reservation").val().split(' - ');
         let xoa = $("#modal_hoatdong_check").is(":checked");
         let isDeleted = xoa ? 0 : 1;
-        let ngaybatdau = moment(dates[0], 'MM/DD/YYYY').format('YYYY-MM-DD');
-        let ngayketthuc = moment(dates[1], 'MM/DD/YYYY').format('YYYY-MM-DD');
+        let ngaybatdau = dates[0];
+        let ngayketthuc = dates[1];
         let ghichu = $("#modal_ghichu_text").val().replace(/[\r\n]+/g, '<br/>');
 
         $.ajax({
