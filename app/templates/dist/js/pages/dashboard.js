@@ -14,6 +14,12 @@ var Toast = Swal.mixin({
   timer: 3000,
 });
 
+function clear_modal() {
+  $("#modal_title").empty();
+  $("#modal_body").empty();
+  $("#modal_footer").empty();
+}
+
 $(function () {
   "use strict";
 
@@ -430,6 +436,7 @@ $("#dashboard_dssinhviendanhgia").on('click', '#viewBtn', function(){
     type: "GET",
     url: `/get_ds_chi_tiet_danh_gia_by_id?id=${id}`,
     success: function (res) {
+      clear_modal();
       // Hien thi modal
       $('.modal-dialog').addClass('modal-lg');
       $('#modal_title').text(`Chi tiết đánh giá`);

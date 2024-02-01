@@ -37,3 +37,9 @@ document.getElementById('password').addEventListener("keydown", (event) => {
     login();
   }
 });
+
+document.getElementById('username').addEventListener("keydown", (event) => {
+  if (event.keyCode === 13) {
+    login();
+  }
+});
