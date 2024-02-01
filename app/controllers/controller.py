@@ -154,8 +154,8 @@ def get_danh_sach_truong_controller():
 def insert_thong_tin_sinh_vien_controller(mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, truong: str, nganh: str, khoa: int):
     return insert_sinh_vien(mssv, hoten, gioitinh, sdt, email, diachi, malop, truong, nganh, khoa)
 
-def update_nhom_thuc_tap_by_sv_id_controller(idsinhvien: int, idnhom: int):
-    return update_nhom_thuc_tap_by_sv_id(idsinhvien, idnhom)
+def update_nhom_thuc_tap_by_sv_id_controller(email: str, idnhom: int):
+    return update_nhom_thuc_tap_by_sv_id(email, idnhom)
 
 def get_dssv_da_danh_gia_by_nguoi_huong_dan_controller(username: str, kythuctap: int):
     return get_dssv_da_danh_gia_by_nguoi_huong_dan(username=username, kythuctap=kythuctap)
@@ -198,3 +198,12 @@ def xoa_chi_tiet_cong_viec_by_id_controller(id: int):
 
 def update_chi_tiet_cong_viec_by_id_controller(id: int, svid: int, trangthai: int, ghichu: str):
     return update_chi_tiet_cong_viec_by_id(id, svid, trangthai, ghichu)
+
+def insert_danh_gia_thuc_tap_controller(sv_id: int, nhd_id: int, dapan_1: int, dapan_2: int, dapan_3: int, dapan_4: int, gopy: str):
+    return insert_danh_gia_thuc_tap(sv_id, nhd_id, dapan_1, dapan_2, dapan_3, dapan_4, gopy)
+
+def get_ds_chi_tiet_danh_gia_controller():
+    return get_ds_chi_tiet_danh_gia()
+
+def get_ds_chi_tiet_danh_gia_by_id_controller(id: int):
+    return get_ds_chi_tiet_danh_gia_by_id(id)

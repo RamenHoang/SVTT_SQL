@@ -160,10 +160,6 @@ async def login(request: Request, token: str = Cookie(None)):
 async def nhap_thong_tin_sinh_vien(request: Request):
     return templates.TemplateResponse('student.html', context={'request': request})
 
-@app.get('/chonnhomthuctap')
-async def chon_nhom_thuc_tap(request: Request):
-    return templates.TemplateResponse('select_group.html', context={'request': request})
-
 @app.get('/hosonguoihuongdan')
 async def hosonguoihuongdan(request: Request, id: str):
     result = get_user_info_by_username(id)
@@ -732,8 +728,8 @@ async def get_chi_tiet_sinh_vien_moi_nhap_thong_tin(id: str):
     return JSONResponse(status_code=200, content=get_chi_tiet_sinh_vien_chua_co_nhom_controller(id))
 
 @app.post('/them_nhom_thuc_tap_sv')
-async def them_nhom_thuc_tap_sv_route(idsinhvien: int, idnhom: int):
-    result = update_nhom_thuc_tap_by_sv_id_controller(idsinhvien, idnhom)
+async def them_nhom_thuc_tap_sv_route(email: str, idnhom: int):
+    result = update_nhom_thuc_tap_by_sv_id_controller(email, idnhom)
     if result:
         response = JSONResponse(status_code=200, content={'status': 'OK'})
         response.set_cookie('groupid', result, max_age=5356800)
@@ -854,8 +850,34 @@ async def sv_login(request: Request):
     return templates.TemplateResponse('sv_login.html', context={'request': request})
 
 @app.get('/sinhvien')
-async def sv_index(request: Request):
-    return templates.TemplateResponse('sv_index.html', context={'request': request})
+async def sv_index(request: Request, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            if username:
+                return templates.TemplateResponse('sv_index.html', context={'request': request})
+            else:
+                return RedirectResponse('/sv_login')
+        except jwt.PyJWTError:
+            return RedirectResponse('/sv_login')
+    else:
+        return RedirectResponse('/sv_login')
+    
+@app.get('/danhgiakythuctap')
+async def sv_danhgiakythuctap(request: Request, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            if username:
+                return templates.TemplateResponse('sv_review.html', context={'request': request})
+            else:
+                return RedirectResponse('/sv_login')
+        except jwt.PyJWTError:
+            return RedirectResponse('/sv_login')
+    else:
+        return RedirectResponse('/sv_login')    
 
 @app.get('/xem_thong_tin_sv')
 async def xem_thong_tin_sv_route(email: str):
@@ -949,3 +971,56 @@ async def get_dssv_by_id_cong_viec_route(id: int):
         return JSONResponse(status_code=200, content=result)
     else:
         return JSONResponse(status_code=200, content={'status': 'BADDDD REQUEST'})
+    
+@app.post('/danh_gia_thuc_tap')
+async def danh_gia_thuc_tap_route(email: str, id_nhd: int, dapan_1: int, dapan_2: int, dapan_3: int, dapan_4: int, gopy: str, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            sv_id = xem_thong_tin_sv(email)
+            result = insert_danh_gia_thuc_tap_controller(sv_id['id'], id_nhd, dapan_1, dapan_2, dapan_3, dapan_4, gopy)
+            if result:
+                return JSONResponse(status_code=200, content={'status': 'OK'})
+            else:
+                return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/sv_login')
+    else:
+        return RedirectResponse('/sv_login')
+    
+@app.get('/get_ds_chi_tiet_danh_gia')
+async def get_ds_chi_tiet_danh_gia_route(token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            isAdmin = kiem_tra_loai_tai_khoan_controller(username)
+            if isAdmin == 1:
+                result = get_ds_chi_tiet_danh_gia_controller()
+                if result:
+                    return JSONResponse(status_code=200, content=result)
+                else:
+                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    else:
+        return RedirectResponse('/login')
+    
+@app.get('/get_ds_chi_tiet_danh_gia_by_id')
+async def get_ds_chi_tiet_danh_gia_by_id_route(id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            isAdmin = kiem_tra_loai_tai_khoan_controller(username)
+            if isAdmin == 1:
+                result = get_ds_chi_tiet_danh_gia_by_id_controller(id)
+                if result:
+                    return JSONResponse(status_code=200, content=result)
+                else:
+                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    else:
+        return RedirectResponse('/login')

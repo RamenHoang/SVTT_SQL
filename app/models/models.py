@@ -7,10 +7,14 @@ cursor = conn.cursor()
 
 def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str, DiaChi: str, MaLop: str, Truong: str, Nganh: str, Khoa: int) -> bool:
     try:
-        i = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", MSSV, HoTen, GioiTinh, SDT, Email, DiaChi, MaLop, Truong, Nganh, Khoa, 0).fetchone()
-        result = i[0]
-        conn.commit()
-        return result
+        check = cursor.execute("SELECT COUNT(ID) FROM SINHVIEN WHERE MSSV=?", MSSV).fetchone()[0]
+        if check==0:
+            i = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", MSSV, HoTen, GioiTinh, SDT, Email, DiaChi, MaLop, Truong, Nganh, Khoa, 0).fetchone()
+            result = i[0]
+            conn.commit()
+            return result
+        else:
+            return False
     except Exception as e:
         return False
     
@@ -432,16 +436,19 @@ def get_danh_sach_truong():
     except Exception as e:
         return e
     
-def update_nhom_thuc_tap_by_sv_id(idsinhvien: int, idnhom: int):
+def update_nhom_thuc_tap_by_sv_id(email: str, idnhom: int):
     try:
         # Kiểm tra xem đã đủ số lượng chưa
         registed = cursor.execute("EXEC GetSoLuongSVDaDangKyByNhomID ?", idnhom).fetchone()[0]
         quantity = cursor.execute("SELECT SoLuong FROM NHOMHUONGDAN WHERE ID = ?", idnhom).fetchone()[0]
         if(registed < quantity):
-            result = cursor.execute("EXEC UpdateNhomThucTapBySinhVienID ?, ?", idsinhvien, idnhom)
+            result = cursor.execute("EXEC UpdateNhomThucTapBySinhVienEmail ?, ?", email, idnhom)
             r = result.fetchone()[0]
             cursor.commit()
-            return True
+            if r:
+                return r
+            else:
+                return False
         else:
             return False
     except Exception as e:
@@ -508,6 +515,33 @@ def xem_thong_tin_sv(email: str):
         result = cursor.execute("EXEC GetChiTietSVByEmail ?", email)
         if result:
             i = result.fetchone()
-            return {'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': i[4], 'email': i[5], 'diachi': i[6], 'malop': i[7], 'truong': i[14], 'nganh': i[15], 'khoa': i[10], 'nhomhuongdan': i[16], 'xacnhan': i[12]}
+            return {'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': i[4], 'email': i[5], 'diachi': i[6], 'malop': i[7], 'truong': i[14], 'nganh': i[15], 'khoa': i[10], 'nhomhuongdan': i[16], 'xacnhan': i[12]}
+    except Exception as e:
+        return e
+    
+def insert_danh_gia_thuc_tap(sv_id: int, nhd_id: int, dapan_1: int, dapan_2: int, dapan_3: int, dapan_4: int, gopy: str):
+    try:
+        check = cursor.execute("SELECT COUNT(ID) FROM CHITIET_DANHGIA WHERE ID_SinhVien = ?", sv_id).fetchone()[0]
+        if check==0:
+            result = cursor.execute("EXEC InsertChiTietDanhGia ?, ?, ?, ?, ?, ?, ?", sv_id, nhd_id, dapan_1, dapan_2, dapan_3, dapan_4, gopy)
+            cursor.commit()
+            if result.fetchone()[0]:
+                return True
+        else:
+            return False
+    except Exception as e:
+        return e
+    
+def get_ds_chi_tiet_danh_gia():
+    try:
+        result = cursor.execute("EXEC GetDSChiTietDanhGia").fetchall()
+        return [{'id': i[0], 'id_sinhvien': i[1], 'mssv': i[8], 'hoten_sinhvien': i[9], 'tennhom': i[10], 'ngaybatdau': i[12], 'nguoihuongdan_ten': i[13], 'nguoihuongdan_id': i[14], 'tendetai': i[15]} for i in result]
+    except Exception as e:
+        return e
+    
+def get_ds_chi_tiet_danh_gia_by_id(id: int):
+    try:
+        i = cursor.execute("EXEC GetDSChiTietDanhGiaByID ?", id).fetchone()
+        return {'id': i[0], 'dapan_1': i[3], 'dapan_2': i[4], 'dapan_3': i[5], 'dapan_4': i[6], 'gopy': i[7], 'mssv': i[8], 'hoten': i[9], 'tennhom': i[10], 'kythuctap': i[12], 'nguoihuongdan': i[13], 'detai': i[15]}
     except Exception as e:
         return e

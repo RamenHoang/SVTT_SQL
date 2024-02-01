@@ -391,3 +391,112 @@ $("#dashboard_bangdssv").on('click', '#deleteBtn', function(){
     }
   });
 });
+
+$('#dashboard_dssinhviendanhgia').DataTable({
+  paging: true,
+  lengthChange: false,
+  searching: true,
+  order: [[0, 'desc']],
+  info: true,
+  autoWidth: false,
+  responsive: true,
+  ajax: {
+    type: "GET",
+    url: "/get_ds_chi_tiet_danh_gia",
+    dataSrc: "",
+  },
+  columns: [
+    { data: "id" },
+    { data: "mssv" },
+    { data: "hoten_sinhvien" },
+    { data: "tennhom" },
+    { data: "tendetai" },
+    { data: "nguoihuongdan_ten" },
+    {
+      data: "id",
+      render: function (data, type, row) {
+        return (`<a class="btn btn-info btn-sm" id="viewBtn" data-id="${data}">
+                  <i class="fas fa-eye"></i>
+                </a>`);
+      }
+    }
+  ],
+  columnDefs: []
+});
+
+$("#dashboard_dssinhviendanhgia").on('click', '#viewBtn', function(){
+  let id = $(this).data('id');
+  $.ajax({
+    type: "GET",
+    url: `/get_ds_chi_tiet_danh_gia_by_id?id=${id}`,
+    success: function (res) {
+      // Hien thi modal
+      $('.modal-dialog').addClass('modal-lg');
+      $('#modal_title').text(`Chi tiết đánh giá`);
+      let body = `
+      <table class="table table-hover table-borderless display">
+        <tbody>
+          <tr>
+            <td>MSSV:</td>
+            <td>${res.mssv}</td>
+          </tr>
+          <tr>
+            <td>Họ tên:</td>
+            <td>${res.hoten}</td>
+          </tr>
+          <tr>
+            <td>Kỳ thực tập:</td>
+            <td>${res.kythuctap}</td>
+          </tr>
+          <tr>
+            <td>Tên nhóm:</td>
+            <td>${res.tennhom}</td>
+          </tr>
+          <tr>
+            <td>Đề tài:</td>
+            <td>${res.detai}</td>
+          </tr>
+          <tr>
+            <td>Người hướng dẫn:</td>
+            <td>${res.nguoihuongdan}</td>
+          </tr>
+          <tr>
+            <td>Độ hài lòng về môi trường làm việc:</td>
+            <td>${convertDoHaiLong(res.dapan_1)}</td>
+          </tr>
+          <tr>
+            <td>Độ hài lòng về thái độ hỗ trợ của người hướng dẫn:</td>
+            <td>${convertDoHaiLong(res.dapan_2)}</td>
+          </tr>
+          <tr>
+            <td>Độ hài lòng về khả năng ứng dụng thực tế của đề tài:</td>
+            <td>${convertDoHaiLong(res.dapan_3)}</td>
+          </tr>
+          <tr>
+            <td>Độ hài lòng về kiến thức, kinh nghiệm học được:</td>
+            <td>${convertDoHaiLong(res.dapan_4)}</td>
+          </tr>
+        </tbody>
+      </table>
+      `;
+      $('#modal_body').append(body);
+      $('#modal_id').modal('show');
+    },
+    error: function (xhr, status, error) {
+      Toast.fire({
+        icon: "error",
+        title: "Xoá không thành công",
+      });
+    },
+  });
+});
+
+function convertDoHaiLong(num){
+  if(num==2){
+    return `<span class="badge badge-success">Hài lòng</span>`;
+  }else if(num==1){
+    return `<span class="badge badge-warning">Bình thường</span>`;
+  }else{
+    return `<span class="badge badge-danger">Không hài lòng</span>`;
+  }
+}
