@@ -61,6 +61,10 @@ def them_ky_thuc_tap_controller(ngaybatdau: str, ngayketthuc: str, isDeleted: in
 def update_xoa_ky_thuc_tap_by_id_controller(id: str):
     return update_xoa_ky_thuc_tap_by_id(id)
 
+def get_ds_nhom_thuc_tap_by_nguoi_huong_dan_controller(username: str):
+    result = get_ds_nhom_thuc_tap_by_nguoi_huong_dan(username)
+    return result
+
 def get_ds_nhom_thuc_tap_controller():
     result = get_ds_nhom_thuc_tap()
     return result

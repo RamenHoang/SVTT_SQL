@@ -19,11 +19,19 @@ $(document).ready(function() {
     theme: "bootstrap"
   });
 
+  let c = document.cookie.split(';');
+  let username = '';
+  c.forEach(function(val){
+      if(val.includes('username=')){
+          username=val.split('username=')[1];
+      }
+  });
+
   // Get danh sách các nhóm
   let filter_chonnhom = $("#filter_chonnhom");
   $.ajax({
     type: 'GET',
-    url: '/get_ds_nhom_thuc_tap',
+    url: `/get_ds_nhom_thuc_tap?username=${username}`,
     success: function(res) {
       $.each(res, function(idx, val) {
         filter_chonnhom.append('<option value="'+val.id+'">'+val.tennhom+'</option>')
