@@ -434,7 +434,12 @@ async def update_xoa_ky_thuc_tap_by_id_route(id: str, token: str = Cookie(None))
     return RedirectResponse('/login')
 
 @app.get('/get_ds_nhom_thuc_tap')
-async def get_ds_nhom_thuc_tap_route(username: str):
+async def get_ds_nhom_thuc_tap_route():
+    result = get_ds_nhom_thuc_tap_controller()
+    return JSONResponse(status_code=200, content=result)
+
+@app.get('/get_ds_nhom_thuc_tap_by_username')
+async def get_ds_nhom_thuc_tap_by_username_route(username: str):
     result = get_ds_nhom_thuc_tap_by_nguoi_huong_dan_controller(username)
     return JSONResponse(status_code=200, content=result)
 

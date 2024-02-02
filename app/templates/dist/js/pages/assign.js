@@ -31,7 +31,7 @@ $(document).ready(function() {
   let filter_chonnhom = $("#filter_chonnhom");
   $.ajax({
     type: 'GET',
-    url: `/get_ds_nhom_thuc_tap?username=${username}`,
+    url: `/get_ds_nhom_thuc_tap_by_username?username=${username}`,
     success: function(res) {
       $.each(res, function(idx, val) {
         filter_chonnhom.append('<option value="'+val.id+'">'+val.tennhom+'</option>')
