@@ -1,16 +1,16 @@
 function getTokenFromCookie(name) {
   let cookies = document.cookie.split("; ");
   for (let cookie of cookies) {
-      let [cookieName, cookieValue] = cookie.split("=");
-      if (cookieName === name) {
-          return decodeURIComponent(cookieValue);
-      }
+    let [cookieName, cookieValue] = cookie.split("=");
+    if (cookieName === name) {
+      return decodeURIComponent(cookieValue);
+    }
   }
   return null;
 }
 
 let token = getTokenFromCookie("token");
-if (!token){
+if (!token) {
   $("#sidebar").empty();
 }
 
@@ -27,9 +27,9 @@ $.ajax({
       "hosonguoihuongdan?id=" + username
     );
   },
-  error: function(xhr, status, error){
+  error: function (xhr, status, error) {
     $("#sidebar").empty();
-  }
+  },
 });
 
 function active_nav_link() {

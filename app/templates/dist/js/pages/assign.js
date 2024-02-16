@@ -1,76 +1,77 @@
 var Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-  });
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+});
 
 // Clear modal
 function clear_modal() {
-    $("#modal_title").empty();
-    $("#modal_body").empty();
-    $("#modal_footer").empty();
-  }
+  $("#modal_title").empty();
+  $("#modal_body").empty();
+  $("#modal_footer").empty();
+}
 
-
-$(document).ready(function() {
+$(document).ready(function () {
   // Select2
-  $('.select2').select2({
-    theme: "bootstrap"
+  $(".select2").select2({
+    theme: "bootstrap",
   });
 
-  let c = document.cookie.split(';');
-  let username = '';
-  c.forEach(function(val){
-      if(val.includes('username=')){
-          username=val.split('username=')[1];
-      }
+  let c = document.cookie.split(";");
+  let username = "";
+  c.forEach(function (val) {
+    if (val.includes("username=")) {
+      username = val.split("username=")[1];
+    }
   });
 
   // Get danh sách các nhóm
   let filter_chonnhom = $("#filter_chonnhom");
   $.ajax({
-    type: 'GET',
+    type: "GET",
     url: `/get_ds_nhom_thuc_tap_by_username?username=${username}`,
-    success: function(res) {
-      $.each(res, function(idx, val) {
-        filter_chonnhom.append('<option value="'+val.id+'">'+val.tennhom+'</option>')
+    success: function (res) {
+      $.each(res, function (idx, val) {
+        filter_chonnhom.append(
+          '<option value="' + val.id + '">' + val.tennhom + "</option>"
+        );
       });
-    }
+    },
   });
 
   // Bắt sự kiện khi chọn nhóm thực tập
-  filter_chonnhom.on('change', function() {
+  filter_chonnhom.on("change", function () {
     let nhomid = filter_chonnhom.val();
-    
+
     load_timeline_congviec(nhomid);
-    $('#bangdscongviec').empty();
+    $("#bangdscongviec").empty();
   });
 
-  function load_timeline_congviec(id){
+  function load_timeline_congviec(id) {
     let timeline = $("#dscongviec");
     // Get danh sách công việc bằng ID nhóm
     $.ajax({
-      type: 'GET',
-      url: '/get_ds_cong_viec_by_id_nhom?id='+id,
-      success: function(data) {
-        let timeline_html = '';
+      type: "GET",
+      url: "/get_ds_cong_viec_by_id_nhom?id=" + id,
+      success: function (data) {
+        let timeline_html = "";
         let count = 1;
 
         timeline.empty();
 
-        $.each(data, function(idx, val) {
-          let bg_color = '';
-          let header_color = '';
-          let btn_color = '';
-          if(moment(val.ngayketthuc, "DD/MM/YYYY").isBefore(moment())){
-            header_color = 'bg-danger';
-            bg_color = '#ef99a1';
-            btn_color = 'btn-danger'
-          }else{
-            header_color = 'bg-success';
-            bg_color = '#a9f5bb';
-            btn_color = 'btn-success'
+        $.each(data, function (idx, val) {
+          let bg_color = "";
+          let header_color = "";
+          let btn_color = "";
+          if (moment(val.ngayketthuc, "DD/MM/YYYY").isBefore(moment())) {
+            header_color = "bg-danger";
+            bg_color = "#ef99a1";
+            btn_color = "btn-danger";
+          } else {
+            header_color = "bg-success";
+            bg_color = "#a9f5bb";
+            btn_color = "btn-success";
           }
           timeline_html += `<div class="time-label">
                               <span class="bg-info" id="thutu">Công việc #${count}</span>
@@ -99,16 +100,15 @@ $(document).ready(function() {
           count++;
         });
         timeline.append(timeline_html);
-      }
+      },
     });
   }
 
-
   // Modal thêm Công việc
-  $("#themconviecviec_btn").click(function(){
+  $("#themconviecviec_btn").click(function () {
     // Clear modal
     clear_modal();
-    $("#modal_title").text('Thêm công việc');
+    $("#modal_title").text("Thêm công việc");
     html = `<div class="form-group">\
               <label>Thời gian:</label> \
               <div class="input-group"> \
@@ -138,83 +138,82 @@ $(document).ready(function() {
     );
 
     $("#thoigian").daterangepicker({
-      "opens": "right",
-      "alwaysShowCalendars": true,
-      "drops": "auto",
-      "ranges": {
-          'Hôm nay': [moment(), moment()],
-          '7 Ngày sau': [moment(), moment().add(6, 'days')],
-          '7 Ngày trước': [moment().subtract(6, 'days'), moment()],
-          '3 Ngày sau': [moment().add(29, 'days'), moment()],
-          '30 ngày trước': [moment(), moment().add(29, 'days')]
+      opens: "right",
+      alwaysShowCalendars: true,
+      drops: "auto",
+      ranges: {
+        "Hôm nay": [moment(), moment()],
+        "7 Ngày sau": [moment(), moment().add(6, "days")],
+        "7 Ngày trước": [moment().subtract(6, "days"), moment()],
+        "3 Ngày sau": [moment().add(29, "days"), moment()],
+        "30 ngày trước": [moment(), moment().add(29, "days")],
       },
-      "locale": {
-        "format": "DD/MM/YYYY",
-        "separator": " - ",
-        "applyLabel": "Chọn",
-        "cancelLabel": "Hủy",
-        "fromLabel": "Từ ngày",
-        "toLabel": "Đến ngày",
-        "customRangeLabel": "Custom",
-        "weekLabel": "W",
-        "daysOfWeek": [
-            "CN",
-            "T2",
-            "T3",
-            "T4",
-            "T5",
-            "T6",
-            "T7"
+      locale: {
+        format: "DD/MM/YYYY",
+        separator: " - ",
+        applyLabel: "Chọn",
+        cancelLabel: "Hủy",
+        fromLabel: "Từ ngày",
+        toLabel: "Đến ngày",
+        customRangeLabel: "Custom",
+        weekLabel: "W",
+        daysOfWeek: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+        monthNames: [
+          "Tháng 1",
+          "Tháng 2",
+          "Tháng 3",
+          "Tháng 4",
+          "Tháng 5",
+          "Tháng 6",
+          "Tháng 7",
+          "Tháng 8",
+          "Tháng 9",
+          "Tháng 10",
+          "Tháng 11",
+          "Tháng 12",
         ],
-        "monthNames": [
-            "Tháng 1",
-            "Tháng 2",
-            "Tháng 3",
-            "Tháng 4",
-            "Tháng 5",
-            "Tháng 6",
-            "Tháng 7",
-            "Tháng 8",
-            "Tháng 9",
-            "Tháng 10",
-            "Tháng 11",
-            "Tháng 12"
-        ],
-        "firstDay": 1
-    }
+        firstDay: 1,
+      },
     });
 
-    $("#modal_id").modal('show');
-    
-    $("#modal_submit_btn").click(function(){
-      let thoigian = $("#thoigian").val().split(' - ');
+    $("#modal_id").modal("show");
+
+    $("#modal_submit_btn").click(function () {
+      let thoigian = $("#thoigian").val().split(" - ");
       let thoigian_bd = thoigian[0];
       let thoigian_kt = thoigian[1];
       let tencongviec = $("#tencongviec").val();
-      let mota = $("#mota").val().replace(/[\r\n]+/g, '<br/>');
+      let mota = $("#mota")
+        .val()
+        .replace(/[\r\n]+/g, "<br/>");
       let nhomid = $("#filter_chonnhom").val();
-      
 
       $.ajax({
-        type: 'POST',
-        url: 'them_cong_viec_nhom?id='+nhomid
-        +'&ngaybatdau='+thoigian_bd
-        +'&ngayketthuc='+thoigian_kt
-        +'&ten='+tencongviec
-        +'&mota='+mota,
-        success: function(res){
-            if(res.status == 'OK'){
-                Toast.fire({
-                  icon: "success",
-                  title: "Đã thêm công việc",
-                });
-                load_timeline_congviec(nhomid);
-            }else{
-                Toast.fire({
-                    icon: "error",
-                    title: "Thêm công việc không thành công",
-                });      
-            }
+        type: "POST",
+        url:
+          "them_cong_viec_nhom?id=" +
+          nhomid +
+          "&ngaybatdau=" +
+          thoigian_bd +
+          "&ngayketthuc=" +
+          thoigian_kt +
+          "&ten=" +
+          tencongviec +
+          "&mota=" +
+          mota,
+        success: function (res) {
+          if (res.status == "OK") {
+            Toast.fire({
+              icon: "success",
+              title: "Đã thêm công việc",
+            });
+            load_timeline_congviec(nhomid);
+          } else {
+            Toast.fire({
+              icon: "error",
+              title: "Thêm công việc không thành công",
+            });
+          }
         },
         error: function (xhr, status, error) {
           Toast.fire({
@@ -223,12 +222,12 @@ $(document).ready(function() {
           });
         },
       });
-      $("#modal_id").modal('hide');    
+      $("#modal_id").modal("hide");
     });
   });
 });
 
-function createModal_ChiTietCongViec(id_congviec, id_nhom){
+function createModal_ChiTietCongViec(id_congviec, id_nhom) {
   clear_modal();
   $("#modal_title").text(`Thêm chi tiết công việc ${id_congviec}`);
   let body = `
@@ -255,51 +254,55 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom){
   $("#modal_footer").append(
     '<button type="button" class="btn btn-primary" id="modal_luuchitiet_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'
   );
-  
+
   // Hiển thị tất cả sinh viên trong nhóm
   $.ajax({
-    type: 'GET',
-    url: '/get_dssv_by_nhom_id?id='+id_nhom,
-    success: function(res) {
-      $.each(res, function(idx, val){
-        $('#modal_sinhvien_select').append(`<option value="${val.id}">${val.hoten}</option>`);
+    type: "GET",
+    url: "/get_dssv_by_nhom_id?id=" + id_nhom,
+    success: function (res) {
+      $.each(res, function (idx, val) {
+        $("#modal_sinhvien_select").append(
+          `<option value="${val.id}">${val.hoten}</option>`
+        );
       });
-    }
+    },
   });
 
-  $("#modal_id").modal('show');
+  $("#modal_id").modal("show");
 
-  $('#modal_luuchitiet_btn').on('click', function(){
-    let dssv_select = $('#modal_sinhvien_select').val();
-    let ghichu = $('#modal_ghichu_text').val().replace(/[\r\n]+/g, '<br/>');
+  $("#modal_luuchitiet_btn").on("click", function () {
+    let dssv_select = $("#modal_sinhvien_select").val();
+    let ghichu = $("#modal_ghichu_text")
+      .val()
+      .replace(/[\r\n]+/g, "<br/>");
     let reqUrl = `/them_chi_tiet_cong_viec?id_congviec=${id_congviec}&ghichu=${ghichu}`;
-    $.each(dssv_select, function(idx, val){
+    $.each(dssv_select, function (idx, val) {
       reqUrl += `&sinhvien=${val}`;
     });
 
     $.ajax({
-      type: 'POST',
+      type: "POST",
       url: reqUrl,
-      success: function(){
+      success: function () {
         Toast.fire({
           icon: "success",
           title: "Đã giao việc",
         });
-        $('#modal_id').modal('hide');
+        $("#modal_id").modal("hide");
       },
-      error: function(){
+      error: function () {
         Toast.fire({
           icon: "error",
           title: "Giao việc không thành công",
         });
-      }
+      },
     });
   });
 }
 
-function load_ChiTietCongViec(id_congviec){
-  $('#bangdscongviec').empty();
-  $('#bangdscongviec').append(`
+function load_ChiTietCongViec(id_congviec) {
+  $("#bangdscongviec").empty();
+  $("#bangdscongviec").append(`
   <thead>
     <tr>
       <th scope="col" style="text-align: center;" width="25%">Công việc</th>
@@ -311,7 +314,7 @@ function load_ChiTietCongViec(id_congviec){
   </thead>
   `);
 
-  let bang_congviec = $('#bangdscongviec').dataTable({
+  let bang_congviec = $("#bangdscongviec").dataTable({
     paging: false,
     lengthChange: false,
     searching: false,
@@ -321,10 +324,10 @@ function load_ChiTietCongViec(id_congviec){
     autoWidth: false,
     responsive: true,
     ajax: {
-          type: "GET",
-          url: 'get_chi_tiet_cong_viec_by_id_cong_viec?id='+id_congviec,
-          dataSrc: "",
-        },
+      type: "GET",
+      url: "get_chi_tiet_cong_viec_by_id_cong_viec?id=" + id_congviec,
+      dataSrc: "",
+    },
     columns: [
       { data: "tencongviec" },
       { data: "nguoithuchien" },
@@ -334,9 +337,9 @@ function load_ChiTietCongViec(id_congviec){
         render: function (data, type, row) {
           if (data == 0) {
             return '<center><span class="badge badge-warning"><i class="fa-solid fa-circle-exclamation"></i> Đang thực hiện</span></center>';
-          } else if (data==1) {
+          } else if (data == 1) {
             return '<center><span class="badge badge-success"><i class="fa-solid fa-check"></i> Hoàn thành</span></center>';
-          }else{
+          } else {
             return '<center><span class="badge badge-danger"><i class="fa-solid fa-bell"></i> Trễ hạn</span></center>';
           }
         },
@@ -344,51 +347,49 @@ function load_ChiTietCongViec(id_congviec){
       {
         data: "id",
         render: function (data, type, row) {
-          return (
-            `<center>
+          return `<center>
               <a class="btn btn-info btn-sm" id="editBtn" onclick="capNhatChiTietCongViec(${id_congviec}, ${data})">
                 <i class="fas fa-pencil-alt"></i>
               </a>
               <a class="btn btn-danger btn-sm" id="deleteBtn" onclick="xoaChiTietCongViec(${id_congviec}, ${data})">
                 <i class="fa-solid fa-trash"></i>
               </a>
-            </center>`
-          );
+            </center>`;
         },
       },
     ],
   });
 
-  bang_congviec.prop('hidden', false);
+  bang_congviec.prop("hidden", false);
 }
 
-function xoaCongViecByID(id){
+function xoaCongViecByID(id) {
   $.ajax({
-    type: 'POST',
+    type: "POST",
     url: `/xoa_cong_viec_by_id?id=${id}`,
-    success: function(){
+    success: function () {
       Toast.fire({
         icon: "success",
         title: "Đã xóa công việc",
       });
       let nhomid = filter_chonnhom.val();
-    
+
       load_timeline_congviec(nhomid);
-      $('#bangdscongviec').empty();
+      $("#bangdscongviec").empty();
     },
-    error: function(){
+    error: function () {
       Toast.fire({
         icon: "error",
         title: "Xóa công việc không thành công",
       });
-    }
+    },
   });
 }
 
-function capNhatChiTietCongViec(id_congviec, id_chitiet){
+function capNhatChiTietCongViec(id_congviec, id_chitiet) {
   clear_modal();
   // Tạo modal hiển thị chi tiết công việc
-  $('#modal_title').text(`Cập nhật công việc`);
+  $("#modal_title").text(`Cập nhật công việc`);
   let body = `
   <div class="form-group">
     <label for="modal_edit_sinhvien_select">Sinh viên thực hiện</label>
@@ -413,75 +414,82 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet){
     </div>
   </div>
   `;
-  $('#modal_body').append(body);
-  $("#modal_footer").append(`<button type="button" class="btn btn-primary" id="modal_edit_luuchitiet_btn">
+  $("#modal_body").append(body);
+  $("#modal_footer")
+    .append(`<button type="button" class="btn btn-primary" id="modal_edit_luuchitiet_btn">
                               <i class="fa-solid fa-floppy-disk"></i> Lưu</button>`);
-  $('#modal_id').modal('show');
+  $("#modal_id").modal("show");
 
-  // Tạo danh sách sinh viên 
+  // Tạo danh sách sinh viên
   $.ajax({
-    type: 'GET',
+    type: "GET",
     url: `/get_dssv_by_id_cong_viec?id=${id_chitiet}`,
-    success: function(res) {
-      $.each(res, function(idx, val) {
-        $('#modal_edit_sinhvien_select').append(`<option value="${val.id}">${val.hoten}</option>`);
+    success: function (res) {
+      $.each(res, function (idx, val) {
+        $("#modal_edit_sinhvien_select").append(
+          `<option value="${val.id}">${val.hoten}</option>`
+        );
       });
       // Get chi tiết công việc bằng id công việc
       $.ajax({
-        type: 'GET',
+        type: "GET",
         url: `get_chi_tiet_cong_viec_by_id?id=${id_chitiet}`,
-        success: function(res) {
-          $('#modal_edit_sinhvien_select').val(res[0].id_sinhvien);
-          $('#modal_edit_ghichu_text').val(res[0].ghichu.replace(/<br\/>/g, "\r\n"));
-          $('#modal_edit_trangthai_select').val(res[0].trangthai);
-        }
+        success: function (res) {
+          $("#modal_edit_sinhvien_select").val(res[0].id_sinhvien);
+          $("#modal_edit_ghichu_text").val(
+            res[0].ghichu.replace(/<br\/>/g, "\r\n")
+          );
+          $("#modal_edit_trangthai_select").val(res[0].trangthai);
+        },
       });
-    }
+    },
   });
 
   // Bắt sự kiện nút lưu
-  $('#modal_edit_luuchitiet_btn').on('click', function() {
-    let id_sinhvien = $('#modal_edit_sinhvien_select').val();
-    let ghichu = $('#modal_edit_ghichu_text').val().replace(/[\r\n]+/g, '<br/>');
-    let trangthai = $('#modal_edit_trangthai_select').val();
+  $("#modal_edit_luuchitiet_btn").on("click", function () {
+    let id_sinhvien = $("#modal_edit_sinhvien_select").val();
+    let ghichu = $("#modal_edit_ghichu_text")
+      .val()
+      .replace(/[\r\n]+/g, "<br/>");
+    let trangthai = $("#modal_edit_trangthai_select").val();
 
     $.ajax({
-      type: 'POST',
+      type: "POST",
       url: `update_chi_tiet_cong_viec_by_id?id=${id_chitiet}&svid=${id_sinhvien}&trangthai=${trangthai}&ghichu=${ghichu}`,
-      success: function(){
+      success: function () {
         Toast.fire({
           icon: "success",
           title: "Đã cập nhật chi tiết công việc",
         });
-        $('#modal_id').modal('hide');
+        $("#modal_id").modal("hide");
         load_ChiTietCongViec(id_congviec);
       },
-      error: function(){
+      error: function () {
         Toast.fire({
           icon: "error",
           title: "Cập nhật chi tiết công việc không thành công",
         });
-      }
+      },
     });
   });
 }
 
-function xoaChiTietCongViec(id_congviec, id_chitiet){
+function xoaChiTietCongViec(id_congviec, id_chitiet) {
   $.ajax({
-    type: 'POST',
+    type: "POST",
     url: `/xoa_chi_tiet_cong_viec_by_id?id=${id_chitiet}`,
-    success: function(){
+    success: function () {
       Toast.fire({
         icon: "success",
         title: "Đã xóa công việc",
       });
       load_ChiTietCongViec(id_congviec);
     },
-    error: function(){
+    error: function () {
       Toast.fire({
         icon: "error",
         title: "Xóa công việc không thành công",
       });
-    }
+    },
   });
 }

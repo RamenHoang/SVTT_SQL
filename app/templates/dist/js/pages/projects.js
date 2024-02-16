@@ -19,10 +19,11 @@ let bangdsdetai = $("#bangdsdetai").DataTable({
     dataSrc: "",
   },
   columns: [
-    { data: "id",
-      render: function(data, type, row) {
-        return '<center>'+data+'</center>';
-      }
+    {
+      data: "id",
+      render: function (data, type, row) {
+        return "<center>" + data + "</center>";
+      },
     },
     { data: "ten" },
     { data: "mota" },
@@ -89,7 +90,9 @@ $("#bangdsdetai").on("click", "#editBtn", function () {
         let id = $(this).data("id");
 
         let ten = $("#modal_tendetai_input").val();
-        let mota = $("#modal_motadetai_input").val().replace(/[\r\n]+/g, '<br/>');
+        let mota = $("#modal_motadetai_input")
+          .val()
+          .replace(/[\r\n]+/g, "<br/>");
         let xoa = $("#modal_hoatdong_check").is(":checked");
         let isDeleted = xoa ? 0 : 1;
 
@@ -166,27 +169,36 @@ $("#bangdsdetai").on("click", "#deleteBtn", function () {
 });
 
 // Modal thêm đề ài
-$("#themdetai_btn").click(function(){
+$("#themdetai_btn").click(function () {
   // Clear modal
   clear_modal();
-  $("#modal_title").text('Thêm đề tài');
-  html = '<div class="form-group"><label for="modal_tendetai_input">Tên đề tài</label><input type="text" class="form-control" id="modal_tendetai_input" placeholder="Nhập tên đề tài"></div><div class="form-group"><label for="modal_motadetai_input">Mô tả đề tài</label><textarea id="modal_motadetai_input" rows="10" class="form-control" placeholder="Nhập mô tả đề tài"></textarea></div><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Sử dụng đề tài</label></div>';
+  $("#modal_title").text("Thêm đề tài");
+  html =
+    '<div class="form-group"><label for="modal_tendetai_input">Tên đề tài</label><input type="text" class="form-control" id="modal_tendetai_input" placeholder="Nhập tên đề tài"></div><div class="form-group"><label for="modal_motadetai_input">Mô tả đề tài</label><textarea id="modal_motadetai_input" rows="10" class="form-control" placeholder="Nhập mô tả đề tài"></textarea></div><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Sử dụng đề tài</label></div>';
   $("#modal_body").append(html);
   $("#modal_footer").append(
     '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'
   );
-  $("#modal_id").modal('show');
-  
-  $("#modal_submit_btn").click(function(){
+  $("#modal_id").modal("show");
+
+  $("#modal_submit_btn").click(function () {
     let ten = $("#modal_tendetai_input").val();
-    let mota = $("#modal_motadetai_input").val().replace(/[\r\n]+/g, '<br/>');
+    let mota = $("#modal_motadetai_input")
+      .val()
+      .replace(/[\r\n]+/g, "<br/>");
     let xoa = $("#modal_hoatdong_check").is(":checked");
     let isDeleted = xoa ? 0 : 1;
-  
+
     $.ajax({
-      type: 'POST',
-      url: 'them_de_tai_thuc_tap?ten='+ten+'&mota='+mota+'&isDeleted='+isDeleted,
-      success: function(res){
+      type: "POST",
+      url:
+        "them_de_tai_thuc_tap?ten=" +
+        ten +
+        "&mota=" +
+        mota +
+        "&isDeleted=" +
+        isDeleted,
+      success: function (res) {
         Toast.fire({
           icon: "success",
           title: "Đã thêm đề tài",
@@ -200,6 +212,6 @@ $("#themdetai_btn").click(function(){
         });
       },
     });
-    $("#modal_id").modal('hide');    
+    $("#modal_id").modal("hide");
   });
 });

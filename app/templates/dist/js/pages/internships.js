@@ -19,20 +19,23 @@ let bangdskythuctap = $("#bangdskythuctap").DataTable({
     dataSrc: "",
   },
   columns: [
-    { data: "id",
-      render: function(data, type, row) {
-        return '<center>'+data+'</center>';
-      }
+    {
+      data: "id",
+      render: function (data, type, row) {
+        return "<center>" + data + "</center>";
+      },
     },
-    { data: "ngaybatdau",
-      render: function(data, type, row) {
-        return '<center>'+data+'</center>';
-      }
+    {
+      data: "ngaybatdau",
+      render: function (data, type, row) {
+        return "<center>" + data + "</center>";
+      },
     },
-    { data: "ngayketthuc",
-      render: function(data, type, row) {
-        return '<center>'+data+'</center>';
-      }
+    {
+      data: "ngayketthuc",
+      render: function (data, type, row) {
+        return "<center>" + data + "</center>";
+      },
     },
     {
       data: "thoihan",
@@ -74,7 +77,7 @@ $("#bangdskythuctap").on("click", "#editBtn", function () {
     type: "GET",
     url: "get_chi_tiet_ky_thuc_tap_by_id?id=" + id,
     success: function (res) {
-      $("#modal_title").text('Kỳ thực tập '+res.ngaybatdau);
+      $("#modal_title").text("Kỳ thực tập " + res.ngaybatdau);
       html = `<div class="form-group">
                 <label>Thời gian thực tập:</label>
                 <div class="input-group">
@@ -142,7 +145,7 @@ $("#bangdskythuctap").on("click", "#editBtn", function () {
                 <input type="checkbox" class="form-check-input" id="modal_hoatdong_check">
                 <label class="form-check-label" for="modal_hoatdong_check">Sử dụng kỳ thực tập</label>
               </div>`;
-      
+
       $("#modal_body").append(html);
       // Set giá trị ghichu
       $("#modal_ghichu_text").val(res.ghichu.replace(/<br\/>/g, "\r\n"));
@@ -161,12 +164,14 @@ $("#bangdskythuctap").on("click", "#editBtn", function () {
       $("#modal_submit_btn").click(function () {
         let id = $(this).data("id");
 
-        let dates = $("#reservation").val().split(' - ');
+        let dates = $("#reservation").val().split(" - ");
         let xoa = $("#modal_hoatdong_check").is(":checked");
         let isDeleted = xoa ? 0 : 1;
         let ngaybatdau = dates[0];
         let ngayketthuc = dates[1];
-        let ghichu = $("#modal_ghichu_text").val().replace(/[\r\n]+/g, '<br/>');
+        let ghichu = $("#modal_ghichu_text")
+          .val()
+          .replace(/[\r\n]+/g, "<br/>");
 
         $.ajax({
           type: "POST",
@@ -179,7 +184,7 @@ $("#bangdskythuctap").on("click", "#editBtn", function () {
             ngayketthuc +
             "&isDeleted=" +
             isDeleted +
-            '&ghichu=' +
+            "&ghichu=" +
             ghichu,
           success: function (data) {
             if (data.status == "OK") {
@@ -243,10 +248,10 @@ $("#bangdskythuctap").on("click", "#deleteBtn", function () {
 });
 
 // Modal thêm đề ài
-$("#themkythuctap_btn").click(function(){
+$("#themkythuctap_btn").click(function () {
   // Clear modal
   clear_modal();
-  $("#modal_title").text('Thêm kỳ thực tập');
+  $("#modal_title").text("Thêm kỳ thực tập");
   html = `<div class="form-group">
             <label>Thời gian thực tập:</label>
             <div class="input-group">
@@ -314,18 +319,26 @@ $("#themkythuctap_btn").click(function(){
   $("#modal_footer").append(
     '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'
   );
-  $("#modal_id").modal('show');
-  
-  $("#modal_submit_btn").click(function(){
-    let dates = $("#reservation").val().split(' - ');
+  $("#modal_id").modal("show");
+
+  $("#modal_submit_btn").click(function () {
+    let dates = $("#reservation").val().split(" - ");
     let ngaybatdau = dates[0];
     let ngayketthuc = dates[1];
-    let ghichu = $("#modal_ghichu_text").val().replace(/[\r\n]+/g, '<br/>');
+    let ghichu = $("#modal_ghichu_text")
+      .val()
+      .replace(/[\r\n]+/g, "<br/>");
 
     $.ajax({
-      type: 'POST',
-      url: 'them_ky_thuc_tap?ngaybatdau='+ngaybatdau+'&ngayketthuc='+ngayketthuc+'&isDeleted=0&ghichu='+ghichu,
-      success: function(res){
+      type: "POST",
+      url:
+        "them_ky_thuc_tap?ngaybatdau=" +
+        ngaybatdau +
+        "&ngayketthuc=" +
+        ngayketthuc +
+        "&isDeleted=0&ghichu=" +
+        ghichu,
+      success: function (res) {
         Toast.fire({
           icon: "success",
           title: "Đã thêm kỳ thực tập",
@@ -339,6 +352,6 @@ $("#themkythuctap_btn").click(function(){
         });
       },
     });
-    $("#modal_id").modal('hide');    
+    $("#modal_id").modal("hide");
   });
 });

@@ -19,38 +19,42 @@ let bangdsnhomthuctap = $("#bangdsnhomthuctap").DataTable({
     dataSrc: "",
   },
   columns: [
-    { data: "id",
-      render: function(data, type, row) {
-        return '<center>'+data+'</center>';
-      }
+    {
+      data: "id",
+      render: function (data, type, row) {
+        return "<center>" + data + "</center>";
+      },
     },
-    { data: "ngaybatdau",
-      render: function(data, type, row) {
-        return '<center>'+data+'</center>';
-      }
+    {
+      data: "ngaybatdau",
+      render: function (data, type, row) {
+        return "<center>" + data + "</center>";
+      },
     },
     { data: "tendetai" },
     { data: "nguoihuongdan" },
-    { data: "soluong",
-      render: function(data, type, row) {
-        return '<center>'+data+'</center>';
-      }
+    {
+      data: "soluong",
+      render: function (data, type, row) {
+        return "<center>" + data + "</center>";
+      },
     },
-    { data: "tennhom", 
-      render: function(data, type, row) {
-        return '<center>'+data+'</center>';
-      }
+    {
+      data: "tennhom",
+      render: function (data, type, row) {
+        return "<center>" + data + "</center>";
+      },
     },
     { data: "ghichu" },
     {
       data: "xoa",
-      render: function(data, type, row){
+      render: function (data, type, row) {
         if (data == 0) {
           return '<center><span class="badge badge-success"><i class="fa-solid fa-check"></i> Đang hoạt động</span></center>';
         } else {
           return '<center><span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> Ngưng hoạt động</span></center>';
         }
-      }
+      },
     },
     {
       data: "id",
@@ -80,61 +84,67 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
 
   $.ajax({
     type: "GET",
-    url: "get_chi_tiet_nhom_thuc_tap_by_id?id="+parseInt(id),
+    url: "get_chi_tiet_nhom_thuc_tap_by_id?id=" + parseInt(id),
     success: function (res) {
-      $("#modal_title").text('Nhóm '+id);
-      
-      html = '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_detai_select">Đề tài</label><select id="modal_detai_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_nguoihuongdan_select">Người hướng dẫn</label><select id="modal_nguoihuongdan_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_tennhom_input">Tên nhóm</label><input type="text" class="form-control" id="modal_tennhom_input" /></div><div class="form-group"><label for="modal_soluong_input">Số lượng sinh viên</label><input type="number" class="form-control" id="modal_soluong_input" /></div><div class="form-group"><label for="modal_ghichu_text">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Hoạt động?</label></div><script>$(".select2").select2({theme: "bootstrap",dropdownParent: $("#modal_id")});</script>';
+      $("#modal_title").text("Nhóm " + id);
+
+      html =
+        '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_detai_select">Đề tài</label><select id="modal_detai_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_nguoihuongdan_select">Người hướng dẫn</label><select id="modal_nguoihuongdan_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_tennhom_input">Tên nhóm</label><input type="text" class="form-control" id="modal_tennhom_input" /></div><div class="form-group"><label for="modal_soluong_input">Số lượng sinh viên</label><input type="number" class="form-control" id="modal_soluong_input" /></div><div class="form-group"><label for="modal_ghichu_text">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Hoạt động?</label></div><script>$(".select2").select2({theme: "bootstrap",dropdownParent: $("#modal_id")});</script>';
       $("#modal_body").append(html);
 
       // Danh sách kỳ thực tập
       $.ajax({
-        type: 'GET',
-        url: '/get_all_ky_thuc_tap',
-        success: function(data){
-          $.each(data, function(idx, val) {
-            $('#modal_kythuctap_select').append('<option value="'+val.id+'">'+val.ngaybatdau+'</option>');
+        type: "GET",
+        url: "/get_all_ky_thuc_tap",
+        success: function (data) {
+          $.each(data, function (idx, val) {
+            $("#modal_kythuctap_select").append(
+              '<option value="' + val.id + '">' + val.ngaybatdau + "</option>"
+            );
           });
-          
-          $('#modal_kythuctap_select').val(res.kythuctap_id);
-        }
+
+          $("#modal_kythuctap_select").val(res.kythuctap_id);
+        },
       });
 
       // Danh sách đề tài
       $.ajax({
-        type: 'GET',
-        url: '/get_all_de_tai',
-        success: function(data){
-          $.each(data, function(idx, val) {
-            $('#modal_detai_select').append('<option value="'+val.id+'">'+val.ten+'</option>');
+        type: "GET",
+        url: "/get_all_de_tai",
+        success: function (data) {
+          $.each(data, function (idx, val) {
+            $("#modal_detai_select").append(
+              '<option value="' + val.id + '">' + val.ten + "</option>"
+            );
           });
-          
-          $('#modal_detai_select').val(res.detai_id);
-        }
+
+          $("#modal_detai_select").val(res.detai_id);
+        },
       });
 
       // Danh sách nhóm thực tập
       $.ajax({
-        type: 'GET',
-        url: '/get_all_nguoi_huong_dan',
-        success: function(data){
-          $.each(data, function(idx, val) {
-            $('#modal_nguoihuongdan_select').append('<option value="'+val.id+'">'+val.hoten+'</option>');
+        type: "GET",
+        url: "/get_all_nguoi_huong_dan",
+        success: function (data) {
+          $.each(data, function (idx, val) {
+            $("#modal_nguoihuongdan_select").append(
+              '<option value="' + val.id + '">' + val.hoten + "</option>"
+            );
           });
-          
-          $('#modal_nguoihuongdan_select').val(res.nguoihuongdan_id);
-        }
+
+          $("#modal_nguoihuongdan_select").val(res.nguoihuongdan_id);
+        },
       });
-      
+
       // Tên nhóm
-      $('#modal_tennhom_input').val(res.nhomthuctap_tennhom);
+      $("#modal_tennhom_input").val(res.nhomthuctap_tennhom);
 
       // Số lượng sinh viên thực tập
-      $('#modal_soluong_input').val(res.nhomthuctap_soluong);
-      
-      // Ghi chú
-      $('#modal_ghichu_text').val(res.ghichu.replace(/<br\/>/g, "\r\n"));
+      $("#modal_soluong_input").val(res.nhomthuctap_soluong);
 
+      // Ghi chú
+      $("#modal_ghichu_text").val(res.ghichu.replace(/<br\/>/g, "\r\n"));
 
       // Trạng thái nhóm
       if (res.xoa == 0) {
@@ -151,7 +161,6 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
       $("#modal_id").modal("show");
       // Tính năng lưu thay đổi
       $("#modal_submit_btn").click(function () {
-
         let xoa = $("#modal_hoatdong_check").is(":checked");
         let isDeleted = xoa ? 0 : 1;
         let kytt = $("#modal_kythuctap_select").val();
@@ -159,7 +168,9 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
         let nhd = $("#modal_nguoihuongdan_select").val();
         let soluong = $("#modal_soluong_input").val();
         let tennhom = $("#modal_tennhom_input").val();
-        let ghichu = $("#modal_ghichu_text").val().replace(/[\r\n]+/g, '<br/>');
+        let ghichu = $("#modal_ghichu_text")
+          .val()
+          .replace(/[\r\n]+/g, "<br/>");
         $.ajax({
           type: "POST",
           url:
@@ -241,41 +252,67 @@ $("#bangdsnhomthuctap").on("click", "#deleteBtn", function () {
 });
 
 // Modal thêm đề ài
-$("#themkythuctap_btn").click(function(){
+$("#themkythuctap_btn").click(function () {
   clear_modal();
   $.ajax({
     type: "GET",
     url: "get_chi_tiet_chinh_sua_nhom",
-    success: function(res){
-      $("#modal_title").text('Thêm nhóm thực tập');
-      html = '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_detai_select">Đề tài</label><select id="modal_detai_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_nguoihuongdan_select">Người hướng dẫn</label><select id="modal_nguoihuongdan_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_tennhom_input">Tên nhóm</label><input type="text" class="form-control" id="modal_tennhom_input" /></div><div class="form-group"><label for="modal_soluong_input">Số lượng sinh viên</label><input type="number" class="form-control" id="modal_soluong_input" /></div><div class="form-group"><label for="modal_soluong_input">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div><script>$(".select2").select2({theme: "bootstrap",dropdownParent: $("#modal_id")});</script>';
+    success: function (res) {
+      $("#modal_title").text("Thêm nhóm thực tập");
+      html =
+        '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_detai_select">Đề tài</label><select id="modal_detai_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_nguoihuongdan_select">Người hướng dẫn</label><select id="modal_nguoihuongdan_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_tennhom_input">Tên nhóm</label><input type="text" class="form-control" id="modal_tennhom_input" /></div><div class="form-group"><label for="modal_soluong_input">Số lượng sinh viên</label><input type="number" class="form-control" id="modal_soluong_input" /></div><div class="form-group"><label for="modal_soluong_input">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div><script>$(".select2").select2({theme: "bootstrap",dropdownParent: $("#modal_id")});</script>';
       $("#modal_body").append(html);
-      $.each(res.kythuctap, function(idx, val){
-        $('#modal_kythuctap_select').append('<option value="'+val.id+'">'+moment(val.ngay, 'YYYY-MM-DD').format('DD/MM/YYYY')+'</option>');
+      $.each(res.kythuctap, function (idx, val) {
+        $("#modal_kythuctap_select").append(
+          '<option value="' +
+            val.id +
+            '">' +
+            moment(val.ngay, "YYYY-MM-DD").format("DD/MM/YYYY") +
+            "</option>"
+        );
       });
-      $.each(res.detai, function(idx, val){
-        $('#modal_detai_select').append('<option value="'+val.id+'">'+val.ten+'</option>');
+      $.each(res.detai, function (idx, val) {
+        $("#modal_detai_select").append(
+          '<option value="' + val.id + '">' + val.ten + "</option>"
+        );
       });
-      $.each(res.nguoihuongdan, function(idx, val){
-        $('#modal_nguoihuongdan_select').append('<option value="'+val.id+'">'+val.hoten+'</option>');
+      $.each(res.nguoihuongdan, function (idx, val) {
+        $("#modal_nguoihuongdan_select").append(
+          '<option value="' + val.id + '">' + val.hoten + "</option>"
+        );
       });
       $("#modal_footer").append(
         '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'
       );
-      $("#modal_id").modal('show');
-      
-      $("#modal_submit_btn").click(function(){
+      $("#modal_id").modal("show");
+
+      $("#modal_submit_btn").click(function () {
         let kytt = $("#modal_kythuctap_select").val();
         let detai = $("#modal_detai_select").val();
         let soluong = $("#modal_soluong_input").val();
         let nhd = $("#modal_nguoihuongdan_select").val();
         let tennhom = $("#modal_tennhom_input").val();
-        let ghichu = $("#modal_ghichu_text").val().replace(/[\r\n]+/g, '<br/>');
-    
+        let ghichu = $("#modal_ghichu_text")
+          .val()
+          .replace(/[\r\n]+/g, "<br/>");
+
         $.ajax({
-          type: 'POST',
-          url: "them_nhom_thuc_tap?kytt=" + parseInt(kytt) + "&nguoihd=" + parseInt(nhd) + "&detai=" + parseInt(detai) + "&soluong=" + parseInt(soluong) + "&tennhom=" + tennhom + "&isDeleted=0" + "&ghichu=" + ghichu,
-          success: function(res){
+          type: "POST",
+          url:
+            "them_nhom_thuc_tap?kytt=" +
+            parseInt(kytt) +
+            "&nguoihd=" +
+            parseInt(nhd) +
+            "&detai=" +
+            parseInt(detai) +
+            "&soluong=" +
+            parseInt(soluong) +
+            "&tennhom=" +
+            tennhom +
+            "&isDeleted=0" +
+            "&ghichu=" +
+            ghichu,
+          success: function (res) {
             Toast.fire({
               icon: "success",
               title: "Đã thêm kỳ thực tập",
@@ -289,11 +326,11 @@ $("#themkythuctap_btn").click(function(){
             });
           },
         });
-        $("#modal_id").modal('hide');    
+        $("#modal_id").modal("hide");
       });
     },
-    error: function(xhr, status, error){
-      console.log(error)
-    }
+    error: function (xhr, status, error) {
+      console.log(error);
+    },
   });
 });

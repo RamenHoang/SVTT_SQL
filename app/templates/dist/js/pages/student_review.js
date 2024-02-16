@@ -6,9 +6,9 @@ var Toast = Swal.mixin({
 });
 
 // Select2
-$(document).ready(function() {
-  $('.select2').select2({
-    theme: "bootstrap"
+$(document).ready(function () {
+  $(".select2").select2({
+    theme: "bootstrap",
   });
 });
 
@@ -22,15 +22,23 @@ function empty_modal() {
 function loadFilter() {
   // load kỳ thực tập
   $.ajax({
-    type: 'GET',
-    url: '/get_all_ky_thuc_tap',
-    success: function(data) {
-      let filter_kythuctap = $('#filter_kythuctap');
-      data.forEach(element => {
-        filter_kythuctap.append('<option value=' + element.id + '>' + element.ngaybatdau + '-' + element.ngayketthuc + '</option>');
+    type: "GET",
+    url: "/get_all_ky_thuc_tap",
+    success: function (data) {
+      let filter_kythuctap = $("#filter_kythuctap");
+      data.forEach((element) => {
+        filter_kythuctap.append(
+          "<option value=" +
+            element.id +
+            ">" +
+            element.ngaybatdau +
+            "-" +
+            element.ngayketthuc +
+            "</option>"
+        );
       });
-    }
-  })
+    },
+  });
 }
 
 $("#dashboard_bangdssv").on("click", "#editBtn", function () {
@@ -43,7 +51,7 @@ $("#dashboard_bangdssv").on("click", "#editBtn", function () {
     success: function (res) {
       $(".modal-dialog").addClass("modal-lg");
       $("#modal_title").text("Đánh giá sinh viên");
-      let html =`
+      let html = `
         <form id="editForm">
           <div class="form-group row"> 
             <div class="col-sm-10"> 
@@ -183,36 +191,51 @@ $("#dashboard_bangdssv").on("click", "#editBtn", function () {
       $("#modal_submit_btn").click(function () {
         // Get ID Nhom
         $.ajax({
-          type: 'GET',
-          url: 'get_id_nhom_by_sv_id?id='+id,
-          success: function(res){
+          type: "GET",
+          url: "get_id_nhom_by_sv_id?id=" + id,
+          success: function (res) {
+            let data_update =
+              "?sinhvienid=" +
+              String(id) +
+              "&nhomid=" +
+              parseInt(res.id) +
+              "&ythuckyluat_number=" +
+              parseFloat(ythuckyluat_number.val()) +
+              "&ythuckyluat_text=" +
+              ythuckyluat_text.val() +
+              "&tuanthuthoigian_number=" +
+              parseFloat(tuanthuthoigian_number.val()) +
+              "&tuanthuthoigian_text=" +
+              tuanthuthoigian_text.val() +
+              "&kienthuc_number=" +
+              parseFloat(kienthuc_number.val()) +
+              "&kienthuc_text=" +
+              kienthuc_text.val() +
+              "&kynangnghe_number=" +
+              parseFloat(kynangnghe_number.val()) +
+              "&kynangnghe_text=" +
+              kynangnghe_text.val() +
+              "&khanangdoclap_number=" +
+              parseFloat(khanangdoclap_number.val()) +
+              "&khanangdoclap_text=" +
+              khanangdoclap_text.val() +
+              "&khanangnhom_number=" +
+              parseFloat(khanangnhom_number.val()) +
+              "&khanangnhom_text=" +
+              khanangnhom_text.val() +
+              "&khananggiaiquyetcongviec_number=" +
+              parseFloat(khananggiaiquyetcongviec_number.val()) +
+              "&khananggiaiquyetcongviec_text=" +
+              khananggiaiquyetcongviec_text.val() +
+              "&danhgiachung_number=" +
+              parseFloat(danhgiachung_number.val());
 
-            let data_update ='?sinhvienid='+String(id)
-                +'&nhomid='+parseInt(res.id)
-                +'&ythuckyluat_number='+parseFloat(ythuckyluat_number.val())
-                +'&ythuckyluat_text='+ythuckyluat_text.val()
-                +'&tuanthuthoigian_number='+parseFloat(tuanthuthoigian_number.val())
-                +'&tuanthuthoigian_text='+tuanthuthoigian_text.val()
-                +'&kienthuc_number='+parseFloat(kienthuc_number.val())
-                +'&kienthuc_text='+kienthuc_text.val()
-                +'&kynangnghe_number='+parseFloat(kynangnghe_number.val())
-                +'&kynangnghe_text='+kynangnghe_text.val()
-                +'&khanangdoclap_number='+parseFloat(khanangdoclap_number.val())
-                +'&khanangdoclap_text='+khanangdoclap_text.val()
-                +'&khanangnhom_number='+parseFloat(khanangnhom_number.val())
-                +'&khanangnhom_text='+khanangnhom_text.val()
-                +'&khananggiaiquyetcongviec_number='+parseFloat(khananggiaiquyetcongviec_number.val())
-                +'&khananggiaiquyetcongviec_text='+khananggiaiquyetcongviec_text.val()
-                +'&danhgiachung_number='+parseFloat(danhgiachung_number.val())
-    
-    
             $.ajax({
               type: "POST",
-              url:
-                "update_danh_gia_sv_by_id"+data_update,
+              url: "update_danh_gia_sv_by_id" + data_update,
               data: data_update,
               headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
               },
               success: function (data) {
                 if (data.status == "OK") {
@@ -236,7 +259,7 @@ $("#dashboard_bangdssv").on("click", "#editBtn", function () {
                 });
               },
             });
-          }
+          },
         });
       });
     },
@@ -246,48 +269,48 @@ $("#dashboard_bangdssv").on("click", "#editBtn", function () {
 $("#dashboard_bangdssv").on("click", "#downloadBtn", function () {
   let id = $(this).data("id");
   $.ajax({
-    type: 'GET',
-    url: '/xuat_danh_gia?id='+id,
-    success: function(res){
-      window.location.href='/xuat_danh_gia?id='+id;
+    type: "GET",
+    url: "/xuat_danh_gia?id=" + id,
+    success: function (res) {
+      window.location.href = "/xuat_danh_gia?id=" + id;
     },
-    error: function(xhr, status, error){
+    error: function (xhr, status, error) {
       Toast.fire({
         icon: "warning",
         title: "Sinh viên chưa có đánh giá",
       });
-    }
+    },
   });
 });
 
-$("#uploadBtn").click(function() {
+$("#uploadBtn").click(function () {
   $("#fileInput").click();
 });
 
-$("#fileInput").change(function() {
+$("#fileInput").change(function () {
   var fileName = $(this).val();
   if (fileName) {
     var form = new FormData();
     form.append("file", fileInput.files[0], fileName);
-    
+
     var settings = {
-      "url": "import_danh_gia_sv",
-      "method": "POST",
-      "timeout": 0,
-      "processData": false,
-      "mimeType": "multipart/form-data",
-      "contentType": false,
-      "data": form
+      url: "import_danh_gia_sv",
+      method: "POST",
+      timeout: 0,
+      processData: false,
+      mimeType: "multipart/form-data",
+      contentType: false,
+      data: form,
     };
-    
+
     $.ajax(settings).done(function (response) {
-      if(response){
+      if (response) {
         Toast.fire({
           icon: "success",
           title: "Import thành công",
         });
         bangdssv.ajax.reload();
-      }else{
+      } else {
         Toast.fire({
           icon: "error",
           title: "Import thất bại",
@@ -304,46 +327,57 @@ function clear_modal() {
   $("#modal_footer").empty();
 }
 
-$("#downloadBtn").on('click', function(){
+$("#downloadBtn").on("click", function () {
   clear_modal();
 
   $.ajax({
-    type: 'GET',
-    url: 'get_all_ky_thuc_tap',
-    success: function(res){
+    type: "GET",
+    url: "get_all_ky_thuc_tap",
+    success: function (res) {
       $("#modal_title").text("Download đánh giá theo kỳ thực tập");
-      html = '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control"></select></div>';
+      html =
+        '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control"></select></div>';
       $("#modal_body").append(html);
-      
-      $.each(res, function(idx, val){
-        $("#modal_kythuctap_select").append('<option value="'+val.id+'">'+val.ngaybatdau+' - '+val.ngayketthuc+'</option>');
+
+      $.each(res, function (idx, val) {
+        $("#modal_kythuctap_select").append(
+          '<option value="' +
+            val.id +
+            '">' +
+            val.ngaybatdau +
+            " - " +
+            val.ngayketthuc +
+            "</option>"
+        );
       });
 
       $("#modal_footer").append(
         '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Download</button>'
       );
-      $("#modal_id").modal('show');
+      $("#modal_id").modal("show");
 
-      $("#modal_submit_btn").click(function(){
-        let url = 'xuat_ds_sinh_vien_da_danh_gia?kythuctap='+$("#modal_kythuctap_select").val();
+      $("#modal_submit_btn").click(function () {
+        let url =
+          "xuat_ds_sinh_vien_da_danh_gia?kythuctap=" +
+          $("#modal_kythuctap_select").val();
 
         $.ajax({
-          type: 'GET',
+          type: "GET",
           url: url,
-          success: function(res){
-            window.location.href=url;
+          success: function (res) {
+            window.location.href = url;
           },
-          error: function(xhr, status, error){
+          error: function (xhr, status, error) {
             Toast.fire({
               icon: "error",
               title: "Chưa có đánh giá cho sinh viên trong kỳ thực tập này",
             });
-          }
-        })
+          },
+        });
       });
-    }
+    },
   });
-})
+});
 
 function create_table(data) {
   let bangdssv = $("#dashboard_bangdssv").DataTable({
@@ -356,17 +390,18 @@ function create_table(data) {
     autoWidth: false,
     responsive: true,
     ajax: {
-          type: "GET",
-          url: 'get_ds_sinh_vien_by_username?kythuctap='+data,
-          dataSrc: "",
-        },
+      type: "GET",
+      url: "get_ds_sinh_vien_by_username?kythuctap=" + data,
+      dataSrc: "",
+    },
     columns: [
       { data: "mssv" },
       { data: "hoten" },
-      { data: "gioitinh",
+      {
+        data: "gioitinh",
         render: function (data, type, row) {
-          return '<center>'+data+'</center>';
-        }
+          return "<center>" + data + "</center>";
+        },
       },
       { data: "nganh" },
       { data: "detai" },
@@ -397,13 +432,12 @@ function create_table(data) {
   });
 }
 
-$(document).ready(function() {
-  create_table('-1');
-  $('#filter_kythuctap').on('change', function() {
-    let id = $('#filter_kythuctap').val();
+$(document).ready(function () {
+  create_table("-1");
+  $("#filter_kythuctap").on("change", function () {
+    let id = $("#filter_kythuctap").val();
     create_table(id);
   });
-  
-  loadFilter();
 
+  loadFilter();
 });

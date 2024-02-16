@@ -139,7 +139,7 @@ $(function () {
     $("#modal_title").empty();
     $("#modal_body").empty();
     $("#modal_footer").empty();
-  }
+  };
 
   $.ajax({
     type: "GET",
@@ -187,14 +187,13 @@ $(function () {
       });
     },
   });
-$(document).ready(function() {
-
-  let dashboard_bangdssv = $("#dashboard_bangdssv").DataTable({
+  $(document).ready(function () {
+    let dashboard_bangdssv = $("#dashboard_bangdssv").DataTable({
       paging: true,
       lengthChange: false,
       searching: true,
       // ordering: true,
-      order: [[0, 'desc']],
+      order: [[0, "desc"]],
       info: true,
       autoWidth: false,
       responsive: true,
@@ -207,29 +206,29 @@ $(document).ready(function() {
         { data: "id" },
         { data: "mssv" },
         { data: "hoten" },
-        { 
+        {
           data: "gioitinh",
-          render: function(data, type, row){
-            if(data==0){
-              return 'Nữ'
-            }else{
-              return 'Nam'
+          render: function (data, type, row) {
+            if (data == 0) {
+              return "Nữ";
+            } else {
+              return "Nam";
             }
-          }
+          },
         },
         { data: "nganh" },
         { data: "truong" },
         {
           data: "trangthai",
-          render: function(data, type, row){
-            if(data==0){
+          render: function (data, type, row) {
+            if (data == 0) {
               return '<center><span class="badge badge-danger"><i class="fa-solid fa-triangle-exclamation"></i> Chưa có nhóm</span></center>';
-            }else if(data==1){
+            } else if (data == 1) {
               return '<center><span class="badge badge-warning"><i class="fa-solid fa-circle-exclamation"></i> Chưa đánh giá</span></center>';
-            }else{
+            } else {
               return '<center><span class="badge badge-success"><i class="fa-solid fa-check"></i> Đã đánh giá</span></center>';
             }
-          }
+          },
         },
         {
           data: "id",
@@ -241,99 +240,233 @@ $(document).ready(function() {
               data +
               '" id="deleteBtn"><i class="fas fa-trash"></i></a>'
             );
-          }
+          },
         },
         {
-          data: "luuy"
-        }
+          data: "luuy",
+        },
       ],
       columnDefs: [
         {
           targets: 8,
-          visible: false
-        }
+          visible: false,
+        },
       ],
-      createdRow: function(row, data, dataIndex) {
+      createdRow: function (row, data, dataIndex) {
         if (data.luuy == 1) {
-            $(row).addClass('luuy-1');
-        }else if (data.luuy == 2) {
-          $(row).addClass('luuy-2');
+          $(row).addClass("luuy-1");
+        } else if (data.luuy == 2) {
+          $(row).addClass("luuy-2");
         }
-    }
+      },
     });
   });
 });
 
 // xem/sửa thông tin sinh viên
-$("#dashboard_bangdssv").on('click', '#viewBtn', function(){
-  let id = $(this).data('id');
+$("#dashboard_bangdssv").on("click", "#viewBtn", function () {
+  let id = $(this).data("id");
   // Clear modal
   $("#modal_title").empty();
   $("#modal_body").empty();
   $("#modal_footer").empty();
   $.ajax({
-    type: 'GET',
-    url: 'get_chi_tiet_sinh_vien_by_id?id=' + id,
-    success: function(res){
-      $('.modal-dialog').addClass('modal-lg');
-      $('#modal_title').text('Thông tin sinh viên');
-      let html='';
+    type: "GET",
+    url: "get_chi_tiet_sinh_vien_by_id?id=" + id,
+    success: function (res) {
+      $(".modal-dialog").addClass("modal-lg");
+      $("#modal_title").text("Thông tin sinh viên");
+      let html = "";
 
-      if(res.trangthai==0){
-        html='<table class="table" id="thongtinsinhvien"><tr>    <td>Họ tên</td>    <td> <input type="text" id="hoten_sv" value="'+res.hoten+'" class="form-control"/></td></tr><tr>    <td>MSSV</td>    <td><input type="text" id="mssv" value="'+res.mssv+'" class="form-control"/></td></tr><tr>    <td>Giới tính</td>    <td><select id="gioitinh_sv" class="form-control select2"><option value="1">Nam</option><option value="0">Nữ</option></select></td></tr><tr>    <td>SĐT</td>    <td><input type="tel" id="sdt_sv" value="'+res.sdt+'" class="form-control"/></td></tr><tr>    <td>Email</td>    <td><input type="email" id="email_sv" value="'+res.email+'" class="form-control"/></td></tr><tr>    <td>Điạ chỉ</td>    <td><input type="text" id="diachi_sv" value="'+res.diachi+'" class="form-control" /></td></tr><tr>    <td>Mã lớp</td>    <td><input type="text" id="malop_sv" value="'+res.malop+'" class="form-control"/></td></tr><tr>    <td>Khoá</td>    <td><input type="number" id="khoa_sv" value="'+res.khoa+'" class="form-control"/></td></tr><tr>    <td>Ngành</td>    <td><select id="nganh_sv" class="form-control select2">'+res.nganh+'</select></td></tr><tr>    <td>Trường</td>    <td><select id="truong_sv" class="form-control select2">'+res.truong+'</select></td></tr></table>';
-      }else if(res.trangthai==1){
-        html='<table class="table" id="thongtinsinhvien"><tr>    <td>Họ tên</td>    <td><input type="text" id="hoten_sv" value="'+res.hoten+'" class="form-control"/></td></tr><tr>    <td>MSSV</td>    <td><input type="text" id="mssv" value="'+res.mssv+'" class="form-control"/></td></tr><tr>    <td>Giới tính</td>    <td><select id="gioitinh_sv" class="form-control select2"><option value="1">Nam</option><option value="0">Nữ</option></select></td></tr><tr>    <td>SĐT</td>    <td><input type="tel" id="sdt_sv" value="'+res.sdt+'" class="form-control"/></td></tr><tr>    <td>Email</td>    <td><input type="email" id="email_sv" value="'+res.email+'" class="form-control"/></td></tr><tr>    <td>Điạ chỉ</td>    <td><input type="text" id="diachi_sv" value="'+res.diachi+'" class="form-control" /></td></tr><tr>    <td>Mã lớp</td>    <td><input type="text" id="malop_sv" value="'+res.malop+'" class="form-control"/></td></tr><tr>    <td>Khoá</td>    <td><input type="number" id="khoa_sv" value="'+res.khoa+'" class="form-control"/></td></tr><tr>    <td>Ngành</td>    <td><select id="nganh_sv" class="form-control select2">'+res.nganh+'</select></td></tr><tr>    <td>Trường</td>    <td><select id="truong_sv" class="form-control select2">'+res.truong+'</select></td></tr><tr>    <td>Kỳ thực tập</td>    <td>'+res.ngaybatdau+'</td></tr><tr>    <td>Đề tài</td>    <td>'+res.tendetai+'</td></tr><tr>    <td>Tên nhóm</td>    <td>'+res.tennhom+'</td></tr><tr>    <td>Người hướng dẫn</td>    <td>'+res.nguoihuongdan+'</td></tr></table>';
-      }else{
-        html = '<table class="table" id="thongtinsinhvien"> <tr> <td>Họ tên</td> <td><input type="text" id="hoten_sv" value="'+res.hoten+'" class="form-control"/></td> </tr> <tr> <td>MSSV</td> <td><input type="text" id="mssv" value="'+res.mssv+'" class="form-control"/></td> </tr> <tr> <td>Giới tính</td> <td><select id="gioitinh_sv" class="form-control select2"><option value="1">Nam</option><option value="0">Nữ</option></select></td> </tr> <tr> <td>SĐT</td> <td><input type="tel" id="sdt_sv" value="'+res.sdt+'" class="form-control"/></td> </tr> <tr> <td>Email</td> <td><input type="email" id="email_sv" value="'+res.email+'" class="form-control"/></td> </tr> <tr> <td>Điạ chỉ</td> <td><input type="text" id="diachi_sv" value="'+res.diachi+'" class="form-control" /></td> </tr> <tr> <td>Mã lớp</td> <td><input type="text" id="malop_sv" value="'+res.malop+'" class="form-control"/></td> </tr> <tr> <td>Khoá</td> <td><input type="number" id="khoa_sv" value="'+res.khoa+'" class="form-control"/></td> </tr> <tr> <td>Ngành</td> <td><select id="nganh_sv" class="form-control select2">'+res.nganh+'</select></td> </tr> <tr> <td>Trường</td> <td><select id="truong_sv" class="form-control select2">'+res.truong+'</select></td> </tr> <tr> <td>Kỳ thực tập</td> <td>'+res.ngaybatdau+'</td> </tr> <tr> <td>Đề tài</td> <td>'+res.tendetai+'</td> </tr><tr>    <td>Tên nhóm</td>    <td>'+res.tennhom+'</td></tr> <tr> <td>Người hướng dẫn</td> <td>'+res.nguoihuongdan+'</td> </tr> <tr> <td> Ý thức kỷ luật </td> <td> <span class="badge badge-primary"> '+res.ythuckyluat_number+' </span> '+res.ythuckyluat_text+' </td> </tr> <tr> <td> Tuân thủ thời gian </td> <td> <span class="badge badge-primary"> '+res.tuanthuthoigian_number+' </span> '+res.tuanthuthoigian_text+' </td> </tr> <tr> <td> Kiến thức </td> <td> <span class="badge badge-primary"> '+res.kienthuc_number+' </span> '+res.kienthuc_text+' </td> </tr> <tr> <td> Kỷ năng nghề </td> <td> <span class="badge badge-primary"> '+res.kynangnghe_number+' </span> '+res.kynangnghe_text+' </td> </tr> <tr> <td> Khả năng làm việc độc lập </td> <td> <span class="badge badge-primary"> '+res.khanangdoclap_number+' </span> '+res.khanangdoclap_text+' </td> </tr> <tr> <td> Khả năng làm việc nhóm </td> <td> <span class="badge badge-primary"> '+res.khanangnhom_number+' </span> '+res.khanangnhom_text+' </td> </tr> <tr> <td> Khả năng giải quyết công việc </td> <td> <span class="badge badge-primary"> '+res.khananggiaiquyetcongviec_number+' </span> '+res.khananggiaiquyetcongviec_text+' </td> </tr> <tr> <td> Đánh giá chung </td> <td> <span class="badge badge-primary"> '+res.danhgiachung_number+' </span> </td> </tr> </table>';
+      if (res.trangthai == 0) {
+        html =
+          '<table class="table" id="thongtinsinhvien"><tr>    <td>Họ tên</td>    <td> <input type="text" id="hoten_sv" value="' +
+          res.hoten +
+          '" class="form-control"/></td></tr><tr>    <td>MSSV</td>    <td><input type="text" id="mssv" value="' +
+          res.mssv +
+          '" class="form-control"/></td></tr><tr>    <td>Giới tính</td>    <td><select id="gioitinh_sv" class="form-control select2"><option value="1">Nam</option><option value="0">Nữ</option></select></td></tr><tr>    <td>SĐT</td>    <td><input type="tel" id="sdt_sv" value="' +
+          res.sdt +
+          '" class="form-control"/></td></tr><tr>    <td>Email</td>    <td><input type="email" id="email_sv" value="' +
+          res.email +
+          '" class="form-control"/></td></tr><tr>    <td>Điạ chỉ</td>    <td><input type="text" id="diachi_sv" value="' +
+          res.diachi +
+          '" class="form-control" /></td></tr><tr>    <td>Mã lớp</td>    <td><input type="text" id="malop_sv" value="' +
+          res.malop +
+          '" class="form-control"/></td></tr><tr>    <td>Khoá</td>    <td><input type="number" id="khoa_sv" value="' +
+          res.khoa +
+          '" class="form-control"/></td></tr><tr>    <td>Ngành</td>    <td><select id="nganh_sv" class="form-control select2">' +
+          res.nganh +
+          '</select></td></tr><tr>    <td>Trường</td>    <td><select id="truong_sv" class="form-control select2">' +
+          res.truong +
+          "</select></td></tr></table>";
+      } else if (res.trangthai == 1) {
+        html =
+          '<table class="table" id="thongtinsinhvien"><tr>    <td>Họ tên</td>    <td><input type="text" id="hoten_sv" value="' +
+          res.hoten +
+          '" class="form-control"/></td></tr><tr>    <td>MSSV</td>    <td><input type="text" id="mssv" value="' +
+          res.mssv +
+          '" class="form-control"/></td></tr><tr>    <td>Giới tính</td>    <td><select id="gioitinh_sv" class="form-control select2"><option value="1">Nam</option><option value="0">Nữ</option></select></td></tr><tr>    <td>SĐT</td>    <td><input type="tel" id="sdt_sv" value="' +
+          res.sdt +
+          '" class="form-control"/></td></tr><tr>    <td>Email</td>    <td><input type="email" id="email_sv" value="' +
+          res.email +
+          '" class="form-control"/></td></tr><tr>    <td>Điạ chỉ</td>    <td><input type="text" id="diachi_sv" value="' +
+          res.diachi +
+          '" class="form-control" /></td></tr><tr>    <td>Mã lớp</td>    <td><input type="text" id="malop_sv" value="' +
+          res.malop +
+          '" class="form-control"/></td></tr><tr>    <td>Khoá</td>    <td><input type="number" id="khoa_sv" value="' +
+          res.khoa +
+          '" class="form-control"/></td></tr><tr>    <td>Ngành</td>    <td><select id="nganh_sv" class="form-control select2">' +
+          res.nganh +
+          '</select></td></tr><tr>    <td>Trường</td>    <td><select id="truong_sv" class="form-control select2">' +
+          res.truong +
+          "</select></td></tr><tr>    <td>Kỳ thực tập</td>    <td>" +
+          res.ngaybatdau +
+          "</td></tr><tr>    <td>Đề tài</td>    <td>" +
+          res.tendetai +
+          "</td></tr><tr>    <td>Tên nhóm</td>    <td>" +
+          res.tennhom +
+          "</td></tr><tr>    <td>Người hướng dẫn</td>    <td>" +
+          res.nguoihuongdan +
+          "</td></tr></table>";
+      } else {
+        html =
+          '<table class="table" id="thongtinsinhvien"> <tr> <td>Họ tên</td> <td><input type="text" id="hoten_sv" value="' +
+          res.hoten +
+          '" class="form-control"/></td> </tr> <tr> <td>MSSV</td> <td><input type="text" id="mssv" value="' +
+          res.mssv +
+          '" class="form-control"/></td> </tr> <tr> <td>Giới tính</td> <td><select id="gioitinh_sv" class="form-control select2"><option value="1">Nam</option><option value="0">Nữ</option></select></td> </tr> <tr> <td>SĐT</td> <td><input type="tel" id="sdt_sv" value="' +
+          res.sdt +
+          '" class="form-control"/></td> </tr> <tr> <td>Email</td> <td><input type="email" id="email_sv" value="' +
+          res.email +
+          '" class="form-control"/></td> </tr> <tr> <td>Điạ chỉ</td> <td><input type="text" id="diachi_sv" value="' +
+          res.diachi +
+          '" class="form-control" /></td> </tr> <tr> <td>Mã lớp</td> <td><input type="text" id="malop_sv" value="' +
+          res.malop +
+          '" class="form-control"/></td> </tr> <tr> <td>Khoá</td> <td><input type="number" id="khoa_sv" value="' +
+          res.khoa +
+          '" class="form-control"/></td> </tr> <tr> <td>Ngành</td> <td><select id="nganh_sv" class="form-control select2">' +
+          res.nganh +
+          '</select></td> </tr> <tr> <td>Trường</td> <td><select id="truong_sv" class="form-control select2">' +
+          res.truong +
+          "</select></td> </tr> <tr> <td>Kỳ thực tập</td> <td>" +
+          res.ngaybatdau +
+          "</td> </tr> <tr> <td>Đề tài</td> <td>" +
+          res.tendetai +
+          "</td> </tr><tr>    <td>Tên nhóm</td>    <td>" +
+          res.tennhom +
+          "</td></tr> <tr> <td>Người hướng dẫn</td> <td>" +
+          res.nguoihuongdan +
+          '</td> </tr> <tr> <td> Ý thức kỷ luật </td> <td> <span class="badge badge-primary"> ' +
+          res.ythuckyluat_number +
+          " </span> " +
+          res.ythuckyluat_text +
+          ' </td> </tr> <tr> <td> Tuân thủ thời gian </td> <td> <span class="badge badge-primary"> ' +
+          res.tuanthuthoigian_number +
+          " </span> " +
+          res.tuanthuthoigian_text +
+          ' </td> </tr> <tr> <td> Kiến thức </td> <td> <span class="badge badge-primary"> ' +
+          res.kienthuc_number +
+          " </span> " +
+          res.kienthuc_text +
+          ' </td> </tr> <tr> <td> Kỷ năng nghề </td> <td> <span class="badge badge-primary"> ' +
+          res.kynangnghe_number +
+          " </span> " +
+          res.kynangnghe_text +
+          ' </td> </tr> <tr> <td> Khả năng làm việc độc lập </td> <td> <span class="badge badge-primary"> ' +
+          res.khanangdoclap_number +
+          " </span> " +
+          res.khanangdoclap_text +
+          ' </td> </tr> <tr> <td> Khả năng làm việc nhóm </td> <td> <span class="badge badge-primary"> ' +
+          res.khanangnhom_number +
+          " </span> " +
+          res.khanangnhom_text +
+          ' </td> </tr> <tr> <td> Khả năng giải quyết công việc </td> <td> <span class="badge badge-primary"> ' +
+          res.khananggiaiquyetcongviec_number +
+          " </span> " +
+          res.khananggiaiquyetcongviec_text +
+          ' </td> </tr> <tr> <td> Đánh giá chung </td> <td> <span class="badge badge-primary"> ' +
+          res.danhgiachung_number +
+          " </span> </td> </tr> </table>";
       }
-      html += '<script>$(".select2").select2({theme: "bootstrap",dropdownParent: $("#modal_id")});</script>';
+      html +=
+        '<script>$(".select2").select2({theme: "bootstrap",dropdownParent: $("#modal_id")});</script>';
       // Select danh sách ngành
       $.ajax({
-        type: 'GET',
-        url: 'get_danh_sach_nganh',
-        success: function(data) {
-          $.each(data, function(idx, val){
-            $('#nganh_sv').append('<option value="'+val.id+'">'+val.ten+'</option>');
+        type: "GET",
+        url: "get_danh_sach_nganh",
+        success: function (data) {
+          $.each(data, function (idx, val) {
+            $("#nganh_sv").append(
+              '<option value="' + val.id + '">' + val.ten + "</option>"
+            );
           });
-          $('#nganh_sv').val(res.id_nganh);        
-        }
+          $("#nganh_sv").val(res.id_nganh);
+        },
       });
-      
+
       // Select danh sách trường
       $.ajax({
-        type: 'GET',
-        url: 'get_danh_sach_truong',
-        success: function(data) {
-          $.each(data, function(idx, val){
-            $('#truong_sv').append('<option value="'+val.id+'">'+val.ten+'</option>');
+        type: "GET",
+        url: "get_danh_sach_truong",
+        success: function (data) {
+          $.each(data, function (idx, val) {
+            $("#truong_sv").append(
+              '<option value="' + val.id + '">' + val.ten + "</option>"
+            );
           });
-          $('#truong_sv').val(res.id_truong);
-        }
+          $("#truong_sv").val(res.id_truong);
+        },
       });
 
-      $('#modal_body').append(html);
+      $("#modal_body").append(html);
       $("#gioitinh_sv").val(res.gioitinh);
-      $('#modal_footer').append('<button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>  <button type="button" id="modal_save_button" data-id="'+id+'" class="btn btn-primary">Lưu</button>')
-      $('#modal_id').modal('show');
+      $("#modal_footer").append(
+        '<button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>  <button type="button" id="modal_save_button" data-id="' +
+          id +
+          '" class="btn btn-primary">Lưu</button>'
+      );
+      $("#modal_id").modal("show");
 
       // Chỉnh sửa thông tin
-      $("#modal_save_button").on('click', function() {
-        let id = $(this).data('id');
-      
-        let hoten_sv = $('#hoten_sv').val();
-        let maso_sv = $('#mssv').val();
-        let gioitinh_sv = $('#gioitinh_sv').val();
-        let sdt_sv = $('#sdt_sv').val();
-        let email_sv = $('#email_sv').val();
-        let diachi_sv = $('#diachi_sv').val();
-        let malop_sv = $('#malop_sv').val();
-        let khoa_sv = $('#khoa_sv').val();
-        let nganh_sv = $('#nganh_sv').val();
-        let truong_sv = $('#truong_sv').val();
-      
+      $("#modal_save_button").on("click", function () {
+        let id = $(this).data("id");
+
+        let hoten_sv = $("#hoten_sv").val();
+        let maso_sv = $("#mssv").val();
+        let gioitinh_sv = $("#gioitinh_sv").val();
+        let sdt_sv = $("#sdt_sv").val();
+        let email_sv = $("#email_sv").val();
+        let diachi_sv = $("#diachi_sv").val();
+        let malop_sv = $("#malop_sv").val();
+        let khoa_sv = $("#khoa_sv").val();
+        let nganh_sv = $("#nganh_sv").val();
+        let truong_sv = $("#truong_sv").val();
+
         $.ajax({
-          type: 'POST',
-          url: '/update_sinh_vien_by_id?id='+id+'&mssv='+maso_sv+'&hoten='+hoten_sv+'&gioitinh='+gioitinh_sv+'&sdt='+sdt_sv+'&email='+email_sv+'&diachi='+diachi_sv+'&malop='+malop_sv+'&truong='+truong_sv+'&nganh='+nganh_sv+'&khoa='+khoa_sv,
+          type: "POST",
+          url:
+            "/update_sinh_vien_by_id?id=" +
+            id +
+            "&mssv=" +
+            maso_sv +
+            "&hoten=" +
+            hoten_sv +
+            "&gioitinh=" +
+            gioitinh_sv +
+            "&sdt=" +
+            sdt_sv +
+            "&email=" +
+            email_sv +
+            "&diachi=" +
+            diachi_sv +
+            "&malop=" +
+            malop_sv +
+            "&truong=" +
+            truong_sv +
+            "&nganh=" +
+            nganh_sv +
+            "&khoa=" +
+            khoa_sv,
           success: function (data) {
             if (data.status == "OK") {
               $("#modal_id").modal("hide");
@@ -355,18 +488,17 @@ $("#dashboard_bangdssv").on('click', '#viewBtn', function(){
               title: "Đã xãy ra lỗi",
             });
           },
-        })
-      
+        });
       });
-    }
-  })
+    },
+  });
 });
 
 // Submit sửa thông tin sinh viên
 
 // Xóa thông tin sinh viên
-$("#dashboard_bangdssv").on('click', '#deleteBtn', function(){
-  let id = $(this).data('id');
+$("#dashboard_bangdssv").on("click", "#deleteBtn", function () {
+  let id = $(this).data("id");
 
   Swal.fire({
     title: "Bạn muốn xoá sinh viên " + id,
@@ -398,11 +530,11 @@ $("#dashboard_bangdssv").on('click', '#deleteBtn', function(){
   });
 });
 
-$('#dashboard_dssinhviendanhgia').DataTable({
+$("#dashboard_dssinhviendanhgia").DataTable({
   paging: true,
   lengthChange: false,
   searching: true,
-  order: [[0, 'desc']],
+  order: [[0, "desc"]],
   info: true,
   autoWidth: false,
   responsive: true,
@@ -421,25 +553,25 @@ $('#dashboard_dssinhviendanhgia').DataTable({
     {
       data: "id",
       render: function (data, type, row) {
-        return (`<a class="btn btn-info btn-sm" id="viewBtn" data-id="${data}">
+        return `<a class="btn btn-info btn-sm" id="viewBtn" data-id="${data}">
                   <i class="fas fa-eye"></i>
-                </a>`);
-      }
-    }
+                </a>`;
+      },
+    },
   ],
-  columnDefs: []
+  columnDefs: [],
 });
 
-$("#dashboard_dssinhviendanhgia").on('click', '#viewBtn', function(){
-  let id = $(this).data('id');
+$("#dashboard_dssinhviendanhgia").on("click", "#viewBtn", function () {
+  let id = $(this).data("id");
   $.ajax({
     type: "GET",
     url: `/get_ds_chi_tiet_danh_gia_by_id?id=${id}`,
     success: function (res) {
       clear_modal();
       // Hien thi modal
-      $('.modal-dialog').addClass('modal-lg');
-      $('#modal_title').text(`Chi tiết đánh giá`);
+      $(".modal-dialog").addClass("modal-lg");
+      $("#modal_title").text(`Chi tiết đánh giá`);
       let body = `
       <table class="table table-hover table-borderless display">
         <tbody>
@@ -486,8 +618,8 @@ $("#dashboard_dssinhviendanhgia").on('click', '#viewBtn', function(){
         </tbody>
       </table>
       `;
-      $('#modal_body').append(body);
-      $('#modal_id').modal('show');
+      $("#modal_body").append(body);
+      $("#modal_id").modal("show");
     },
     error: function (xhr, status, error) {
       Toast.fire({
@@ -498,12 +630,12 @@ $("#dashboard_dssinhviendanhgia").on('click', '#viewBtn', function(){
   });
 });
 
-function convertDoHaiLong(num){
-  if(num==2){
+function convertDoHaiLong(num) {
+  if (num == 2) {
     return `<span class="badge badge-success">Hài lòng</span>`;
-  }else if(num==1){
+  } else if (num == 1) {
     return `<span class="badge badge-warning">Bình thường</span>`;
-  }else{
+  } else {
     return `<span class="badge badge-danger">Không hài lòng</span>`;
   }
 }
