@@ -20,9 +20,15 @@ email_name = os.getenv('EMAIL_NAME')
 
 
 def create_connection():
-    # Sử dụng ODBC Driver
-    conn = pyodbc.connect(
-        f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password};CHARSET=UTF8')
-    # Sử dụng FreeTDS Driver
-    # conn = pyodbc.connect(f'DRIVER={{FreeTDS}};Server={server};DATABASE={database};Port=1433;UID={username};PWD={password};CHARSET=UTF8')
-    return conn
+    try:
+        # Sử dụng ODBC Driver
+        conn = pyodbc.connect(
+            f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password};CHARSET=UTF8')
+        return conn
+    except pyodbc.Error:
+        # Sử dụng FreeTDS Driver
+        conn = pyodbc.connect(
+            f'DRIVER={{FreeTDS}};Server={server};DATABASE={database};Port=1433;UID={username};PWD={password};')
+        return conn
+    finally:
+        return conn
