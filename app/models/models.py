@@ -1,15 +1,19 @@
 from ..config import create_connection
 from ..send_otp import is_otp_valid
 import datetime
+import bleach
 
 conn = create_connection()
 cursor = conn.cursor()
+
+def protect_xss(input: str):
+    return bleach.clean(input, tags=['br'], attributes={})
 
 def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str, DiaChi: str, MaLop: str, Truong: str, Nganh: str, Khoa: int) -> bool:
     try:
         check = cursor.execute("SELECT COUNT(ID) FROM SINHVIEN WHERE MSSV=?", MSSV).fetchone()[0]
         if check==0:
-            i = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", MSSV, HoTen, GioiTinh, SDT, Email, DiaChi, MaLop, Truong, Nganh, Khoa, 0).fetchone()
+            i = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(MSSV), protect_xss(HoTen), protect_xss(GioiTinh), protect_xss(SDT), protect_xss(Email), protect_xss(DiaChi), protect_xss(MaLop), protect_xss(Truong), protect_xss(Nganh), protect_xss(Khoa), 0).fetchone()
             result = i[0]
             conn.commit()
             return result
@@ -20,7 +24,7 @@ def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str,
     
 def verify_user(username: str, password: str):
     try:
-        cursor.execute("LoginUser ?, ?", username, password)
+        cursor.execute("LoginUser ?, ?", protect_xss(username), protect_xss(password))
         result = cursor.fetchone()
 
         if not result or not result.IsValidUser:
@@ -111,7 +115,7 @@ def get_chi_tiet_de_tai_by_id(id: str):
     
 def update_chi_tiet_de_tai_by_id(id: str, ten: str, mota: str, isDeleted: int):
     try:
-        result = cursor.execute("EXEC UpdateChiTietDeTaiByID ?, ?, ?, ?", id, ten, mota, isDeleted)
+        result = cursor.execute("EXEC UpdateChiTietDeTaiByID ?, ?, ?, ?", protect_xss(id), protect_xss(ten), protect_xss(mota), (isDeleted))
         conn.commit()
         return True
     except Exception as e:
@@ -119,7 +123,7 @@ def update_chi_tiet_de_tai_by_id(id: str, ten: str, mota: str, isDeleted: int):
     
 def update_xoa_de_tai_by_id(id: str):
     try:
-        result = cursor.execute("EXEC UpdateXoaDeTaiByID ?", id)
+        result = cursor.execute("EXEC UpdateXoaDeTaiByID ?", protect_xss(id))
         conn.commit()
         return True
     except Exception as e:
@@ -135,7 +139,8 @@ def get_nhom_thuc_tap_by_user_id(id: str):
 
 def them_de_tai_thuc_tap(ten: str, mota: str, isDeleted: int):
     try:
-        result = cursor.execute("EXEC InsertDeTai ?, ?, ?", ten, mota, isDeleted)
+        print(protect_xss(mota))
+        result = cursor.execute("EXEC InsertDeTai ?, ?, ?", protect_xss(ten), protect_xss(mota), isDeleted)
         conn.commit()
         return True
     except Exception as e:
@@ -158,7 +163,7 @@ def get_chi_tiet_ky_thuc_tap_by_id(id: str):
     
 def update_chi_tiet_ky_thuc_tap_by_id(id: str, ngaybatdau: str, ngayketthuc: str, isDeleted: int, ghichu: str):
     try:
-        result = cursor.execute("EXEC UpdateChiTietKyThucTapByID ?, ?, ?, ?, ?", id, ngaybatdau, ngayketthuc, isDeleted, ghichu)
+        result = cursor.execute("EXEC UpdateChiTietKyThucTapByID ?, ?, ?, ?, ?", protect_xss(id), protect_xss(ngaybatdau), protect_xss(ngayketthuc), (isDeleted), protect_xss(ghichu))
         conn.commit()
         return True
     except Exception as e:
@@ -166,7 +171,7 @@ def update_chi_tiet_ky_thuc_tap_by_id(id: str, ngaybatdau: str, ngayketthuc: str
     
 def them_ky_thuc_tap(ngaybatdau: str, ngayketthuc: str, isDeleted: int, ghichu: str):
     try:
-        result = cursor.execute("EXEC InsertKyThucTap ?, ?, ?, ?", ngaybatdau, ngayketthuc, isDeleted, ghichu)
+        result = cursor.execute("EXEC InsertKyThucTap ?, ?, ?, ?", protect_xss(ngaybatdau), protect_xss(ngayketthuc), isDeleted, protect_xss(ghichu))
         conn.commit()
         return True
     except Exception as e:
@@ -174,7 +179,7 @@ def them_ky_thuc_tap(ngaybatdau: str, ngayketthuc: str, isDeleted: int, ghichu: 
     
 def update_xoa_ky_thuc_tap_by_id(id: str):
     try:
-        result = cursor.execute("EXEC UpdateXoaKyThucTapByID ?", id)
+        result = cursor.execute("EXEC UpdateXoaKyThucTapByID ?", protect_xss(id))
         conn.commit()
         return True
     except Exception as e:
@@ -226,7 +231,7 @@ def get_chi_tiet_chinh_sua_nhom():
     
 def update_chi_tiet_nhom_thuc_tap_by_id(id: int, kytt: int, nguoihd: int, detai: int, soluong: int, tennhom: str, isDeleted: int, ghichu: str):
     try:
-        result = cursor.execute("EXEC UpdateChiTietNhomThucTapByID ?, ?, ?, ?, ?, ?, ?, ?", id, kytt, nguoihd, detai, soluong, isDeleted, ghichu, tennhom)
+        result = cursor.execute("EXEC UpdateChiTietNhomThucTapByID ?, ?, ?, ?, ?, ?, ?, ?", id, kytt, nguoihd, detai, soluong, isDeleted, protect_xss(ghichu), protect_xss(tennhom))
         conn.commit()
         return True
     except Exception as e:
@@ -234,7 +239,7 @@ def update_chi_tiet_nhom_thuc_tap_by_id(id: int, kytt: int, nguoihd: int, detai:
     
 def update_xoa_nhom_thuc_tap_by_id(id: str):
     try:
-        result = cursor.execute("EXEC UpdateXoaNhomThucTapByID ?", id)
+        result = cursor.execute("EXEC UpdateXoaNhomThucTapByID ?", protect_xss(id))
         conn.commit()
         return True
     except Exception as e:
@@ -242,7 +247,7 @@ def update_xoa_nhom_thuc_tap_by_id(id: str):
     
 def them_nhom_thuc_tap(nguoihd: str, kytt: str, detai: str, soluong: int, tennhom: str, isDeleted: int, ghichu: str):
     try:
-        result = cursor.execute("EXEC InsertNhomThucTap ?, ?, ?, ?, ?, ?, ?", nguoihd, kytt, detai, soluong, isDeleted, ghichu, tennhom)
+        result = cursor.execute("EXEC InsertNhomThucTap ?, ?, ?, ?, ?, ?, ?", protect_xss(nguoihd), protect_xss(kytt), protect_xss(detai), soluong, isDeleted, protect_xss(ghichu), protect_xss(tennhom))
         conn.commit()
         return True
     except Exception as e:
@@ -292,7 +297,7 @@ def get_chi_tiet_danh_gia_sv_by_id(id: str):
     
 def update_danh_gia_sv_by_id(sinhvienid: str, nhomid: int, ythuckyluat_number: float, ythuckyluat_text: str, tuanthuthoigian_number: float, tuanthuthoigian_text: str, kienthuc_number: float, kienthuc_text: str, kynangnghe_number: float, kynangnghe_text: str, khanangdoclap_number: float, khanangdoclap_text: str, khanangnhom_number: float, khanangnhom_text: str, khananggiaiquyetcongviec_number: float, khananggiaiquyetcongviec_text: str, danhgiachung_number: float):
     try:
-        result = cursor.execute("EXEC UpdateDanhGiaSVByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", sinhvienid, nhomid, ythuckyluat_number, ythuckyluat_text, tuanthuthoigian_number, tuanthuthoigian_text, kienthuc_number, kienthuc_text, kynangnghe_number, kynangnghe_text, khanangdoclap_number, khanangdoclap_text, khanangnhom_number, khanangnhom_text, khananggiaiquyetcongviec_number, khananggiaiquyetcongviec_text, danhgiachung_number)
+        result = cursor.execute("EXEC UpdateDanhGiaSVByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(sinhvienid), nhomid, ythuckyluat_number, protect_xss(ythuckyluat_text), tuanthuthoigian_number, protect_xss(tuanthuthoigian_text), kienthuc_number, protect_xss(kienthuc_text), kynangnghe_number, protect_xss(kynangnghe_text), khanangdoclap_number, protect_xss(khanangdoclap_text), khanangnhom_number, protect_xss(khanangnhom_text), khananggiaiquyetcongviec_number, protect_xss(khananggiaiquyetcongviec_text), danhgiachung_number)
         cursor.commit()
         return True
     except Exception as e:
@@ -300,7 +305,7 @@ def update_danh_gia_sv_by_id(sinhvienid: str, nhomid: int, ythuckyluat_number: f
     
 def update_danh_gia_sv_by_mssv(mssv: str, ythuckyluat_number: float, ythuckyluat_text: str, tuanthuthoigian_number: float, tuanthuthoigian_text: str, kienthuc_number: float, kienthuc_text: str, kynangnghe_number: float, kynangnghe_text: str, khanangdoclap_number: float, khanangdoclap_text: str, khanangnhom_number: float, khanangnhom_text: str, khananggiaiquyetcongviec_number: float, khananggiaiquyetcongviec_text: str, danhgiachung_number: float):
     try:
-        result = cursor.execute("EXEC UpdateDanhGiaSVByMSSV ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", mssv, ythuckyluat_number, ythuckyluat_text, tuanthuthoigian_number, tuanthuthoigian_text, kienthuc_number, kienthuc_text, kynangnghe_number, kynangnghe_text, khanangdoclap_number, khanangdoclap_text, khanangnhom_number, khanangnhom_text, khananggiaiquyetcongviec_number, khananggiaiquyetcongviec_text, danhgiachung_number)
+        result = cursor.execute("EXEC UpdateDanhGiaSVByMSSV ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(mssv), ythuckyluat_number, protect_xss(ythuckyluat_text), tuanthuthoigian_number, protect_xss(tuanthuthoigian_text), kienthuc_number, protect_xss(kienthuc_text), kynangnghe_number, protect_xss(kynangnghe_text), khanangdoclap_number, protect_xss(khanangdoclap_text), khanangnhom_number, protect_xss(khanangnhom_text), khananggiaiquyetcongviec_number, protect_xss(khananggiaiquyetcongviec_text), danhgiachung_number)
         cursor.commit()
         return True
     except Exception as e:
@@ -308,7 +313,7 @@ def update_danh_gia_sv_by_mssv(mssv: str, ythuckyluat_number: float, ythuckyluat
 
 def get_id_nhom_by_sv_id(id: str):
     try:
-        i = cursor.execute("EXEC GetIDNhomBySVID ?", id).fetchone()
+        i = cursor.execute("EXEC GetIDNhomBySVID ?", protect_xss(id)).fetchone()
         return int(i[0])
     except Exception as e:
         return e
@@ -318,7 +323,7 @@ def get_ds_nhom_chua_co_cong_viec(username: str):
         Get danh sách nhóm chưa có công việc bằng ID người hướng dẫn
     """
     try:
-        result = cursor.execute("EXEC [GetDSNhomChuaCoCongViecByNguoiHDUsername] ?", username)
+        result = cursor.execute("EXEC [GetDSNhomChuaCoCongViecByNguoiHDUsername] ?", protect_xss(username))
         data = [{'id': i[0], 'ngaybatdau': i[3], 'tendetai': i[5], 'idcongviec': i[7], 'tennhom': i[8]} for i in result]
         return data
     except Exception as e:
@@ -359,7 +364,7 @@ def get_chi_tiet_cong_viec_by_id(id: int):
 
 def update_chi_tiet_cong_viec_by_id(id: int, svid: int, trangthai: int, ghichu: str):
     try:
-        result = cursor.execute("EXEC UpdateChiTietCongViecByID ?, ?, ?, ?", id, svid, trangthai, ghichu)
+        result = cursor.execute("EXEC UpdateChiTietCongViecByID ?, ?, ?, ?", id, svid, trangthai, protect_xss(ghichu))
         cursor.commit()
         if result.fetchone()[0]==1:
             return True
@@ -392,7 +397,7 @@ def xoa_cong_viec_by_id(id: int):
 
 def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str):
     try:
-        result = cursor.execute("EXEC InsertCongViec ?, ?, ?, ?, ?", id, ngaybatdau, ngayketthuc, ten, mota)
+        result = cursor.execute("EXEC InsertCongViec ?, ?, ?, ?, ?", id, protect_xss(ngaybatdau), protect_xss(ngayketthuc), protect_xss(ten), protect_xss(mota))
         cursor.commit()
         if result.fetchone()[0]==1:
             return True
@@ -403,7 +408,7 @@ def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mo
     
 def them_chi_tiet_cong_viec(id_congviec: int, id_sinhvien: int, trangthai: int, ghichu: str):
     try:
-        result = cursor.execute("EXEC InsertChiTietCongViec ?, ?, ?, ?", id_congviec, id_sinhvien, trangthai, ghichu)
+        result = cursor.execute("EXEC InsertChiTietCongViec ?, ?, ?, ?", id_congviec, id_sinhvien, trangthai, protect_xss(ghichu))
         cursor.commit()
         return True
     except Exception as e:
@@ -450,7 +455,7 @@ def update_nhom_thuc_tap_by_sv_id(email: str, idnhom: int):
         registed = cursor.execute("EXEC GetSoLuongSVDaDangKyByNhomID ?", idnhom).fetchone()[0]
         quantity = cursor.execute("SELECT SoLuong FROM NHOMHUONGDAN WHERE ID = ?", idnhom).fetchone()[0]
         if(registed < quantity):
-            result = cursor.execute("EXEC UpdateNhomThucTapBySinhVienEmail ?, ?", email, idnhom)
+            result = cursor.execute("EXEC UpdateNhomThucTapBySinhVienEmail ?, ?", protect_xss(email), idnhom)
             r = result.fetchone()[0]
             cursor.commit()
             if r:
@@ -464,7 +469,7 @@ def update_nhom_thuc_tap_by_sv_id(email: str, idnhom: int):
     
 def get_dssv_da_danh_gia_by_nguoi_huong_dan(username: str, kythuctap: int):
     try:
-        result = cursor.execute("EXEC GetDSSVDanhGiaByNguoiHuongDanUsername ?, ?", username, kythuctap).fetchall()
+        result = cursor.execute("EXEC GetDSSVDanhGiaByNguoiHuongDanUsername ?, ?", protect_xss(username), kythuctap).fetchall()
         return [{'mssv': i[21], 'hoten': i[18], 'malop': i[19], 'nguoihuongdan': i[20], 'ythuckyluat_text': i[4], 'ythuckyluat_number': i[3], 'tuanthuthoigian_text': i[6], 'tuanthuthoigian_number': i[5], 'kienthuc_text': i[8], 'kienthuc_number': i[7], 'kynangnghe_text': i[10], 'kynangnghe_number': i[9], 'khanangdoclap_text': i[12], 'khanangdoclap_number': i[11], 'khanangnhom_text': i[14], 'khanangnhom_number': i[13], 'khananggiaiquyetcongviec_text': i[16], 'khananggiaiquyetcongviec_number': i[15], 'danhgiachung_number': i[17]} for i in result]
     except Exception as e:
         return e
@@ -480,7 +485,7 @@ def update_xoa_sinh_vien_by_id(id: int):
 
 def update_sinh_vien_by_id(id: int, mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, truong: int, nganh: int, khoa: int):
     try:
-        result = cursor.execute("EXEC UpdateSinhVienByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", id, mssv, hoten, gioitinh, sdt, email, diachi, malop, truong, nganh, khoa)
+        result = cursor.execute("EXEC UpdateSinhVienByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", id, protect_xss(mssv), protect_xss(hoten), gioitinh, protect_xss(sdt), protect_xss(email), protect_xss(diachi), protect_xss(malop), truong, nganh, khoa)
         r = cursor.fetchone()[0]
         cursor.commit()
         return r
@@ -497,12 +502,13 @@ def get_danh_sach_nhom_theo_ky_id(id: int):
     
 def get_ho_ten_sv_by_email(email: str):
     try:
-        result = cursor.execute("EXEC GetHoTenSVByEmail ?", email)
+        result = cursor.execute("EXEC GetHoTenSVByEmail ?", protect_xss(email))
         return result.fetchone()[0]
     except Exception as e:
         return e
     
 def kiem_tra_loai_tai_khoan(username: str):
+    username = protect_xss(username)
     try:
         if username:
             if '@' in username:
@@ -519,6 +525,7 @@ def kiem_tra_loai_tai_khoan(username: str):
         return e
     
 def xem_thong_tin_sv(email: str):
+    email = protect_xss(email)
     try:
         result = cursor.execute("EXEC GetChiTietSVByEmail ?", email)
         if result:
@@ -531,7 +538,7 @@ def insert_danh_gia_thuc_tap(sv_id: int, nhd_id: int, dapan_1: int, dapan_2: int
     try:
         check = cursor.execute("SELECT COUNT(ID) FROM CHITIET_DANHGIA WHERE ID_SinhVien = ?", sv_id).fetchone()[0]
         if check==0:
-            result = cursor.execute("EXEC InsertChiTietDanhGia ?, ?, ?, ?, ?, ?, ?", sv_id, nhd_id, dapan_1, dapan_2, dapan_3, dapan_4, gopy)
+            result = cursor.execute("EXEC InsertChiTietDanhGia ?, ?, ?, ?, ?, ?, ?", sv_id, nhd_id, dapan_1, dapan_2, dapan_3, dapan_4, protect_xss(gopy))
             cursor.commit()
             if result.fetchone()[0]:
                 return True
