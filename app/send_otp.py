@@ -9,6 +9,8 @@ conn = create_connection()
 cursor = conn.cursor()
 
 # Hàm để gửi email với mã OTP và lưu thông tin vào cơ sở dữ liệu
+
+
 def send_otp_email(email: str, hoten: str):
     # Tạo một đối tượng TOTP với một secret key mới
     totp = pyotp.TOTP(pyotp.random_base32())
@@ -52,6 +54,8 @@ def send_otp_email(email: str, hoten: str):
     return True
 
 # Hàm để lưu thông tin mã OTP vào cơ sở dữ liệu
+
+
 def save_otp_to_database(email, otp):
     try:
         # Kiểm tra xem email đã tồn tại trong bảng chưa
@@ -60,10 +64,12 @@ def save_otp_to_database(email, otp):
 
         if email_count > 0:
             # Nếu tồn tại, cập nhật mã OTP mới
-            cursor.execute("UPDATE Temp_OTP SET OtpCode = ?, ExpiryTime = ?, IsVerified = ? WHERE Email = ?", otp, datetime.now() + timedelta(minutes=5), 0, email)
+            cursor.execute("UPDATE Temp_OTP SET OtpCode = ?, ExpiryTime = ?, IsVerified = ? WHERE Email = ?",
+                           otp, datetime.now() + timedelta(minutes=5), 0, email)
         else:
             # Nếu chưa tồn tại, thêm mới
-            cursor.execute("INSERT INTO Temp_OTP (Email, OtpCode, ExpiryTime, IsVerified) VALUES (?, ?, ?, ?)", email, otp, datetime.now() + timedelta(minutes=5), 0)
+            cursor.execute("INSERT INTO Temp_OTP (Email, OtpCode, ExpiryTime, IsVerified) VALUES (?, ?, ?, ?)",
+                           email, otp, datetime.now() + timedelta(minutes=5), 0)
 
         conn.commit()
 
@@ -72,18 +78,20 @@ def save_otp_to_database(email, otp):
 
 
 # Hàm để kiểm tra xem mã OTP có còn hạn không
-def is_otp_valid(email, entered_otp):    
+def is_otp_valid(email, entered_otp):
     try:
         # Lấy thông tin về thời gian hết hạn của mã OTP
-        cursor.execute("SELECT ExpiryTime, IsVerified FROM Temp_OTP WHERE Email = ? AND OtpCode = ?", email, entered_otp)
+        cursor.execute(
+            "SELECT ExpiryTime, IsVerified FROM Temp_OTP WHERE Email = ? AND OtpCode = ?", email, entered_otp)
         result = cursor.fetchone()
         expiry_time = result[0]
         isVerified = result[1]
         print(expiry_time, isVerified)
         if expiry_time:
-            if int(isVerified)==0:
+            if int(isVerified) == 0:
                 # expiry_time[1] = 0 là chưa xác thực thì xác thực rồi cập nhật lại = 1
-                cursor.execute("EXEC UpdateVerifiedOTP ?, ?", email, entered_otp)
+                cursor.execute("EXEC UpdateVerifiedOTP ?, ?",
+                               email, entered_otp)
                 cursor.commit()
                 # Kiểm tra xem thời gian hiện tại có nhỏ hơn thời gian hết hạn hay không
                 return datetime.now() < expiry_time
@@ -112,4 +120,3 @@ def is_otp_valid(email, entered_otp):
 #     print("Mã OTP hợp lệ.")
 # else:
 #     print("Mã OTP không hợp lệ hoặc đã hết hạn.")
-
