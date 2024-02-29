@@ -41,230 +41,6 @@ function loadFilter() {
   });
 }
 
-$("#dashboard_bangdssv").on("click", "#editBtn", function () {
-  let id = $(this).data("id");
-
-  empty_modal();
-  $.ajax({
-    url: "get_chi_tiet_danh_gia_sv_by_id?id=" + id,
-    type: "GET",
-    success: function (res) {
-      $(".modal-dialog").addClass("modal-lg");
-      $("#modal_title").text("Đánh giá sinh viên");
-      let html = `
-        <form id="editForm">
-          <div class="form-group row"> 
-            <div class="col-sm-10"> 
-              <label for="ythuckyluat" class="col-form-label">Ý thức kỷ luật, tuân thủ nội quy</label> 
-            </div> 
-            <div class="col-sm-2"> 
-              <input type="number" class="form-control" id="ythuckyluat_number" name="ythuckyluat_number" min="0" max="100" value="0"> 
-            </div> 
-            <div class="col-sm mt-4"> 
-              <textarea id="ythuckyluat_text" class="form-control" rows="3"></textarea> 
-            </div> 
-          </div> 
-          <div class="form-group row mt-4"> 
-            <div class="col-sm-10"> 
-              <label for="tuanthuthoigian" class="col-form-label">Tuân thủ thời gian</label> 
-            </div> 
-            <div class="col-sm-2"> 
-              <input type="number" class="form-control" id="tuanthuthoigian_number" name="tuanthuthoigian_number" min="0" max="100" value="0"> 
-            </div> 
-            <div class="col-sm mt-4"> 
-              <textarea id="tuanthuthoigian_text" class="form-control" rows="3"></textarea> 
-            </div> 
-          </div> 
-          <div class="form-group row mt-4"> 
-            <div class="col-sm-10"> 
-              <label for="kienthuc" class="col-form-label">Kiến thức</label> 
-            </div> 
-          <div class="col-sm-2"> 
-            <input type="number" class="form-control" id="kienthuc_number" name="kienthuc_number" min="0" max="100" value="0"> 
-          </div> 
-          <div class="col-sm mt-4"> 
-            <textarea id="kienthuc_text" class="form-control" rows="3"></textarea> 
-          </div>
-        </div> 
-        <div class="form-group row mt-4"> 
-          <div class="col-sm-10"> 
-            <label for="kynangnghe" class="col-form-label">Kỹ năng nghề</label> 
-          </div> 
-          <div class="col-sm-2"> 
-            <input type="number" class="form-control" id="kynangnghe_number" name="kynangnghe_number" min="0" max="100" value="0"> 
-          </div> 
-          <div class="col-sm mt-4"> 
-            <textarea id="kynangnghe_text" class="form-control" rows="3"></textarea> 
-          </div> 
-        </div> 
-        <div class="form-group row mt-4"> 
-          <div class="col-sm-10"> 
-            <label for="khanangdoclap" class="col-form-label">Khả năng làm việc độc lập</label> 
-          </div> 
-          <div class="col-sm-2"> 
-            <input type="number" class="form-control" id="khanangdoclap_number" name="khanangdoclap_number" min="0" max="100" value="0"> 
-          </div> 
-          <div class="col-sm mt-4"> 
-            <textarea id="khanangdoclap_text" class="form-control" rows="3"></textarea> 
-          </div> 
-        </div> 
-        <div class="form-group row mt-4"> 
-          <div class="col-sm-10"> 
-            <label for="khanangnhom" class="col-form-label">Khả năng làm việc nhóm</label> 
-          </div> 
-          <div class="col-sm-2"> 
-            <input type="number" class="form-control" id="khanangnhom_number" name="khanangnhom_number" min="0" max="100" value="0"> 
-          </div> 
-          <div class="col-sm mt-4"> 
-            <textarea id="khanangnhom_text" class="form-control" rows="3"></textarea> 
-          </div> 
-        </div> 
-        <div class="form-group row mt-4"> 
-          <div class="col-sm-10"> 
-            <label for="khananggiaiquyetcongviec" class="col-form-label">Khả năng giải quyết công việc</label> 
-          </div> 
-          <div class="col-sm-2"> 
-            <input type="number" class="form-control" id="khananggiaiquyetcongviec_number" name="khananggiaiquyetcongviec_number" min="0" max="100" value="0">
-          </div> 
-          <div class="col-sm mt-4"> 
-            <textarea id="khananggiaiquyetcongviec_text" class="form-control" rows="3"></textarea> 
-          </div> 
-        </div> 
-        <div class="form-group row mt-4"> 
-          <div class="col-sm-10"> 
-            <label for="danhgiachung" class="col-form-label">Đánh giá chung</label> 
-          </div> 
-          <div class="col-sm-2"> 
-            <input type="number" class="form-control" id="danhgiachung_number" name="danhgiachung_number" min="0" max="100" value="0"> 
-          </div> 
-        </div> 
-      </form>`;
-      $("#modal_body").append(html);
-
-      $("input, textarea").val("");
-      let ythuckyluat_number = $("#ythuckyluat_number");
-      let ythuckyluat_text = $("#ythuckyluat_text");
-      let tuanthuthoigian_number = $("#tuanthuthoigian_number");
-      let tuanthuthoigian_text = $("#tuanthuthoigian_text");
-      let kienthuc_number = $("#kienthuc_number");
-      let kienthuc_text = $("#kienthuc_text");
-      let kynangnghe_number = $("#kynangnghe_number");
-      let kynangnghe_text = $("#kynangnghe_text");
-      let khanangdoclap_number = $("#khanangdoclap_number");
-      let khanangdoclap_text = $("#khanangdoclap_text");
-      let khanangnhom_number = $("#khanangnhom_number");
-      let khanangnhom_text = $("#khanangnhom_text");
-      let khananggiaiquyetcongviec_number = $(
-        "#khananggiaiquyetcongviec_number"
-      );
-      let khananggiaiquyetcongviec_text = $("#khananggiaiquyetcongviec_text");
-      let danhgiachung_number = $("#danhgiachung_number");
-
-      if (Object.keys(res).length > 0) {
-        ythuckyluat_number.val(res.ythuckyluat_number);
-        ythuckyluat_text.val(res.ythuckyluat_text);
-        tuanthuthoigian_number.val(res.tuanthuthoigian_number);
-        tuanthuthoigian_text.val(res.tuanthuthoigian_text);
-        kienthuc_number.val(res.kienthuc_number);
-        kienthuc_text.val(res.kienthuc_text);
-        kynangnghe_number.val(res.kynangnghe_number);
-        kynangnghe_text.val(res.kynangnghe_text);
-        khanangdoclap_number.val(res.khanangdoclap_number);
-        khanangdoclap_text.val(res.khanangdoclap_text);
-        khanangnhom_number.val(res.khanangnhom_number);
-        khanangnhom_text.val(res.khanangnhom_text);
-        khananggiaiquyetcongviec_number.val(
-          res.khananggiaiquyetcongviec_number
-        );
-        khananggiaiquyetcongviec_text.val(res.khananggiaiquyetcongviec_text);
-        danhgiachung_number.val(res.danhgiachung_number);
-      }
-
-      $("#modal_footer").append(
-        '<button type="button" class="btn btn-primary" data-id="' +
-          id +
-          '" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>'
-      );
-      $("#modal_id").modal("show");
-
-      // Tính năng lưu thay đổi
-      $("#modal_submit_btn").click(function () {
-        // Get ID Nhom
-        $.ajax({
-          type: "GET",
-          url: "get_id_nhom_by_sv_id?id=" + id,
-          success: function (res) {
-            let data_update =
-              "?sinhvienid=" +
-              String(id) +
-              "&nhomid=" +
-              parseInt(res.id) +
-              "&ythuckyluat_number=" +
-              parseFloat(ythuckyluat_number.val()) +
-              "&ythuckyluat_text=" +
-              ythuckyluat_text.val() +
-              "&tuanthuthoigian_number=" +
-              parseFloat(tuanthuthoigian_number.val()) +
-              "&tuanthuthoigian_text=" +
-              tuanthuthoigian_text.val() +
-              "&kienthuc_number=" +
-              parseFloat(kienthuc_number.val()) +
-              "&kienthuc_text=" +
-              kienthuc_text.val() +
-              "&kynangnghe_number=" +
-              parseFloat(kynangnghe_number.val()) +
-              "&kynangnghe_text=" +
-              kynangnghe_text.val() +
-              "&khanangdoclap_number=" +
-              parseFloat(khanangdoclap_number.val()) +
-              "&khanangdoclap_text=" +
-              khanangdoclap_text.val() +
-              "&khanangnhom_number=" +
-              parseFloat(khanangnhom_number.val()) +
-              "&khanangnhom_text=" +
-              khanangnhom_text.val() +
-              "&khananggiaiquyetcongviec_number=" +
-              parseFloat(khananggiaiquyetcongviec_number.val()) +
-              "&khananggiaiquyetcongviec_text=" +
-              khananggiaiquyetcongviec_text.val() +
-              "&danhgiachung_number=" +
-              parseFloat(danhgiachung_number.val());
-
-            $.ajax({
-              type: "POST",
-              url: "update_danh_gia_sv_by_id" + data_update,
-              data: data_update,
-              headers: {
-                "Content-Type": "application/json",
-              },
-              success: function (data) {
-                if (data.status == "OK") {
-                  $("#modal_id").modal("hide");
-                  bangdssv.ajax.reload();
-                  Toast.fire({
-                    icon: "success",
-                    title: "Cập nhật thành công",
-                  });
-                } else {
-                  Toast.fire({
-                    icon: "error",
-                    title: "Đã xãy ra lỗi",
-                  });
-                }
-              },
-              error: function (xhr, status, error) {
-                Toast.fire({
-                  icon: "error",
-                  title: "Đã xãy ra lỗi",
-                });
-              },
-            });
-          },
-        });
-      });
-    },
-  });
-});
 
 $("#dashboard_bangdssv").on("click", "#downloadBtn", function () {
   let id = $(this).data("id");
@@ -429,6 +205,232 @@ function create_table(data) {
         },
       },
     ],
+  });
+
+
+  $("#dashboard_bangdssv").on("click", "#editBtn", function () {
+    let id = $(this).data("id");
+  
+    empty_modal();
+    $.ajax({
+      url: "get_chi_tiet_danh_gia_sv_by_id?id=" + id,
+      type: "GET",
+      success: function (res) {
+        $(".modal-dialog").addClass("modal-lg");
+        $("#modal_title").text("Đánh giá sinh viên");
+        let html = `
+          <form id="editForm">
+            <div class="form-group row"> 
+              <div class="col-sm-10"> 
+                <label for="ythuckyluat" class="col-form-label">Ý thức kỷ luật, tuân thủ nội quy</label> 
+              </div> 
+              <div class="col-sm-2"> 
+                <input type="number" class="form-control" id="ythuckyluat_number" name="ythuckyluat_number" min="0" max="100" value="0"> 
+              </div> 
+              <div class="col-sm mt-4"> 
+                <textarea id="ythuckyluat_text" class="form-control" rows="3"></textarea> 
+              </div> 
+            </div> 
+            <div class="form-group row mt-4"> 
+              <div class="col-sm-10"> 
+                <label for="tuanthuthoigian" class="col-form-label">Tuân thủ thời gian</label> 
+              </div> 
+              <div class="col-sm-2"> 
+                <input type="number" class="form-control" id="tuanthuthoigian_number" name="tuanthuthoigian_number" min="0" max="100" value="0"> 
+              </div> 
+              <div class="col-sm mt-4"> 
+                <textarea id="tuanthuthoigian_text" class="form-control" rows="3"></textarea> 
+              </div> 
+            </div> 
+            <div class="form-group row mt-4"> 
+              <div class="col-sm-10"> 
+                <label for="kienthuc" class="col-form-label">Kiến thức</label> 
+              </div> 
+            <div class="col-sm-2"> 
+              <input type="number" class="form-control" id="kienthuc_number" name="kienthuc_number" min="0" max="100" value="0"> 
+            </div> 
+            <div class="col-sm mt-4"> 
+              <textarea id="kienthuc_text" class="form-control" rows="3"></textarea> 
+            </div>
+          </div> 
+          <div class="form-group row mt-4"> 
+            <div class="col-sm-10"> 
+              <label for="kynangnghe" class="col-form-label">Kỹ năng nghề</label> 
+            </div> 
+            <div class="col-sm-2"> 
+              <input type="number" class="form-control" id="kynangnghe_number" name="kynangnghe_number" min="0" max="100" value="0"> 
+            </div> 
+            <div class="col-sm mt-4"> 
+              <textarea id="kynangnghe_text" class="form-control" rows="3"></textarea> 
+            </div> 
+          </div> 
+          <div class="form-group row mt-4"> 
+            <div class="col-sm-10"> 
+              <label for="khanangdoclap" class="col-form-label">Khả năng làm việc độc lập</label> 
+            </div> 
+            <div class="col-sm-2"> 
+              <input type="number" class="form-control" id="khanangdoclap_number" name="khanangdoclap_number" min="0" max="100" value="0"> 
+            </div> 
+            <div class="col-sm mt-4"> 
+              <textarea id="khanangdoclap_text" class="form-control" rows="3"></textarea> 
+            </div> 
+          </div> 
+          <div class="form-group row mt-4"> 
+            <div class="col-sm-10"> 
+              <label for="khanangnhom" class="col-form-label">Khả năng làm việc nhóm</label> 
+            </div> 
+            <div class="col-sm-2"> 
+              <input type="number" class="form-control" id="khanangnhom_number" name="khanangnhom_number" min="0" max="100" value="0"> 
+            </div> 
+            <div class="col-sm mt-4"> 
+              <textarea id="khanangnhom_text" class="form-control" rows="3"></textarea> 
+            </div> 
+          </div> 
+          <div class="form-group row mt-4"> 
+            <div class="col-sm-10"> 
+              <label for="khananggiaiquyetcongviec" class="col-form-label">Khả năng giải quyết công việc</label> 
+            </div> 
+            <div class="col-sm-2"> 
+              <input type="number" class="form-control" id="khananggiaiquyetcongviec_number" name="khananggiaiquyetcongviec_number" min="0" max="100" value="0">
+            </div> 
+            <div class="col-sm mt-4"> 
+              <textarea id="khananggiaiquyetcongviec_text" class="form-control" rows="3"></textarea> 
+            </div> 
+          </div> 
+          <div class="form-group row mt-4"> 
+            <div class="col-sm-10"> 
+              <label for="danhgiachung" class="col-form-label">Đánh giá chung</label> 
+            </div> 
+            <div class="col-sm-2"> 
+              <input type="number" class="form-control" id="danhgiachung_number" name="danhgiachung_number" min="0" max="100" value="0"> 
+            </div> 
+          </div> 
+        </form>`;
+        $("#modal_body").append(html);
+  
+        $("input, textarea").val("");
+        let ythuckyluat_number = $("#ythuckyluat_number");
+        let ythuckyluat_text = $("#ythuckyluat_text");
+        let tuanthuthoigian_number = $("#tuanthuthoigian_number");
+        let tuanthuthoigian_text = $("#tuanthuthoigian_text");
+        let kienthuc_number = $("#kienthuc_number");
+        let kienthuc_text = $("#kienthuc_text");
+        let kynangnghe_number = $("#kynangnghe_number");
+        let kynangnghe_text = $("#kynangnghe_text");
+        let khanangdoclap_number = $("#khanangdoclap_number");
+        let khanangdoclap_text = $("#khanangdoclap_text");
+        let khanangnhom_number = $("#khanangnhom_number");
+        let khanangnhom_text = $("#khanangnhom_text");
+        let khananggiaiquyetcongviec_number = $(
+          "#khananggiaiquyetcongviec_number"
+        );
+        let khananggiaiquyetcongviec_text = $("#khananggiaiquyetcongviec_text");
+        let danhgiachung_number = $("#danhgiachung_number");
+  
+        if (Object.keys(res).length > 0) {
+          ythuckyluat_number.val(res.ythuckyluat_number);
+          ythuckyluat_text.val(res.ythuckyluat_text);
+          tuanthuthoigian_number.val(res.tuanthuthoigian_number);
+          tuanthuthoigian_text.val(res.tuanthuthoigian_text);
+          kienthuc_number.val(res.kienthuc_number);
+          kienthuc_text.val(res.kienthuc_text);
+          kynangnghe_number.val(res.kynangnghe_number);
+          kynangnghe_text.val(res.kynangnghe_text);
+          khanangdoclap_number.val(res.khanangdoclap_number);
+          khanangdoclap_text.val(res.khanangdoclap_text);
+          khanangnhom_number.val(res.khanangnhom_number);
+          khanangnhom_text.val(res.khanangnhom_text);
+          khananggiaiquyetcongviec_number.val(
+            res.khananggiaiquyetcongviec_number
+          );
+          khananggiaiquyetcongviec_text.val(res.khananggiaiquyetcongviec_text);
+          danhgiachung_number.val(res.danhgiachung_number);
+        }
+  
+        $("#modal_footer").append(
+          '<button type="button" class="btn btn-primary" data-id="' +
+            id +
+            '" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>'
+        );
+        $("#modal_id").modal("show");
+  
+        // Tính năng lưu thay đổi
+        $("#modal_submit_btn").click(function () {
+          // Get ID Nhom
+          $.ajax({
+            type: "GET",
+            url: "get_id_nhom_by_sv_id?id=" + id,
+            success: function (res) {
+              let data_update =
+                "?sinhvienid=" +
+                String(id) +
+                "&nhomid=" +
+                parseInt(res.id) +
+                "&ythuckyluat_number=" +
+                parseFloat(ythuckyluat_number.val()) +
+                "&ythuckyluat_text=" +
+                ythuckyluat_text.val() +
+                "&tuanthuthoigian_number=" +
+                parseFloat(tuanthuthoigian_number.val()) +
+                "&tuanthuthoigian_text=" +
+                tuanthuthoigian_text.val() +
+                "&kienthuc_number=" +
+                parseFloat(kienthuc_number.val()) +
+                "&kienthuc_text=" +
+                kienthuc_text.val() +
+                "&kynangnghe_number=" +
+                parseFloat(kynangnghe_number.val()) +
+                "&kynangnghe_text=" +
+                kynangnghe_text.val() +
+                "&khanangdoclap_number=" +
+                parseFloat(khanangdoclap_number.val()) +
+                "&khanangdoclap_text=" +
+                khanangdoclap_text.val() +
+                "&khanangnhom_number=" +
+                parseFloat(khanangnhom_number.val()) +
+                "&khanangnhom_text=" +
+                khanangnhom_text.val() +
+                "&khananggiaiquyetcongviec_number=" +
+                parseFloat(khananggiaiquyetcongviec_number.val()) +
+                "&khananggiaiquyetcongviec_text=" +
+                khananggiaiquyetcongviec_text.val() +
+                "&danhgiachung_number=" +
+                parseFloat(danhgiachung_number.val());
+  
+              $.ajax({
+                type: "POST",
+                url: "update_danh_gia_sv_by_id" + data_update,
+                data: data_update,
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                success: function (data) {
+                  if (data.status == "OK") {
+                    $("#modal_id").modal("hide");
+                    bangdssv.ajax.reload();
+                    Toast.fire({
+                      icon: "success",
+                      title: "Cập nhật thành công",
+                    });
+                  } else {
+                    Toast.fire({
+                      icon: "error",
+                      title: "Đã xãy ra lỗi",
+                    });
+                  }
+                },
+                error: function (xhr, status, error) {
+                  Toast.fire({
+                    icon: "error",
+                    title: "Đã xãy ra lỗi",
+                  });
+                },
+              });
+            },
+          });
+        });
+      },
+    });
   });
 }
 
