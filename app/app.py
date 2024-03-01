@@ -938,8 +938,12 @@ async def xac_thuc_otp(email: str, otp: str):
 async def gui_mail_otp(email: str):
     try:
         hoten = get_ho_ten_sv_by_email_controller(email)
-        send_otp_email(email, hoten)
-        return JSONResponse(status_code=200, content={'status': 'OK'})
+        ngayHetHan = check_sv_con_han_thuc_tap(email)
+        if(datetime.datetime.strptime(ngayHetHan, '%Y-%m-%d') <= datetime.datetime.today()):
+            send_otp_email(email, hoten)
+            return JSONResponse(status_code=200, content={'status': 'OK'})
+        else:
+            return JSONResponse(status_code=200, content={'status': 'Expired'})
     except Exception as e:
         print(e)
         return JSONResponse(status_code=500, content={'status': 'Email system has problem'})

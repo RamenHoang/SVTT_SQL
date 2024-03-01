@@ -560,3 +560,13 @@ def get_ds_chi_tiet_danh_gia_by_id(id: int):
         return {'id': i[0], 'dapan_1': i[3], 'dapan_2': i[4], 'dapan_3': i[5], 'dapan_4': i[6], 'gopy': i[7], 'mssv': i[8], 'hoten': i[9], 'tennhom': i[10], 'kythuctap': i[12], 'nguoihuongdan': i[13], 'detai': i[15]}
     except Exception as e:
         return e
+    
+def check_sv_con_han_thuc_tap(email: str):
+    try:
+        i = cursor.execute("EXEC CheckSVConHanThucTapByEmail ?", protect_xss(email)).fetchone()
+        if len(i) > 0:
+            return i[0]
+        else:
+            return False
+    except Exception as e:
+        return False
