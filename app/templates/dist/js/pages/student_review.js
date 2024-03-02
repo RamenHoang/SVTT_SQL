@@ -33,24 +33,6 @@ function loadFilter() {
       });
     },
   });
-
-  // Bắt sự kiện thay đổi kỳ thực tập
-  $("#filter_kythuctap").on('change', function(){
-    let id = $("#filter_kythuctap").val();
-    filter_nhomthuctap = $("#filter_nhomthuctap");
-    filter_nhomthuctap.empty();
-    $.ajax({
-      type: `GET`,
-      url: `get_danh_sach_nhom_theo_ky_id?id=${id}`,
-      success: function(data){
-        data.forEach((element) => {
-          filter_nhomthuctap.append(
-            `<option value="${element.tennhom}">${element.tennhom}</option>`
-          );
-        });
-      }
-    });
-  });
 }
 
 $("#dashboard_bangdssv").on("click", "#downloadBtn", function () {
@@ -164,7 +146,7 @@ $("#downloadBtn").on("click", function () {
   });
 });
 
-function create_table(data, filter) {
+function create_table(data) {
   var bangdssv = $("#dashboard_bangdssv").DataTable({
     paging: true,
     lengthChange: false,
@@ -221,10 +203,6 @@ function create_table(data, filter) {
       },
     ],
   });
-
-  if(filter !== ""){
-    $("#dashboard_bangdssv").column(6).search(filter).draw();
-  }
 
   $("#dashboard_bangdssv").on("click", "#editBtn", function () {
     let id = $(this).data("id");
@@ -452,27 +430,21 @@ function create_table(data, filter) {
   });
 }
 
-
 $(document).ready(function () {
   empty_modal();
   loadFilter();
   create_table("-1");
   $("#filter_kythuctap").on("change", function () {
     let id = $("#filter_kythuctap").val();
-    $("#filter_nhomthuctap").on("change", function(){
-      let value = $("#filter_nhomthuctap").val();
-      $("#dashboard_bangdssv").destroy();
-      create_table(id, value);
-    });
+    create_table(id);
   });
-
 });
 
 // Bắt sự kiến nút đánh giá nhiều
-$('#reviewBtn').on('click', function(){
+$("#reviewBtn").on("click", function () {
   // Kiem tra neu chua co check box thi bao loi
   Toast.fire({
     icon: "warning",
-    title: "Tính năng đang phát triển"
+    title: "Tính năng đang phát triển",
   });
 });
