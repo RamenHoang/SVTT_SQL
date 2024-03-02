@@ -28,16 +28,28 @@ function loadFilter() {
       let filter_kythuctap = $("#filter_kythuctap");
       data.forEach((element) => {
         filter_kythuctap.append(
-          "<option value=" +
-            element.id +
-            ">" +
-            element.ngaybatdau +
-            "-" +
-            element.ngayketthuc +
-            "</option>"
+          `<option value="${element.id}">${element.ngaybatdau} - ${element.ngayketthuc}</option>`
         );
       });
     },
+  });
+
+  // Bắt sự kiện thay đổi kỳ thực tập
+  $("#filter_kythuctap").on('change', function(){
+    let id = $("#filter_kythuctap").val();
+    filter_nhomthuctap = $("#filter_nhomthuctap");
+    filter_nhomthuctap.empty();
+    $.ajax({
+      type: `GET`,
+      url: `get_danh_sach_nhom_theo_ky_id?id=${id}`,
+      success: function(data){
+        data.forEach((element) => {
+          filter_nhomthuctap.append(
+            `<option value="${element.tennhom}">${element.tennhom}</option>`
+          );
+        });
+      }
+    });
   });
 }
 
@@ -153,8 +165,8 @@ $("#downloadBtn").on("click", function () {
   });
 });
 
-function create_table(data) {
-  let bangdssv = $("#dashboard_bangdssv").DataTable({
+function create_table(data, filter) {
+  var bangdssv = $("#dashboard_bangdssv").DataTable({
     paging: true,
     lengthChange: false,
     searching: true,
@@ -210,6 +222,9 @@ function create_table(data) {
     ],
   });
 
+  if(filter !== ""){
+    $("#dashboard_bangdssv").column(6).search(filter).draw();
+  }
 
   $("#dashboard_bangdssv").on("click", "#editBtn", function () {
     let id = $(this).data("id");
@@ -439,11 +454,24 @@ function create_table(data) {
 
 $(document).ready(function () {
   empty_modal();
+  loadFilter();
   create_table("-1");
   $("#filter_kythuctap").on("change", function () {
     let id = $("#filter_kythuctap").val();
-    create_table(id);
+    $("#filter_nhomthuctap").on("change", function(){
+      let value = $("#filter_nhomthuctap").val();
+      $("#dashboard_bangdssv").destroy();
+      create_table(id, value);
+    });
   });
 
-  loadFilter();
+});
+
+// Bắt sự kiến nút đánh giá nhiều
+$('#reviewBtn').on('click', function(){
+  // Kiem tra neu chua co check box thi bao loi
+  Toast.fire({
+    icon: "warning",
+    title: "Tính năng đang phát triển"
+  });
 });

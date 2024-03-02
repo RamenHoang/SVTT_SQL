@@ -42,7 +42,7 @@
             </h3>
             <button class="btn btn-primary btn-xs ms-auto" id="uploadBtn"><i class="fa-solid fa-file-excel"></i> Import
               file excel</button>
-            <button class="btn btn-warning btn-xs ms-auto" id="uploadBtn"><i class="fa-solid fa-pen-nib"></i> Đánh giá sinh viên đã chọn</button>
+            <button class="btn btn-warning btn-xs ms-auto" id="reviewBtn"><i class="fa-solid fa-pen-nib"></i> Đánh giá sinh viên đã chọn</button>
             <button class="btn btn-success btn-xs ms-auto" id="downloadBtn"><i class="fa-solid fa-file-zipper"></i>
               Download đánh giá</button>
             <input type="file" id="fileInput" style="display: none;">
@@ -51,6 +51,12 @@
                 <label for="filter_kythuctap">Chọn kỳ thực tập</label>
                 <select name="filter_kythuctap" id="filter_kythuctap" class="form-control select2" height="120%">
                   <option value="-1" selected>Tất cả</option>
+                </select>
+              </div>
+              <div class="form-group col-lg-3">
+                <label for="filter_nhomthuctap">Chọn nhóm thực tập</label>
+                <select name="filter_nhomthuctap" id="filter_nhomthuctap" class="form-control select2" height="120%">
+                  <option value="" selected>Tất cả</option>
                 </select>
               </div>
             </div>
