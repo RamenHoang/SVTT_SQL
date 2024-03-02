@@ -13,7 +13,7 @@ def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str,
     try:
         check = cursor.execute("SELECT COUNT(ID) FROM SINHVIEN WHERE MSSV=?", MSSV).fetchone()[0]
         if check==0:
-            i = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(MSSV), protect_xss(HoTen), protect_xss(GioiTinh), protect_xss(SDT), protect_xss(Email), protect_xss(DiaChi), protect_xss(MaLop), protect_xss(Truong), protect_xss(Nganh), protect_xss(Khoa), 0).fetchone()
+            i = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(MSSV), protect_xss(HoTen), GioiTinh, protect_xss(SDT), protect_xss(Email), protect_xss(DiaChi), protect_xss(MaLop), Truong, Nganh, Khoa, 0).fetchone()
             result = i[0]
             conn.commit()
             return result
@@ -139,7 +139,6 @@ def get_nhom_thuc_tap_by_user_id(id: str):
 
 def them_de_tai_thuc_tap(ten: str, mota: str, isDeleted: int):
     try:
-        print(protect_xss(mota))
         result = cursor.execute("EXEC InsertDeTai ?, ?, ?", protect_xss(ten), protect_xss(mota), isDeleted)
         conn.commit()
         return True
@@ -564,9 +563,6 @@ def get_ds_chi_tiet_danh_gia_by_id(id: int):
 def check_sv_con_han_thuc_tap(email: str):
     try:
         i = cursor.execute("EXEC CheckSVConHanThucTapByEmail ?", protect_xss(email)).fetchone()
-        if len(i) > 0:
-            return i[0]
-        else:
-            return False
+        return i
     except Exception as e:
         return False

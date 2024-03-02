@@ -117,13 +117,7 @@ $("#downloadBtn").on("click", function () {
 
       $.each(res, function (idx, val) {
         $("#modal_kythuctap_select").append(
-          '<option value="' +
-            val.id +
-            '">' +
-            val.ngaybatdau +
-            " - " +
-            val.ngayketthuc +
-            "</option>"
+          `<option value="${val.id}">${val.ngaybatdau} - ${val.ngayketthuc}</option>`
         );
       });
 
@@ -141,6 +135,10 @@ $("#downloadBtn").on("click", function () {
           type: "GET",
           url: url,
           success: function (res) {
+            Toast.fire({
+              icon: "success",
+              title: "Vui lòng chờ trong giây lát",
+            });
             window.location.href = url;
           },
           error: function (xhr, status, error) {
@@ -171,6 +169,11 @@ function create_table(data) {
       dataSrc: "",
     },
     columns: [
+      { data: "id",
+        render: function(data, type, row) {
+          return `<center><input class="form-check-input" type="checkbox" value=${data}></center>`
+        }
+      },
       { data: "mssv" },
       { data: "hoten" },
       {
@@ -306,6 +309,7 @@ function create_table(data) {
             </div> 
           </div> 
         </form>`;
+        $("#modal_body").empty();
         $("#modal_body").append(html);
   
         $("input, textarea").val("");
@@ -347,10 +351,9 @@ function create_table(data) {
           danhgiachung_number.val(res.danhgiachung_number);
         }
   
+        $("#modal_footer").empty();
         $("#modal_footer").append(
-          '<button type="button" class="btn btn-primary" data-id="' +
-            id +
-            '" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>'
+          `<button type="button" class="btn btn-primary" data-id="${id}" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>`
         );
         $("#modal_id").modal("show");
   
@@ -435,6 +438,7 @@ function create_table(data) {
 }
 
 $(document).ready(function () {
+  empty_modal();
   create_table("-1");
   $("#filter_kythuctap").on("change", function () {
     let id = $("#filter_kythuctap").val();

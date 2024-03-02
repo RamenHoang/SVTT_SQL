@@ -105,7 +105,7 @@ $(document).ready(function () {
             "/" +
             String(res.nhomthuctap_soluong);
           $("#nguoihuongdan").val(res.nguoihuongdan_hoten);
-          $("#mota").val(res.detai_mota.replace(/<br\/>/g, "\r\n"));
+          $("#mota").val(res.detai_mota.replace(/<br>/g, "\r\n"));
           $("#soluongsv").val(soluongdangky);
         },
       });
