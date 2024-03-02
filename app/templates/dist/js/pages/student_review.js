@@ -222,13 +222,10 @@ function create_table(data, filter) {
     ],
   });
 
-<<<<<<< HEAD
-=======
   if(filter !== ""){
     $("#dashboard_bangdssv").column(6).search(filter).draw();
   }
 
->>>>>>> 0153b4aad1b4c36db35219e1fb05773aaa856929
   $("#dashboard_bangdssv").on("click", "#editBtn", function () {
     let id = $(this).data("id");
 
