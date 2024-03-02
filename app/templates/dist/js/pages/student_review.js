@@ -41,7 +41,6 @@ function loadFilter() {
   });
 }
 
-
 $("#dashboard_bangdssv").on("click", "#downloadBtn", function () {
   let id = $(this).data("id");
   $.ajax({
@@ -169,10 +168,11 @@ function create_table(data) {
       dataSrc: "",
     },
     columns: [
-      { data: "id",
-        render: function(data, type, row) {
-          return `<center><input class="form-check-input" type="checkbox" value=${data}></center>`
-        }
+      {
+        data: "id",
+        render: function (data, type, row) {
+          return `<center><input class="form-check-input" type="checkbox" value=${data}></center>`;
+        },
       },
       { data: "mssv" },
       { data: "hoten" },
@@ -210,10 +210,9 @@ function create_table(data) {
     ],
   });
 
-
   $("#dashboard_bangdssv").on("click", "#editBtn", function () {
     let id = $(this).data("id");
-  
+
     empty_modal();
     $.ajax({
       url: "get_chi_tiet_danh_gia_sv_by_id?id=" + id,
@@ -311,7 +310,7 @@ function create_table(data) {
         </form>`;
         $("#modal_body").empty();
         $("#modal_body").append(html);
-  
+
         $("input, textarea").val("");
         let ythuckyluat_number = $("#ythuckyluat_number");
         let ythuckyluat_text = $("#ythuckyluat_text");
@@ -330,7 +329,7 @@ function create_table(data) {
         );
         let khananggiaiquyetcongviec_text = $("#khananggiaiquyetcongviec_text");
         let danhgiachung_number = $("#danhgiachung_number");
-  
+
         if (Object.keys(res).length > 0) {
           ythuckyluat_number.val(res.ythuckyluat_number);
           ythuckyluat_text.val(res.ythuckyluat_text);
@@ -350,13 +349,13 @@ function create_table(data) {
           khananggiaiquyetcongviec_text.val(res.khananggiaiquyetcongviec_text);
           danhgiachung_number.val(res.danhgiachung_number);
         }
-  
+
         $("#modal_footer").empty();
         $("#modal_footer").append(
           `<button type="button" class="btn btn-primary" data-id="${id}" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>`
         );
         $("#modal_id").modal("show");
-  
+
         // Tính năng lưu thay đổi
         $("#modal_submit_btn").click(function () {
           // Get ID Nhom
@@ -399,7 +398,7 @@ function create_table(data) {
                 khananggiaiquyetcongviec_text.val() +
                 "&danhgiachung_number=" +
                 parseFloat(danhgiachung_number.val());
-  
+
               $.ajax({
                 type: "POST",
                 url: "update_danh_gia_sv_by_id" + data_update,
