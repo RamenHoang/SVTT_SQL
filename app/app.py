@@ -1162,7 +1162,6 @@ async def danh_gia_nhieu_sv_route(dssv: str, ythuckyluat_number: float, ythuckyl
             username = payload.get("sub")
             isAdmin = kiem_tra_loai_tai_khoan_controller(username)
             if isAdmin == 1:
-                print(eval(dssv))
                 if isinstance(eval(dssv), int):
                     nhomid = get_id_nhom_by_sv_id_controller(str(dssv))
                     result = update_danh_gia_sv_by_id_controller(str(dssv), nhomid, ythuckyluat_number, ythuckyluat_text, tuanthuthoigian_number, tuanthuthoigian_text, kienthuc_number, kienthuc_text, kynangnghe_number,

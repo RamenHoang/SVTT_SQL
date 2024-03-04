@@ -221,6 +221,9 @@ function create_table(kythuctap, nhomthuctap) {
         },
       },
     ],
+    columnDefs: [
+      { "orderable": false, "targets": 0 } // Tắt tính năng sắp xếp cho cột 0
+    ]
   });
 
   $("#bangdssv").on("click", "#editBtn", function () {
@@ -448,6 +451,22 @@ function create_table(kythuctap, nhomthuctap) {
     });
   });
 
+  // Handle "Check All" checkbox click event
+  $('#checkAll').on('click', function(){
+      var rows = bangdssv.rows({ 'search': 'applied' }).nodes();
+      $('input[type="checkbox"]', rows).prop('checked', this.checked);
+  });
+
+  // Handle individual checkbox click event
+  $('#bangdssv tbody').on('change', 'input[type="checkbox"]', function(){
+      if(!this.checked){
+          var el = $('#checkAll').get(0);
+          if(el && el.checked && ('indeterminate' in el)){
+              el.indeterminate = true;
+          }
+      }
+  });
+
   // Bắt sự kiến nút đánh giá nhiều
 $("#reviewBtn").on("click", function () {
   // Kiem tra neu chua co check box thi bao loi
@@ -458,7 +477,9 @@ $("#reviewBtn").on("click", function () {
 
     if (checkbox.prop("checked")) {
       let id = checkbox.data("id");
-      dsSinhVien.push(id);
+      if(id !== undefined){
+        dsSinhVien.push(id);
+      }
     }
   });
 
