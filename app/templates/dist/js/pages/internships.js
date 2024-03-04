@@ -230,11 +230,18 @@ $("#bangdskythuctap").on("click", "#deleteBtn", function () {
         type: "POST",
         url: "update_xoa_ky_thuc_tap_by_id?id=" + parseInt(id),
         success: function (res) {
-          Toast.fire({
-            icon: "success",
-            title: "Đã xoá",
-          });
-          bangdskythuctap.ajax.reload();
+          if(res.status=='OK'){
+            Toast.fire({
+              icon: "success",
+              title: "Đã xoá",
+            });
+            bangdskythuctap.ajax.reload();
+          }else{
+            Toast.fire({
+              icon: "warning",
+              title: "Kỳ thực tập đang được nhóm sử dụng"
+            });
+          }
         },
         error: function (xhr, status, error) {
           Toast.fire({

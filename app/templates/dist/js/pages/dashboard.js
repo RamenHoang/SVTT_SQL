@@ -513,11 +513,18 @@ $("#dashboard_bangdssv").on("click", "#deleteBtn", function () {
         type: "POST",
         url: "update_xoa_sinh_vien_by_id?id=" + parseInt(id),
         success: function (res) {
-          Toast.fire({
-            icon: "success",
-            title: "Đã xoá",
-          });
-          $("#dashboard_bangdssv").DataTable().ajax.reload();
+          if(res.status=='OK'){
+            Toast.fire({
+              icon: "success",
+              title: "Đã xoá",
+            });
+            $("#dashboard_bangdssv").DataTable().ajax.reload();
+          }else{
+            Toast.fire({
+              icon: "warning",
+              title: "Xoá sinh viên thất bại do sinh viên đã có nhóm thực tập"
+            });
+          }
         },
         error: function (xhr, status, error) {
           Toast.fire({

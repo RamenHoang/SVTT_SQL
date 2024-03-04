@@ -151,11 +151,18 @@ $("#bangdsdetai").on("click", "#deleteBtn", function () {
         type: "POST",
         url: "update_xoa_de_tai_by_id?id=" + parseInt(id),
         success: function (res) {
-          Toast.fire({
-            icon: "success",
-            title: "Đã xoá",
-          });
-          bangdsdetai.ajax.reload();
+          if(res.status=='OK'){
+            Toast.fire({
+              icon: "success",
+              title: "Đã xoá",
+            });
+            bangdsdetai.ajax.reload();
+          }else{
+            Toast.fire({
+              icon: "warning",
+              title: "Đề tài đã có nhóm sử dụng"
+            });
+          }
         },
         error: function (xhr, status, error) {
           Toast.fire({

@@ -386,7 +386,10 @@ async def update_xoa_de_tai_by_id_route(id: str, token: str = Cookie(None)):
             isAdmin = kiem_tra_loai_tai_khoan_controller(username)
             if isAdmin == 1:
                 result = update_xoa_de_tai_by_id_controller(id)
-                return JSONResponse(status_code=200, content={'status': 'OK'})
+                if result:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'NOT OK'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
@@ -476,7 +479,10 @@ async def update_xoa_ky_thuc_tap_by_id_route(id: str, token: str = Cookie(None))
             isAdmin = kiem_tra_loai_tai_khoan_controller(username)
             if isAdmin == 1:
                 result = update_xoa_ky_thuc_tap_by_id_controller(id)
-                return JSONResponse(status_code=200, content={'status': 'OK'})
+                if result:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'NOT OK'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
@@ -631,7 +637,10 @@ async def update_xoa_nhom_thuc_tap_by_id_route(id: str, token: str = Cookie(None
             isAdmin = kiem_tra_loai_tai_khoan_controller(username)
             if isAdmin == 1:
                 result = update_xoa_nhom_thuc_tap_by_id_controller(id)
-                return JSONResponse(status_code=200, content={'status': 'OK'})
+                if result:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'NOT OK'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
@@ -803,7 +812,7 @@ async def update_xoa_sinh_vien_by_id(id: int, token: str = Cookie(None)):
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
-                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+                    return JSONResponse(status_code=200, content={'status': 'BADDDD REQUEST'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     else:

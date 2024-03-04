@@ -234,11 +234,18 @@ $("#bangdsnhomthuctap").on("click", "#deleteBtn", function () {
         type: "POST",
         url: "update_xoa_nhom_thuc_tap_by_id?id=" + parseInt(id),
         success: function (res) {
-          Toast.fire({
-            icon: "success",
-            title: "Đã xoá",
-          });
-          bangdsnhomthuctap.ajax.reload();
+          if(res.status=='OK'){
+            Toast.fire({
+              icon: "success",
+              title: "Đã xoá",
+            });
+            bangdsnhomthuctap.ajax.reload();
+          }else{
+            Toast.fire({
+              icon: "warning",
+              title: "Nhóm đã có sinh viên đăng ký hoặc đã kết thúc"
+            });
+          }
         },
         error: function (xhr, status, error) {
           Toast.fire({

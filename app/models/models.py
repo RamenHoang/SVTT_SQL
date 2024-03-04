@@ -123,9 +123,12 @@ def update_chi_tiet_de_tai_by_id(id: str, ten: str, mota: str, isDeleted: int):
     
 def update_xoa_de_tai_by_id(id: str):
     try:
-        result = cursor.execute("EXEC UpdateXoaDeTaiByID ?", protect_xss(id))
+        result = cursor.execute("EXEC UpdateXoaDeTaiByID ?", protect_xss(id)).fetchone()[0]
         conn.commit()
-        return True
+        if result==1:
+            return True
+        else:
+            return False
     except Exception as e:
         return e
     
@@ -178,9 +181,12 @@ def them_ky_thuc_tap(ngaybatdau: str, ngayketthuc: str, isDeleted: int, ghichu: 
     
 def update_xoa_ky_thuc_tap_by_id(id: str):
     try:
-        result = cursor.execute("EXEC UpdateXoaKyThucTapByID ?", protect_xss(id))
+        result = cursor.execute("EXEC UpdateXoaKyThucTapByID ?", protect_xss(id)).fetchone()[0]
         conn.commit()
-        return True
+        if result==1:
+            return True
+        else:
+            return False
     except Exception as e:
         return e
     
@@ -238,9 +244,9 @@ def update_chi_tiet_nhom_thuc_tap_by_id(id: int, kytt: int, nguoihd: int, detai:
     
 def update_xoa_nhom_thuc_tap_by_id(id: str):
     try:
-        result = cursor.execute("EXEC UpdateXoaNhomThucTapByID ?", protect_xss(id))
+        result = cursor.execute("EXEC UpdateXoaNhomThucTapByID ?", protect_xss(id)).fetchone()[0]
         conn.commit()
-        return True
+        return True if result==1 else False
     except Exception as e:
         return e
     
@@ -475,10 +481,9 @@ def get_dssv_da_danh_gia_by_nguoi_huong_dan(username: str, kythuctap: int):
     
 def update_xoa_sinh_vien_by_id(id: int):
     try:
-        result = cursor.execute("EXEC UpdateXoaSinhVienByID ?", id)
-        r = result.fetchone()[0]
+        result = cursor.execute("EXEC UpdateXoaSinhVienByID ?", id).fetchone()[0]
         cursor.commit()
-        return r
+        return result
     except Exception as e:
         return e
 
