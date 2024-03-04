@@ -109,8 +109,8 @@ def verify_user_controller(username: str, password: str):
 def verify_student_controller(email: str, otp: int):
     return verify_student(email, otp)
 
-def get_ds_sinh_vien_by_username_controller(username: str, kythuctap: str):
-    return get_ds_sinh_vien_by_username(username, kythuctap)
+def get_ds_sinh_vien_by_username_controller(username: str, kythuctap: str, nhomhuongdan: str):
+    return get_ds_sinh_vien_by_username(username, kythuctap, nhomhuongdan)
 
 def get_chi_tiet_danh_gia_sv_by_id_controller(id: str):
     return get_chi_tiet_danh_gia_sv_by_id(id)

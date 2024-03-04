@@ -677,14 +677,14 @@ async def get_chi_tiet_sinh_vien_by_id_route(id: str, token: str = Cookie(None))
 
 
 @app.get('/get_ds_sinh_vien_by_username')
-async def get_ds_sinh_vien_by_username_route(kythuctap: str, token: str = Cookie(None)):
+async def get_ds_sinh_vien_by_username_route(kythuctap: str, nhomthuctap: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             isAdmin = kiem_tra_loai_tai_khoan_controller(username)
             if isAdmin == 1:
-                return JSONResponse(status_code=200, content=get_ds_sinh_vien_by_username_controller(username, kythuctap))
+                return JSONResponse(status_code=200, content=get_ds_sinh_vien_by_username_controller(username, kythuctap, nhomthuctap))
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
@@ -1144,3 +1144,26 @@ async def get_ds_chi_tiet_danh_gia_by_id_route(id: int, token: str = Cookie(None
             return RedirectResponse('/login')
     else:
         return RedirectResponse('/login')
+
+@app.post('/danh_gia_nhieu_sv')
+async def danh_gia_nhieu_sv_route(dssv: str, ythuckyluat_number: float, ythuckyluat_text: str, tuanthuthoigian_number: float, tuanthuthoigian_text: str, kienthuc_number: float, kienthuc_text: str, kynangnghe_number: float, kynangnghe_text: str, khanangdoclap_number: float, khanangdoclap_text: str, khanangnhom_number: float, khanangnhom_text: str, khananggiaiquyetcongviec_number: float, khananggiaiquyetcongviec_text: str, danhgiachung_number: float, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            isAdmin = kiem_tra_loai_tai_khoan_controller(username)
+            if isAdmin == 1:
+                print(eval(dssv))
+                if isinstance(eval(dssv), int):
+                    nhomid = get_id_nhom_by_sv_id_controller(str(dssv))
+                    result = update_danh_gia_sv_by_id_controller(str(dssv), nhomid, ythuckyluat_number, ythuckyluat_text, tuanthuthoigian_number, tuanthuthoigian_text, kienthuc_number, kienthuc_text, kynangnghe_number,
+                                                            kynangnghe_text, khanangdoclap_number, khanangdoclap_text, khanangnhom_number, khanangnhom_text, khananggiaiquyetcongviec_number, khananggiaiquyetcongviec_text, danhgiachung_number)
+                else:
+                    for sinhvienid in eval(dssv):
+                        nhomid = get_id_nhom_by_sv_id_controller(str(sinhvienid))
+                        result = update_danh_gia_sv_by_id_controller(str(sinhvienid), nhomid, ythuckyluat_number, ythuckyluat_text, tuanthuthoigian_number, tuanthuthoigian_text, kienthuc_number, kienthuc_text, kynangnghe_number,
+                                                                kynangnghe_text, khanangdoclap_number, khanangdoclap_text, khanangnhom_number, khanangnhom_text, khananggiaiquyetcongviec_number, khananggiaiquyetcongviec_text, danhgiachung_number)
+                return JSONResponse(status_code=200, content={'status': 'OK'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
