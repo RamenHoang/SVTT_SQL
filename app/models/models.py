@@ -488,9 +488,9 @@ def xoa_cong_viec_by_id(id: int):
 def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str):
     try:
         result = cursor.execute("EXEC InsertCongViec ?, ?, ?, ?, ?", id, protect_xss(
-            ngaybatdau), protect_xss(ngayketthuc), protect_xss(ten), protect_xss(mota))
+            ngaybatdau), protect_xss(ngayketthuc), protect_xss(ten), protect_xss(mota)).fetchone()
         cursor.commit()
-        if result.fetchone()[0] == 1:
+        if result[0] == 1:
             return True
         else:
             return False
@@ -688,9 +688,9 @@ def check_sv_con_han_thuc_tap(email: str):
     except Exception as e:
         return False
 
-def get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec(id: int):
+def get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec(id: int, sv_id: int):
     try:
-        result = cursor.execute("EXEC GetChiTietGiaoViecChoSVByIDCongViec ?", id).fetchone()
-        return {'nguoinhanviec': result[0], 'nguoigiaoviec': result[1], 'tencongviec': result[2], 'ngaybatdau': result[3], 'ngayketthuc': result[4], 'ghichu': result[5], 'telegram_id': result[6]}
+        result = cursor.execute("EXEC GetChiTietGiaoViecChoSVByIDCongViec ?, ?", id, sv_id).fetchone()
+        return {'nguoinhanviec': result[0], 'mssv': result[1], 'nguoigiaoviec': result[2], 'tencongviec': result[3], 'ngaybatdau': result[4], 'ngayketthuc': result[5], 'ghichu': result[6], 'motacongviec': result[7], 'telegram_id': result[8]}
     except Exception as e:
         return e

@@ -556,7 +556,7 @@ async def them_cong_viec_nhom_route(id: int, ngaybatdau: str, ngayketthuc: str, 
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
-                    return JSONResponse(status_code=400, content={'status': 'BAD REQUEST'})
+                    return JSONResponse(status_code=200, content={'status': 'NOT OK'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
@@ -1013,11 +1013,12 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
                 for i in sinhvien:
                     result = them_chi_tiet_cong_viec_controller(
                         id_congviec=id_congviec, id_sinhvien=int(i), trangthai=0, ghichu=ghichu)
-                if result:
                     congviec = get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(
-                        id_congviec)
-                    congviec_ghichu = str(congviec['ghichu']).replace('<br>', '\n')
-                    asyncio.create_task(sendMessageHTML(message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>{congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Mô tả:</b> {congviec_ghichu}", chat_id=str(congviec['telegram_id'])))
+                        id_congviec, int(i))
+                    congviec_ghichu = ghichu.replace('<br/>', '\n')
+                    congviec_mota = str(congviec['motacongviec']).replace('<br>', '\n')
+                    asyncio.create_task(sendMessageHTML(message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>[{congviec['mssv']}] {congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Mô tả:</b>\n{congviec_mota}\n<b>Ghi chú:</b>\n{congviec_ghichu}", chat_id=str(congviec['telegram_id'])))
+                if result:
                     return JSONResponse(status_code=200, content=result)
                 else:
                     return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
