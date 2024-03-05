@@ -124,6 +124,7 @@ async def login_for_access_token(credentials: UserCredentials):
         response = JSONResponse(
             {"access_token": access_token, "token_type": "bearer"})
         response.set_cookie("token", access_token, httponly=False)
+        response.set_cookie("username", credentials.username, httponly=False)
         return response
     raise HTTPException(
         status_code=400, detail="Incorrect username or password")
@@ -217,8 +218,9 @@ async def giaoviec(request: Request, token: str = Cookie(None)):
             username = payload.get("sub")
             permission = payload.get("permission")
             if permission=="admin":
-                return templates.TemplateResponse('assign.html', context={'request': request})
-
+                response = templates.TemplateResponse('assign.html', context={'request': request})
+                response.set_cookie("username", username, httponly=False)
+                return response
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
@@ -1014,7 +1016,7 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
                         id_congviec, int(i))
                     congviec_ghichu = ghichu.replace('<br/>', '\n')
                     congviec_mota = str(congviec['motacongviec']).replace('<br>', '\n')
-                    asyncio.create_task(sendMessageHTML(message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>[{congviec['mssv']}] {congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Nội dung công việc:</b>\n{congviec_mota}\n<b>Ghi chú:</b>\n{congviec_ghichu}", chat_id=str(congviec['telegram_id'])))
+                    asyncio.create_task(sendMessageHTML(message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <pre language='c++'>[{congviec['mssv']}] {congviec['nguoinhanviec']}</pre>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Nội dung công việc:</b>\n{congviec_mota}\n<b>Ghi chú:</b>\n{congviec_ghichu}", chat_id=str(congviec['telegram_id'])))
                 if result:
                     return JSONResponse(status_code=200, content=result)
                 else:

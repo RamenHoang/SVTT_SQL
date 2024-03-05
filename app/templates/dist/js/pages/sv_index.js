@@ -9,12 +9,12 @@ $(document).ready(function () {
   let cookie = document.cookie.split(";");
   let bangthongtin = $("#bang_thongtinsinhvien tbody");
   cookie.forEach(function (val) {
-    if (val.includes("email=")) {
-      let email = val.split("email=")[1].replaceAll('"', "");
+    if (val.includes("username=")) {
+      let email = val.split("username=")[1].replaceAll('"', "");
 
       $.ajax({
         type: "GET",
-        url: `/xem_thong_tin_sv?email=${email}`,
+        url: `/xem_thong_tin_sv?username=${email}`,
         success: function (res) {
           html = `
                         <tr>
@@ -122,11 +122,11 @@ $(document).ready(function () {
     $("#submitBtn").on("click", function () {
       let id_nhom = $("#danhsachnhom").val();
       cookie.forEach(function (val) {
-        if (val.includes("email=")) {
-          let email = val.split("email=")[1].replaceAll('"', "");
+        if (val.includes("username=")) {
+          let email = val.split("username=")[1].replaceAll('"', "");
           $.ajax({
             type: "POST",
-            url: `/them_nhom_thuc_tap_sv?email=${email}&idnhom=${id_nhom}`,
+            url: `/them_nhom_thuc_tap_sv?username=${email}&idnhom=${id_nhom}`,
             success: function (res) {
               if (res.status == "OK") {
                 Toast.fire({
@@ -177,7 +177,7 @@ $(document).ready(function () {
     } else {
       $.ajax({
         type: "POST",
-        url: `/danh_gia_thuc_tap?email=${email}&id_nhd=${nhomhuongdan_id}&dapan_1=${cau_1}&dapan_2=${cau_2}&dapan_3=${cau_3}&dapan_4=${cau_4}&gopy=${gopy}`,
+        url: `/danh_gia_thuc_tap?username=${email}&id_nhd=${nhomhuongdan_id}&dapan_1=${cau_1}&dapan_2=${cau_2}&dapan_3=${cau_3}&dapan_4=${cau_4}&gopy=${gopy}`,
         success: function () {
           Toast.fire({
             icon: "success",
@@ -203,8 +203,8 @@ $(document).ready(function () {
     let email = "";
     let groupid = -1;
     cookie.forEach(function (val) {
-      if (val.includes("email=")) {
-        email = val.split("email=")[1].replaceAll('"', "");
+      if (val.includes("username=")) {
+        email = val.split("username=")[1].replaceAll('"', "");
       }
 
       if (val.includes("groupid=")) {
