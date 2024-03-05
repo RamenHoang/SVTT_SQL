@@ -124,6 +124,7 @@ async def login_for_access_token(credentials: UserCredentials):
         response = JSONResponse(
             {"access_token": access_token, "token_type": "bearer"})
         response.set_cookie("token", access_token, httponly=False)
+        response.set_cookie("username", credentials.username, httponly=False)
         return response
     raise HTTPException(
         status_code=400, detail="Incorrect username or password")
