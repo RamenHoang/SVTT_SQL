@@ -1014,8 +1014,10 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
                     result = them_chi_tiet_cong_viec_controller(
                         id_congviec=id_congviec, id_sinhvien=int(i), trangthai=0, ghichu=ghichu)
                 if result:
-                    congviec = get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(id_congviec)
-                    asyncio.create_task(sendMessageHTML(message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>{congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Mô tả:</b> {congviec['ghichu']}", chat_id=str(congviec['telegram_id'])))
+                    congviec = get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(
+                        id_congviec)
+                    congviec_ghichu = str(congviec['ghichu']).replace('<br>', '\n')
+                    asyncio.create_task(sendMessageHTML(message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>{congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Mô tả:</b> {congviec_ghichu}", chat_id=str(congviec['telegram_id'])))
                     return JSONResponse(status_code=200, content=result)
                 else:
                     return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})

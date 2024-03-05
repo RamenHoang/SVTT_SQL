@@ -18,7 +18,6 @@ async def sendMessageHTML(message: str, chat_id: str):
     try:
         async with aiohttp.ClientSession() as session:
             async with session.post(requestURI, data=json.dumps(requestBody), headers=requestHeaders) as response:
-                print(response)
                 if response.status == 200:
                     return True
                 else:
