@@ -29,27 +29,26 @@ def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str,
 
 def verify_user(username: str, password: str):
     try:
-        cursor.execute("LoginUser ?, ?", protect_xss(
-            username), protect_xss(password))
-        result = cursor.fetchone()
-
-        if not result or not result.IsValidUser:
+        result = cursor.execute("LoginUser ?, ?", protect_xss(
+            username), protect_xss(password)).fetchone()[0]
+        if result==1:
+            return True
+        else:
             return False
-        return True
     except Exception as e:
         return e
 
 
-def verify_student(email: str, otp: int):
+def verify_student(email: str, password: str):
     try:
-        result = is_otp_valid(email, otp)
-
-        if not result:
+        result = cursor.execute("LoginStudent ?, ?", protect_xss(
+            email), protect_xss(password)).fetchone()[0]
+        if result==1:
+            return True
+        else:
             return False
-        return True
     except Exception as e:
         return e
-
 
 def get_all_sinh_vien():
     try:

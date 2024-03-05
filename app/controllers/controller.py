@@ -141,8 +141,8 @@ def verify_user_controller(username: str, password: str):
     return verify_user(username, password)
 
 
-def verify_student_controller(email: str, otp: int):
-    return verify_student(email, otp)
+def verify_student_controller(email: str, password: str):
+    return verify_student(email, password)
 
 
 def get_ds_sinh_vien_by_username_controller(username: str, kythuctap: str, nhomhuongdan: str):

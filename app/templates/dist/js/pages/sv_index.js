@@ -9,8 +9,8 @@ $(document).ready(function () {
   let cookie = document.cookie.split(";");
   let bangthongtin = $("#bang_thongtinsinhvien tbody");
   cookie.forEach(function (val) {
-    if (val.includes("username=")) {
-      let email = val.split("username=")[1].replaceAll('"', "");
+    if (val.includes("email=")) {
+      let email = val.split("email=")[1].replaceAll('"', "");
 
       $.ajax({
         type: "GET",
@@ -122,8 +122,8 @@ $(document).ready(function () {
     $("#submitBtn").on("click", function () {
       let id_nhom = $("#danhsachnhom").val();
       cookie.forEach(function (val) {
-        if (val.includes("username=")) {
-          let email = val.split("username=")[1].replaceAll('"', "");
+        if (val.includes("email=")) {
+          let email = val.split("email=")[1].replaceAll('"', "");
           $.ajax({
             type: "POST",
             url: `/them_nhom_thuc_tap_sv?email=${email}&idnhom=${id_nhom}`,
@@ -203,8 +203,8 @@ $(document).ready(function () {
     let email = "";
     let groupid = -1;
     cookie.forEach(function (val) {
-      if (val.includes("username=")) {
-        email = val.split("username=")[1].replaceAll('"', "");
+      if (val.includes("email=")) {
+        email = val.split("email=")[1].replaceAll('"', "");
       }
 
       if (val.includes("groupid=")) {
