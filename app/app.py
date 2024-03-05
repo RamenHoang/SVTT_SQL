@@ -1184,3 +1184,17 @@ async def danh_gia_nhieu_sv_route(dssv: str, ythuckyluat_number: float, ythuckyl
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
+
+@app.get('/theodoitiendo')
+async def theodoitiendo(request: Request, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            isAdmin = kiem_tra_loai_tai_khoan_controller(username)
+            if isAdmin == 1:
+                return templates.TemplateResponse('progress.html', context={'request': request})
+
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
