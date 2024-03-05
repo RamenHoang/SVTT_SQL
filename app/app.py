@@ -1017,7 +1017,7 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
                         id_congviec, int(i))
                     congviec_ghichu = ghichu.replace('<br/>', '\n')
                     congviec_mota = str(congviec['motacongviec']).replace('<br>', '\n')
-                    asyncio.create_task(sendMessageHTML(message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>[{congviec['mssv']}] {congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Mô tả:</b>\n{congviec_mota}\n<b>Ghi chú:</b>\n{congviec_ghichu}", chat_id=str(congviec['telegram_id'])))
+                    asyncio.create_task(sendMessageHTML(message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>[{congviec['mssv']}] {congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Nội dung công việc:</b>\n{congviec_mota}\n<b>Ghi chú:</b>\n{congviec_ghichu}", chat_id=str(congviec['telegram_id'])))
                 if result:
                     return JSONResponse(status_code=200, content=result)
                 else:
