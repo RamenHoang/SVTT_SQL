@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from hashlib import sha3_256
 from .controllers.controller import *
 from .send_otp import send_otp_email, is_otp_valid
+from .send_telegram_message import sendMessageHTML
 
 import os
 import jwt
@@ -15,6 +16,7 @@ import datetime
 import pandas as pd
 import zipfile
 import shutil
+import asyncio
 
 app = FastAPI()
 app.add_middleware(
@@ -613,7 +615,7 @@ async def get_chi_tiet_chinh_sua_nhom_route(token: str = Cookie(None)):
 
 
 @app.post('/update_chi_tiet_nhom_thuc_tap_by_id')
-async def update_chi_tiet_nhom_thuc_tap_by_id_route(id: int, kytt: int, nguoihd: int, detai: int, soluong: int, tennhom: str, isDeleted: int, ghichu: str, token: str = Cookie(None)):
+async def update_chi_tiet_nhom_thuc_tap_by_id_route(id: int, kytt: int, nguoihd: int, detai: int, soluong: int, tennhom: str, telegram: str, isDeleted: int, ghichu: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -621,7 +623,7 @@ async def update_chi_tiet_nhom_thuc_tap_by_id_route(id: int, kytt: int, nguoihd:
             isAdmin = kiem_tra_loai_tai_khoan_controller(username)
             if isAdmin == 1:
                 result = update_chi_tiet_nhom_thuc_tap_by_id_controller(
-                    id, kytt, nguoihd, detai, soluong, tennhom, ghichu, isDeleted)
+                    id, kytt, nguoihd, detai, soluong, tennhom, telegram, ghichu, isDeleted)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -647,7 +649,7 @@ async def update_xoa_nhom_thuc_tap_by_id_route(id: str, token: str = Cookie(None
 
 
 @app.post('/them_nhom_thuc_tap')
-async def them_nhom_thuc_tap_route(nguoihd: str, kytt: str, detai: str, soluong: int, tennhom: str, isDeleted: int, ghichu: str, token: str = Cookie(None)):
+async def them_nhom_thuc_tap_route(nguoihd: str, kytt: str, detai: str, soluong: int, tennhom: str, telegram: str, isDeleted: int, ghichu: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -655,7 +657,7 @@ async def them_nhom_thuc_tap_route(nguoihd: str, kytt: str, detai: str, soluong:
             isAdmin = kiem_tra_loai_tai_khoan_controller(username)
             if isAdmin == 1:
                 result = them_nhom_thuc_tap_controller(
-                    nguoihd, kytt, detai, soluong, tennhom, isDeleted, ghichu)
+                    nguoihd, kytt, detai, soluong, tennhom, telegram, isDeleted, ghichu)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -948,7 +950,7 @@ async def gui_mail_otp(email: str):
     try:
         hoten = get_ho_ten_sv_by_email_controller(email)
         ngayHetHan = check_sv_con_han_thuc_tap(email)
-        if(True):
+        if (True):
             send_otp_email(email, hoten)
             return JSONResponse(status_code=200, content={'status': 'OK'})
         else:
@@ -1012,6 +1014,8 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
                     result = them_chi_tiet_cong_viec_controller(
                         id_congviec=id_congviec, id_sinhvien=int(i), trangthai=0, ghichu=ghichu)
                 if result:
+                    congviec = get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(id_congviec)
+                    asyncio.create_task(sendMessageHTML(message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>{congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Mô tả:</b> {congviec['ghichu']}", chat_id=str(congviec['telegram_id'])))
                     return JSONResponse(status_code=200, content=result)
                 else:
                     return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
@@ -1154,6 +1158,7 @@ async def get_ds_chi_tiet_danh_gia_by_id_route(id: int, token: str = Cookie(None
     else:
         return RedirectResponse('/login')
 
+
 @app.post('/danh_gia_nhieu_sv')
 async def danh_gia_nhieu_sv_route(dssv: str, ythuckyluat_number: float, ythuckyluat_text: str, tuanthuthoigian_number: float, tuanthuthoigian_text: str, kienthuc_number: float, kienthuc_text: str, kynangnghe_number: float, kynangnghe_text: str, khanangdoclap_number: float, khanangdoclap_text: str, khanangnhom_number: float, khanangnhom_text: str, khananggiaiquyetcongviec_number: float, khananggiaiquyetcongviec_text: str, danhgiachung_number: float, token: str = Cookie(None)):
     if token:
@@ -1165,12 +1170,13 @@ async def danh_gia_nhieu_sv_route(dssv: str, ythuckyluat_number: float, ythuckyl
                 if isinstance(eval(dssv), int):
                     nhomid = get_id_nhom_by_sv_id_controller(str(dssv))
                     result = update_danh_gia_sv_by_id_controller(str(dssv), nhomid, ythuckyluat_number, ythuckyluat_text, tuanthuthoigian_number, tuanthuthoigian_text, kienthuc_number, kienthuc_text, kynangnghe_number,
-                                                            kynangnghe_text, khanangdoclap_number, khanangdoclap_text, khanangnhom_number, khanangnhom_text, khananggiaiquyetcongviec_number, khananggiaiquyetcongviec_text, danhgiachung_number)
+                                                                 kynangnghe_text, khanangdoclap_number, khanangdoclap_text, khanangnhom_number, khanangnhom_text, khananggiaiquyetcongviec_number, khananggiaiquyetcongviec_text, danhgiachung_number)
                 else:
                     for sinhvienid in eval(dssv):
-                        nhomid = get_id_nhom_by_sv_id_controller(str(sinhvienid))
+                        nhomid = get_id_nhom_by_sv_id_controller(
+                            str(sinhvienid))
                         result = update_danh_gia_sv_by_id_controller(str(sinhvienid), nhomid, ythuckyluat_number, ythuckyluat_text, tuanthuthoigian_number, tuanthuthoigian_text, kienthuc_number, kienthuc_text, kynangnghe_number,
-                                                                kynangnghe_text, khanangdoclap_number, khanangdoclap_text, khanangnhom_number, khanangnhom_text, khananggiaiquyetcongviec_number, khananggiaiquyetcongviec_text, danhgiachung_number)
+                                                                     kynangnghe_text, khanangdoclap_number, khanangdoclap_text, khanangnhom_number, khanangnhom_text, khananggiaiquyetcongviec_number, khananggiaiquyetcongviec_text, danhgiachung_number)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')

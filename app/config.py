@@ -18,6 +18,7 @@ email_username = os.getenv('EMAIL_USERNAME')
 email_password = os.getenv('EMAIL_PASSWORD')
 email_name = os.getenv('EMAIL_NAME')
 
+telegram_token = os.getenv('TELEGRAM_TOKEN')
 
 def create_connection():
     try:

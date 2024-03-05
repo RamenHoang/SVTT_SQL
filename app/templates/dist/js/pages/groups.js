@@ -45,6 +45,7 @@ let bangdsnhomthuctap = $("#bangdsnhomthuctap").DataTable({
         return "<center>" + data + "</center>";
       },
     },
+    { data: "telegram_id" },
     { data: "ghichu" },
     {
       data: "xoa",
@@ -88,8 +89,44 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
     success: function (res) {
       $("#modal_title").text("Nhóm " + id);
 
-      html =
-        '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_detai_select">Đề tài</label><select id="modal_detai_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_nguoihuongdan_select">Người hướng dẫn</label><select id="modal_nguoihuongdan_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_tennhom_input">Tên nhóm</label><input type="text" class="form-control" id="modal_tennhom_input" /></div><div class="form-group"><label for="modal_soluong_input">Số lượng sinh viên</label><input type="number" class="form-control" id="modal_soluong_input" /></div><div class="form-group"><label for="modal_ghichu_text">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div><div class="form-check"><input type="checkbox" class="form-check-input" id="modal_hoatdong_check"><label class="form-check-label" for="modal_hoatdong_check">Hoạt động?</label></div><script>$(".select2").select2({theme: "bootstrap",dropdownParent: $("#modal_id")});</script>';
+      html = `<div class="form-group">
+          <label for="modal_kythuctap_select">Kỳ thực tập</label>
+          <select id="modal_kythuctap_select" class="form-control select2"></select>
+        </div>
+        <div class="form-group">
+          <label for="modal_detai_select">Đề tài</label>
+          <select id="modal_detai_select" class="form-control select2"></select>
+        </div>
+        <div class="form-group">
+          <label for="modal_nguoihuongdan_select">Người hướng dẫn</label>
+          <select id="modal_nguoihuongdan_select" class="form-control select2"></select>
+        </div>
+        <div class="form-group">
+          <label for="modal_tennhom_input">Tên nhóm</label>
+          <input type="text" class="form-control" id="modal_tennhom_input" />
+        </div>
+        <div class="form-group">
+          <label for="modal_telegram_input">Telegram ID</label>
+          <input type="number" class="form-control" id="modal_telegram_input" />
+        </div>
+        <div class="form-group">
+          <label for="modal_soluong_input">Số lượng sinh viên</label>
+          <input type="number" class="form-control" id="modal_soluong_input" />
+        </div>
+        <div class="form-group">
+          <label for="modal_ghichu_text">Ghi chú</label>
+          <textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="modal_hoatdong_check">
+          <label class="form-check-label" for="modal_hoatdong_check">Hoạt động?</label>
+        </div>
+        <script>
+          $(".select2").select2({
+            theme: "bootstrap",
+            dropdownParent: $("#modal_id")
+          });
+        </script>`;
       $("#modal_body").append(html);
 
       // Danh sách kỳ thực tập
@@ -140,6 +177,9 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
       // Tên nhóm
       $("#modal_tennhom_input").val(res.nhomthuctap_tennhom);
 
+      // Telegram ID
+      $("#modal_telegram_input").val(res.nhomthuctap_telegram);
+
       // Số lượng sinh viên thực tập
       $("#modal_soluong_input").val(res.nhomthuctap_soluong);
 
@@ -168,6 +208,7 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
         let nhd = $("#modal_nguoihuongdan_select").val();
         let soluong = $("#modal_soluong_input").val();
         let tennhom = $("#modal_tennhom_input").val();
+        let telegram = $("#modal_telegram_input").val();
         let ghichu = $("#modal_ghichu_text")
           .val()
           .replace(/[\r\n]+/g, "<br/>");
@@ -188,6 +229,8 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
             isDeleted +
             "&tennhom=" +
             tennhom +
+            "&telegram=" +
+            telegram +
             "&ghichu=" +
             ghichu,
           success: function (data) {
@@ -234,16 +277,16 @@ $("#bangdsnhomthuctap").on("click", "#deleteBtn", function () {
         type: "POST",
         url: "update_xoa_nhom_thuc_tap_by_id?id=" + parseInt(id),
         success: function (res) {
-          if(res.status=='OK'){
+          if (res.status == "OK") {
             Toast.fire({
               icon: "success",
               title: "Đã xoá",
             });
             bangdsnhomthuctap.ajax.reload();
-          }else{
+          } else {
             Toast.fire({
               icon: "warning",
-              title: "Nhóm đã có sinh viên đăng ký hoặc đã kết thúc"
+              title: "Nhóm đã có sinh viên đăng ký hoặc đã kết thúc",
             });
           }
         },
@@ -258,7 +301,7 @@ $("#bangdsnhomthuctap").on("click", "#deleteBtn", function () {
   });
 });
 
-// Modal thêm đề ài
+// Modal thêm nhóm
 $("#themkythuctap_btn").click(function () {
   clear_modal();
   $.ajax({
@@ -266,8 +309,40 @@ $("#themkythuctap_btn").click(function () {
     url: "get_chi_tiet_chinh_sua_nhom",
     success: function (res) {
       $("#modal_title").text("Thêm nhóm thực tập");
-      html =
-        '<div class="form-group"><label for="modal_kythuctap_select">Kỳ thực tập</label><select id="modal_kythuctap_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_detai_select">Đề tài</label><select id="modal_detai_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_nguoihuongdan_select">Người hướng dẫn</label><select id="modal_nguoihuongdan_select" class="form-control select2"></select></div><div class="form-group"><label for="modal_tennhom_input">Tên nhóm</label><input type="text" class="form-control" id="modal_tennhom_input" /></div><div class="form-group"><label for="modal_soluong_input">Số lượng sinh viên</label><input type="number" class="form-control" id="modal_soluong_input" /></div><div class="form-group"><label for="modal_soluong_input">Ghi chú</label><textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea></div><script>$(".select2").select2({theme: "bootstrap",dropdownParent: $("#modal_id")});</script>';
+      html = `<div class="form-group">
+          <label for="modal_kythuctap_select">Kỳ thực tập</label>
+          <select id="modal_kythuctap_select" class="form-control select2"></select>
+        </div>
+        <div class="form-group">
+          <label for="modal_detai_select">Đề tài</label>
+          <select id="modal_detai_select" class="form-control select2"></select>
+        </div>
+        <div class="form-group">
+          <label for="modal_nguoihuongdan_select">Người hướng dẫn</label>
+          <select id="modal_nguoihuongdan_select" class="form-control select2"></select>
+        </div>
+        <div class="form-group">
+          <label for="modal_tennhom_input">Tên nhóm</label>
+          <input type="text" class="form-control" id="modal_tennhom_input" />
+        </div>
+        <div class="form-group">
+          <label for="modal_telegram_input">Telegram ID</label>
+          <input type="text" class="form-control" id="modal_telegram_input" />
+        </div>
+        <div class="form-group">
+          <label for="modal_soluong_input">Số lượng sinh viên</label>
+          <input type="number" class="form-control" id="modal_soluong_input" />
+        </div>
+        <div class="form-group">
+          <label for="modal_soluong_input">Ghi chú</label>
+          <textarea id="modal_ghichu_text" class="form-control" rows="5"></textarea>
+        </div>
+        <script>
+          $(".select2").select2({
+            theme: "bootstrap",
+            dropdownParent: $("#modal_id")
+          });
+        </script>`;
       $("#modal_body").append(html);
       $.each(res.kythuctap, function (idx, val) {
         $("#modal_kythuctap_select").append(
@@ -299,6 +374,7 @@ $("#themkythuctap_btn").click(function () {
         let soluong = $("#modal_soluong_input").val();
         let nhd = $("#modal_nguoihuongdan_select").val();
         let tennhom = $("#modal_tennhom_input").val();
+        let telegram = $("#modal_telegram_input").val();
         let ghichu = $("#modal_ghichu_text")
           .val()
           .replace(/[\r\n]+/g, "<br/>");
@@ -316,6 +392,8 @@ $("#themkythuctap_btn").click(function () {
             parseInt(soluong) +
             "&tennhom=" +
             tennhom +
+            "&telegram=" +
+            telegram +
             "&isDeleted=0" +
             "&ghichu=" +
             ghichu,
