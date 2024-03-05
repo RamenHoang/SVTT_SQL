@@ -143,6 +143,7 @@ async def logout(token: str = Cookie(None)):
     response = RedirectResponse('/login')
     response.delete_cookie("token")
     response.delete_cookie("email")
+    response.delete_cookie("username")
     return response
 
 
