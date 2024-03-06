@@ -159,24 +159,57 @@ $(document).ready(function () {
         {
           data: "id",
           render: function (data, type, row) {
-            return `<center>
-                <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}">
-                  <i class="fas fa-pencil-alt"></i>
-                </a>
-                <a class="btn btn-danger btn-sm" data-id="${data}" id="deleteBtn">
-                  <i class="fas fa-trash"></i>
-                </a>
-              </center>`;
+            if (row.xacnhan !== 1 && row.trangthai === 1) {
+              return `<center>
+                  <a class="btn btn-success btn-sm" data-id="${data}" id="confirmBtn">
+                    <i class="fa-solid fa-check"></i>
+                  </a>
+                </center>`;
+            } else {
+              return "";
+            }
           },
         },
       ],
       createdRow: function (row, data, dataIndex) {
-        if (data.trangthai == 2) {
-          $(row).addClass("luuy-1");
-        } else if (data.trangthai == 1) {
-          $(row).addClass("luuy-2");
+        if (data.xacnhan == 1) {
+          $(row).addClass("xacnhan");
         }
       },
+    });
+    // Bắt sự kiện xác nhận trạng thái chi tiết công việc
+    $("#bang_dscongviec").on("click", "#confirmBtn", function () {
+      Swal.fire({
+        title: `Xác nhận công việc đã hoàn thành?`,
+        icon: `question`,
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Xác nhận",
+        cancelButtonText: "Huỷ",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let id = $(this).data("id");
+
+          $.ajax({
+            type: `POST`,
+            url: `update_xac_nhan_trang_thai_cong_viec?idcongviec=${id}`,
+            success: function () {
+              Toast.fire({
+                icon: "success",
+                title: "Đã xác nhận trạng thái",
+              });
+              dscongviec.ajax.reload();
+            },
+            error: function () {
+              Toast.fire({
+                icon: "error",
+                title: "Xác nhận trạng thái thất bại",
+              });
+            },
+          });
+        }
+      });
     });
   });
 });

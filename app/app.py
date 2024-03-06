@@ -731,6 +731,23 @@ async def get_ds_chi_tiet_cong_viec_by_idsinhvien_route(sinhvienid: int, token: 
             return RedirectResponse('/login')
     return RedirectResponse('/login')
 
+@app.post('/update_xac_nhan_trang_thai_cong_viec')
+async def update_xac_nhan_trang_thai_cong_viec_route(idcongviec: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            permission = payload.get("permission")
+            if permission == "admin":
+                result = update_xac_nhan_trang_thai_cong_viec_controller(idcongviec, username)
+                if result:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'NOT OK'})
+        except jwt.PyJWKError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
 @app.get('/get_chi_tiet_danh_gia_sv_by_id')
 async def get_chi_tiet_danh_gia_sv_by_id_route(id: str, token: str = Cookie(None)):
     if token:
