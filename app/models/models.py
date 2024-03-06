@@ -365,7 +365,17 @@ def get_dssv_by_kttid_nhomid_username(kythuctap_id: int, nhomhuongdan_id: int, u
 def get_ds_chi_tiet_cong_viec_by_idsinhvien(sinhvien_id: int):
     try:
         result = cursor.execute("EXEC GetDSChiTietCongViecByIDSinhVien ?", sinhvien_id)
-        return [{'id': i[0], 'ngaybatdau': i[1], 'ngayketthuc': i[2], 'tencongviec': i[3], 'mota': i[4], 'ghichu': i[5], 'trangthai': i[6]} for i in result.fetchall()]
+        return [{'id': i[0], 'ngaybatdau': i[1], 'ngayketthuc': i[2], 'tencongviec': i[3], 'mota': i[4], 'ghichu': i[5], 'trangthai': i[6], 'xacnhan': i[7]} for i in result.fetchall()]
+    except Exception as e:
+        return e
+    
+def update_xac_nhan_trang_thai_cong_viec(idcongviec: int, username: str):
+    try:
+        result = cursor.execute("EXEC UpdateXacNhanTrangThaiCongViec ?, ?", idcongviec, protect_xss(username)).fetchone()[0]
+        if result==1:
+            return True
+        else:
+            return False
     except Exception as e:
         return e
 

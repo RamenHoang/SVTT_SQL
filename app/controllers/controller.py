@@ -154,6 +154,9 @@ def get_dssv_by_kttid_nhomid_username_controller(kythuctap_id: int, nhomhuongdan
 def get_ds_chi_tiet_cong_viec_by_idsinhvien_controller(sinhvien_id: int):
     return get_ds_chi_tiet_cong_viec_by_idsinhvien(sinhvien_id)
 
+def update_xac_nhan_trang_thai_cong_viec_controller(idcongviec: int, username: str):
+    return update_xac_nhan_trang_thai_cong_viec(idcongviec, username)
+
 def get_chi_tiet_danh_gia_sv_by_id_controller(id: str):
     return get_chi_tiet_danh_gia_sv_by_id(id)
 
