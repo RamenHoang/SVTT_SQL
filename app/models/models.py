@@ -498,9 +498,9 @@ def xoa_chi_tiet_cong_viec_by_id(id: int):
 
 def xoa_cong_viec_by_id(id: int):
     try:
-        result = cursor.execute("EXEC UpdateXoaCongViecByID ?", id)
+        result = cursor.execute("EXEC UpdateXoaCongViecByID ?", id).fetchone()[0]
         cursor.commit()
-        if result.fetchone()[0] == 1:
+        if result == 1:
             return True
         else:
             return False
