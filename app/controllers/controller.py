@@ -148,6 +148,11 @@ def verify_student_controller(email: str, password: str):
 def get_ds_sinh_vien_by_username_controller(username: str, kythuctap: str, nhomhuongdan: str):
     return get_ds_sinh_vien_by_username(username, kythuctap, nhomhuongdan)
 
+def get_dssv_by_kttid_nhomid_username_controller(kythuctap_id: int, nhomhuongdan_id: int, username: str):
+    return get_dssv_by_kttid_nhomid_username(kythuctap_id, nhomhuongdan_id, username)
+
+def get_ds_chi_tiet_cong_viec_by_idsinhvien_controller(sinhvien_id: int):
+    return get_ds_chi_tiet_cong_viec_by_idsinhvien(sinhvien_id)
 
 def get_chi_tiet_danh_gia_sv_by_id_controller(id: str):
     return get_chi_tiet_danh_gia_sv_by_id(id)

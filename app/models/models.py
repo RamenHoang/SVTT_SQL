@@ -355,6 +355,19 @@ def get_ds_sinh_vien_by_username(username: str, kythuctap: str, nhomhuongdan: st
     except Exception as e:
         return e
 
+def get_dssv_by_kttid_nhomid_username(kythuctap_id: int, nhomhuongdan_id: int, username: str):
+    try:
+        result = cursor.execute("EXEC GetDSSVByKTTID_NhomID_NHDUsername ?, ?, ?", kythuctap_id, nhomhuongdan_id, protect_xss(username))
+        return [{'id': i[0], 'mssv': i[1], 'hoten': i[2]} for i in result.fetchall()]
+    except Exception as e:
+        return e
+    
+def get_ds_chi_tiet_cong_viec_by_idsinhvien(sinhvien_id: int):
+    try:
+        result = cursor.execute("EXEC GetDSChiTietCongViecByIDSinhVien ?", sinhvien_id)
+        return [{'id': i[0], 'ngaybatdau': i[1], 'ngayketthuc': i[2], 'tencongviec': i[3], 'mota': i[4], 'ghichu': i[5], 'trangthai': i[6]} for i in result.fetchall()]
+    except Exception as e:
+        return e
 
 def get_chi_tiet_danh_gia_sv_by_id(id: str):
     try:

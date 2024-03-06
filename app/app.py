@@ -705,6 +705,31 @@ async def get_ds_sinh_vien_by_username_route(kythuctap: str, nhomthuctap: str, t
             return RedirectResponse('/login')
     return RedirectResponse('/login')
 
+@app.get('/get_dssv_by_kttid_nhomid_username')
+async def get_dssv_by_kttid_nhomid_username_route(kythuctap_id: int, nhomhuongdan_id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            permission = payload.get("permission")
+            if permission == "admin":
+                return JSONResponse(status_code=200, content=get_dssv_by_kttid_nhomid_username_controller(kythuctap_id, nhomhuongdan_id, username))
+        except jwt.PyJWKError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+@app.get('/get_ds_chi_tiet_cong_viec_by_idsinhvien')
+async def get_ds_chi_tiet_cong_viec_by_idsinhvien_route(sinhvienid: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            permission = payload.get("permission")
+            if permission == "admin":
+                return JSONResponse(status_code=200, content=get_ds_chi_tiet_cong_viec_by_idsinhvien_controller(sinhvienid))
+        except jwt.PyJWKError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
 
 @app.get('/get_chi_tiet_danh_gia_sv_by_id')
 async def get_chi_tiet_danh_gia_sv_by_id_route(id: str, token: str = Cookie(None)):
