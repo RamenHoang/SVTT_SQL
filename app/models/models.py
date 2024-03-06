@@ -372,6 +372,18 @@ def get_ds_chi_tiet_cong_viec_by_idsinhvien(sinhvien_id: int):
 def update_xac_nhan_trang_thai_cong_viec(idcongviec: int, username: str):
     try:
         result = cursor.execute("EXEC UpdateXacNhanTrangThaiCongViec ?, ?", idcongviec, protect_xss(username)).fetchone()[0]
+        cursor.commit()
+        if result==1:
+            return True
+        else:
+            return False
+    except Exception as e:
+        return e
+
+def update_sv_xac_nhan_hoan_thanh_cong_viec(idcongviec: int, email: str):
+    try:
+        result = cursor.execute("EXEC UpdateSVXacHoanThanhThaiCongViec ?, ?", idcongviec, protect_xss(email)).fetchone()[0]
+        cursor.commit()
         if result==1:
             return True
         else:
@@ -717,5 +729,23 @@ def get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec(id: int, sv_id: int):
         result = cursor.execute(
             "EXEC GetChiTietGiaoViecChoSVByIDCongViec ?, ?", id, sv_id).fetchone()
         return {'nguoinhanviec': result[0], 'mssv': result[1], 'nguoigiaoviec': result[2], 'tencongviec': result[3], 'ngaybatdau': result[4], 'ngayketthuc': result[5], 'ghichu': result[6], 'motacongviec': result[7], 'telegram_id': result[8]}
+    except Exception as e:
+        return e
+
+def get_ds_congviec_by_sinhvien_email(email: str):
+    try:
+        idNhom = cursor.execute(
+            "EXEC GetChiTietSVByEmail ?", protect_xss(email)).fetchone()[11]
+        return get_ds_cong_viec_by_id_nhom(idNhom)
+    except Exception as e:
+        return e
+
+def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv(id: int, email: str):
+    try:
+        result = cursor.execute(
+            "EXEC GetChiTietCongViecByIDCongViecEmailSV ?, ?", id, protect_xss(email)).fetchone()
+        data = [{'id': result[0], 'id_congviec': result[1], 'id_sinhvien': result[2],
+                 'ghichu': result[3], 'tencongviec': result[4], 'nguoithuchien': result[5], 'trangthai': result[6], 'xacnhan': result[7]}]
+        return data
     except Exception as e:
         return e

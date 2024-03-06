@@ -157,6 +157,9 @@ def get_ds_chi_tiet_cong_viec_by_idsinhvien_controller(sinhvien_id: int):
 def update_xac_nhan_trang_thai_cong_viec_controller(idcongviec: int, username: str):
     return update_xac_nhan_trang_thai_cong_viec(idcongviec, username)
 
+def update_sv_xac_nhan_hoan_thanh_cong_viec_controller(idcongviec: int, email: str):
+    return update_sv_xac_nhan_hoan_thanh_cong_viec(idcongviec, email)
+
 def get_chi_tiet_danh_gia_sv_by_id_controller(id: str):
     return get_chi_tiet_danh_gia_sv_by_id(id)
 
@@ -291,3 +294,9 @@ def get_ds_chi_tiet_danh_gia_by_id_controller(id: int):
 
 def get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(id: int, sv_id: int):
     return get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec(id, sv_id)
+
+def get_ds_congviec_by_sinhvien_email_controller(email: str):
+    return get_ds_congviec_by_sinhvien_email(email)
+
+def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_controller(id: int, email: str):
+    return get_chi_tiet_cong_viec_by_id_cong_viec_email_sv(id, email)

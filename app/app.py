@@ -744,6 +744,12 @@ async def update_xac_nhan_trang_thai_cong_viec_route(idcongviec: int, token: str
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'NOT OK'})
+            elif permission=="student":
+                result = update_sv_xac_nhan_hoan_thanh_cong_viec_controller(idcongviec, username)
+                if result:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'NOT OK'})
         except jwt.PyJWKError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
@@ -1003,7 +1009,6 @@ async def gui_mail_otp(email: str):
         else:
             return JSONResponse(status_code=200, content={'status': 'Expired'})
     except Exception as e:
-        print(e)
         return JSONResponse(status_code=500, content={'status': 'Email system has problem'})
 
 
@@ -1243,6 +1248,47 @@ async def theodoitiendo(request: Request, token: str = Cookie(None)):
             if permission == "admin":
                 return templates.TemplateResponse('progress.html', context={'request': request})
 
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+@app.get('/congviecsinhvien')
+async def congviecsinhvien(request: Request, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            permission = payload.get("permission")
+            if permission == "student":
+                return templates.TemplateResponse('sv_tasks.html', context={'request': request})
+
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+@app.get('/get_ds_congviec_by_sinhvien_email')
+async def get_ds_congviec_by_sinhvien_email(token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            permission = payload.get("permission")
+            if permission == "student":
+                return get_ds_congviec_by_sinhvien_email_controller(username)
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+@app.get('/get_chi_tiet_cong_viec_by_id_cong_viec_email_sv')
+async def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_route(id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            permission = payload.get("permission")
+            if permission == "student":
+                result = get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_controller(id, username)
+                return JSONResponse(status_code=200, content=result)
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
