@@ -280,5 +280,6 @@ def get_ds_chi_tiet_danh_gia_controller():
 def get_ds_chi_tiet_danh_gia_by_id_controller(id: int):
     return get_ds_chi_tiet_danh_gia_by_id(id)
 
+
 def get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(id: int, sv_id: int):
     return get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec(id, sv_id)
