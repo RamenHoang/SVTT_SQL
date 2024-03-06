@@ -1026,8 +1026,8 @@ async def sv_danhgiakythuctap(request: Request, token: str = Cookie(None)):
 
 
 @app.get('/xem_thong_tin_sv')
-async def xem_thong_tin_sv_route(email: str):
-    return JSONResponse(status_code=200, content=xem_thong_tin_sv_controller(email))
+async def xem_thong_tin_sv_route(username: str):
+    return JSONResponse(status_code=200, content=xem_thong_tin_sv_controller(email=username))
 
 
 @app.post('/them_chi_tiet_cong_viec')
