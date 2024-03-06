@@ -410,16 +410,6 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet) {
       <textarea class="form-control" id="modal_edit_ghichu_text" rows="5"></textarea> 
     </div> 
   </div>
-  <div class="form-group">
-    <label for="modal_edit_trangthai_select">Trạng thái</label>
-    <div class="input-group">
-      <select id="modal_edit_trangthai_select" class="form-control">
-        <option value="0">Đang thực hiện</option>
-        <option value="1">Hoàn thành</option>
-        <option value="2">Trễ hạn</option>
-      </select>
-    </div>
-  </div>
   `;
   $("#modal_body").append(body);
   $("#modal_footer")
@@ -446,7 +436,6 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet) {
           $("#modal_edit_ghichu_text").val(
             res[0].ghichu.replace(/<br\/>/g, "\r\n")
           );
-          $("#modal_edit_trangthai_select").val(res[0].trangthai);
         },
       });
     },
@@ -458,11 +447,10 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet) {
     let ghichu = $("#modal_edit_ghichu_text")
       .val()
       .replace(/[\r\n]+/g, "<br/>");
-    let trangthai = $("#modal_edit_trangthai_select").val();
 
     $.ajax({
       type: "POST",
-      url: `update_chi_tiet_cong_viec_by_id?id=${id_chitiet}&svid=${id_sinhvien}&trangthai=${trangthai}&ghichu=${ghichu}`,
+      url: `update_chi_tiet_cong_viec_by_id?id=${id_chitiet}&svid=${id_sinhvien}&ghichu=${ghichu}`,
       success: function () {
         Toast.fire({
           icon: "success",
