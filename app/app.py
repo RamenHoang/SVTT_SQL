@@ -1009,7 +1009,6 @@ async def gui_mail_otp(email: str):
         else:
             return JSONResponse(status_code=200, content={'status': 'Expired'})
     except Exception as e:
-        print(e)
         return JSONResponse(status_code=500, content={'status': 'Email system has problem'})
 
 
@@ -1289,7 +1288,6 @@ async def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_route(id: int, token: 
             permission = payload.get("permission")
             if permission == "student":
                 result = get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_controller(id, username)
-                print(result)
                 return JSONResponse(status_code=200, content=result)
         except jwt.PyJWTError:
             return RedirectResponse('/login')
