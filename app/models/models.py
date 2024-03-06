@@ -31,7 +31,7 @@ def verify_user(username: str, password: str):
     try:
         result = cursor.execute("LoginUser ?, ?", protect_xss(
             username), protect_xss(password)).fetchone()[0]
-        if result==1:
+        if result == 1:
             return True
         else:
             return False
@@ -43,12 +43,13 @@ def verify_student(email: str, password: str):
     try:
         result = cursor.execute("LoginStudent ?, ?", protect_xss(
             email), protect_xss(password)).fetchone()[0]
-        if result==1:
+        if result == 1:
             return True
         else:
             return False
     except Exception as e:
         return e
+
 
 def get_all_sinh_vien():
     try:
@@ -687,9 +688,11 @@ def check_sv_con_han_thuc_tap(email: str):
     except Exception as e:
         return False
 
+
 def get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec(id: int, sv_id: int):
     try:
-        result = cursor.execute("EXEC GetChiTietGiaoViecChoSVByIDCongViec ?, ?", id, sv_id).fetchone()
+        result = cursor.execute(
+            "EXEC GetChiTietGiaoViecChoSVByIDCongViec ?, ?", id, sv_id).fetchone()
         return {'nguoinhanviec': result[0], 'mssv': result[1], 'nguoigiaoviec': result[2], 'tencongviec': result[3], 'ngaybatdau': result[4], 'ngayketthuc': result[5], 'ghichu': result[6], 'motacongviec': result[7], 'telegram_id': result[8]}
     except Exception as e:
         return e
