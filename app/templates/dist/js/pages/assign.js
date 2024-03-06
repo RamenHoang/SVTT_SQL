@@ -367,15 +367,22 @@ function xoaCongViecByID(id) {
   $.ajax({
     type: "POST",
     url: `/xoa_cong_viec_by_id?id=${id}`,
-    success: function () {
-      Toast.fire({
-        icon: "success",
-        title: "Đã xóa công việc",
-      });
-      let nhomid = filter_chonnhom.val();
-
-      load_timeline_congviec(nhomid);
-      $("#bangdscongviec").empty();
+    success: function (res) {
+      if(res.status=='OK'){
+        Toast.fire({
+          icon: "success",
+          title: "Đã xóa công việc",
+        });
+        let nhomid = filter_chonnhom.val();
+  
+        load_timeline_congviec(nhomid);
+        $("#bangdscongviec").empty();
+      }else{
+        Toast.fire({
+          icon: "warning",
+          title: "Không thể xoá công việc do đã có chi tiết công việc"
+        });
+      }
     },
     error: function () {
       Toast.fire({
