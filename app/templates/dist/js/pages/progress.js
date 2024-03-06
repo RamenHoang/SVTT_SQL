@@ -159,14 +159,14 @@ $(document).ready(function () {
         {
           data: "id",
           render: function (data, type, row) {
-            if(row.xacnhan !== 1 && row.trangthai===1){
+            if (row.xacnhan !== 1 && row.trangthai === 1) {
               return `<center>
                   <a class="btn btn-success btn-sm" data-id="${data}" id="confirmBtn">
                     <i class="fa-solid fa-check"></i>
                   </a>
                 </center>`;
-            }else{
-              return '';
+            } else {
+              return "";
             }
           },
         },
@@ -178,7 +178,7 @@ $(document).ready(function () {
       },
     });
     // Bắt sự kiện xác nhận trạng thái chi tiết công việc
-    $("#bang_dscongviec").on('click', '#confirmBtn', function(){
+    $("#bang_dscongviec").on("click", "#confirmBtn", function () {
       Swal.fire({
         title: `Xác nhận công việc đã hoàn thành?`,
         icon: `question`,
@@ -186,31 +186,30 @@ $(document).ready(function () {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Xác nhận",
-        cancelButtonText: "Huỷ"
-      }).then((result)=>{
-        if(result.isConfirmed){
+        cancelButtonText: "Huỷ",
+      }).then((result) => {
+        if (result.isConfirmed) {
           let id = $(this).data("id");
-  
+
           $.ajax({
             type: `POST`,
             url: `update_xac_nhan_trang_thai_cong_viec?idcongviec=${id}`,
-            success: function(){
+            success: function () {
               Toast.fire({
                 icon: "success",
-                title: "Đã xác nhận trạng thái"
+                title: "Đã xác nhận trạng thái",
               });
               dscongviec.ajax.reload();
             },
-            error: function(){
+            error: function () {
               Toast.fire({
                 icon: "error",
-                title: "Xác nhận trạng thái thất bại"
+                title: "Xác nhận trạng thái thất bại",
               });
-            }
-          })
+            },
+          });
         }
       });
     });
   });
-
 });
