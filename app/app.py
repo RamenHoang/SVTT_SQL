@@ -1124,7 +1124,7 @@ async def xoa_chi_tiet_cong_viec_by_id_route(id: int, token: str = Cookie(None))
 
 
 @app.post('/update_chi_tiet_cong_viec_by_id')
-async def update_chi_tiet_cong_viec_by_id_route(id: int, svid: int, trangthai: int, ghichu: str, token: str = Cookie(None)):
+async def update_chi_tiet_cong_viec_by_id_route(id: int, svid: int, ghichu: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -1132,7 +1132,7 @@ async def update_chi_tiet_cong_viec_by_id_route(id: int, svid: int, trangthai: i
             permission = payload.get("permission")
             if permission == "admin":
                 result = update_chi_tiet_cong_viec_by_id_controller(
-                    id, svid, trangthai, ghichu)
+                    id, svid, ghichu)
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:

@@ -471,10 +471,10 @@ def get_chi_tiet_cong_viec_by_id(id: int):
         return e
 
 
-def update_chi_tiet_cong_viec_by_id(id: int, svid: int, trangthai: int, ghichu: str):
+def update_chi_tiet_cong_viec_by_id(id: int, svid: int, ghichu: str):
     try:
         result = cursor.execute(
-            "EXEC UpdateChiTietCongViecByID ?, ?, ?, ?", id, svid, trangthai, protect_xss(ghichu))
+            "EXEC UpdateChiTietCongViecByID ?, ?, ?", id, svid, protect_xss(ghichu))
         cursor.commit()
         if result.fetchone()[0] == 1:
             return True

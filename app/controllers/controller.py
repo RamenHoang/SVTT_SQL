@@ -273,8 +273,8 @@ def xoa_chi_tiet_cong_viec_by_id_controller(id: int):
     return xoa_chi_tiet_cong_viec_by_id(id)
 
 
-def update_chi_tiet_cong_viec_by_id_controller(id: int, svid: int, trangthai: int, ghichu: str):
-    return update_chi_tiet_cong_viec_by_id(id, svid, trangthai, ghichu)
+def update_chi_tiet_cong_viec_by_id_controller(id: int, svid: int, ghichu: str):
+    return update_chi_tiet_cong_viec_by_id(id, svid, ghichu)
 
 
 def insert_danh_gia_thuc_tap_controller(sv_id: int, nhd_id: int, dapan_1: int, dapan_2: int, dapan_3: int, dapan_4: int, gopy: str):
