@@ -126,7 +126,7 @@ $(document).ready(function () {
           let email = val.split("username=")[1].replaceAll('"', "");
           $.ajax({
             type: "POST",
-            url: `/them_nhom_thuc_tap_sv?username=${email}&idnhom=${id_nhom}`,
+            url: `/them_nhom_thuc_tap_sv?email=${email}&idnhom=${id_nhom}`,
             success: function (res) {
               if (res.status == "OK") {
                 Toast.fire({
