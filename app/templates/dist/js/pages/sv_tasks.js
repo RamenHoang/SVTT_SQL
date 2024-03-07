@@ -142,7 +142,11 @@ function load_ChiTietCongViec(id_congviec) {
                     </a>
                   </center>`;
               } else {
-                return "";
+                return `
+                <span class="badge badge-pill badge-success" data-toggle="tooltip" data-placement="bottom" title="Người hướng dẫn đã xác nhận hoàn thành công việc">
+                  <i class="fa-solid fa-user-check"></i> Verified
+                </span>
+                `;
               }
         },
       },
