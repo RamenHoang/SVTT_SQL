@@ -20,6 +20,8 @@ email_name = os.getenv('EMAIL_NAME')
 
 telegram_token = os.getenv('TELEGRAM_TOKEN')
 
+default_password = os.getenv('DEFAULT_PASSWORD')
+
 def create_connection():
     try:
         # Sử dụng ODBC Driver
