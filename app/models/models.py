@@ -11,20 +11,20 @@ def protect_xss(input: str):
     return bleach.clean(input, tags=['br'], attributes={})
 
 
-def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str, DiaChi: str, MaLop: str, Truong: str, Nganh: str, Khoa: int) -> bool:
+def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str, DiaChi: str, MaLop: str, Truong: str, Nganh: str, Khoa: int, Password: str) -> bool:
     try:
+        id: int = 0
         check = cursor.execute(
             "SELECT COUNT(ID) FROM SINHVIEN WHERE MSSV=?", MSSV).fetchone()[0]
         if check == 0:
-            i = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(MSSV), protect_xss(
-                HoTen), GioiTinh, protect_xss(SDT), protect_xss(Email), protect_xss(DiaChi), protect_xss(MaLop), Truong, Nganh, Khoa, 0).fetchone()
-            result = i[0]
+            i = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(MSSV), protect_xss(
+                HoTen), GioiTinh, protect_xss(SDT), protect_xss(Email), protect_xss(DiaChi), protect_xss(MaLop), Truong, Nganh, Khoa, 0, protect_xss(Password), id)
             conn.commit()
-            return result
+            return id
         else:
             return False
     except Exception as e:
-        return False
+        return e
 
 
 def verify_user(username: str, password: str):

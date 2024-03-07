@@ -72,8 +72,8 @@ class ThongTinSV(BaseModel):
     email: str
     diachi: str
     malop: str
-    truong: str
-    nganh: str
+    truong: int
+    nganh: int
     khoa: int
 
 
@@ -843,7 +843,8 @@ async def get_danh_sach_truong_route():
 @app.post('/thong_tin_sinh_vien')
 async def thong_tin_sinh_vien_route(sv: ThongTinSV):
     result = insert_sinh_vien_controller(
-        sv.mssv, sv.hoten, sv.gioitinh, sv.sdt, sv.email, sv.diachi, sv.malop, sv.truong, sv.nganh, sv.khoa)
+        sv.mssv, sv.hoten, sv.gioitinh, sv.sdt, sv.email, sv.diachi, sv.malop, sv.truong, sv.nganh, sv.khoa, sha3_256(bytes('Vnpt@2024', 'utf-8')).hexdigest())
+    print(result)
     if result:
         sent = send_otp_email(sv.email, sv.hoten)
         if sent:
