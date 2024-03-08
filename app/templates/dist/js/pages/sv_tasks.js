@@ -135,18 +135,22 @@ function load_ChiTietCongViec(id_congviec) {
       {
         data: "id",
         render: function (data, type, row) {
-            if (row.xacnhan !== 1 && row.trangthai === 0) {
+            if (row.xacnhan === 0 && row.trangthai === 0) {
                 return `<center>
                     <a class="btn btn-success btn-sm" data-id="${data}" id="confirmBtn">
                       <i class="fa-solid fa-check"></i>
                     </a>
                   </center>`;
               } else {
-                return `
-                <span class="badge badge-pill badge-success" data-toggle="tooltip" data-placement="bottom" title="Người hướng dẫn đã xác nhận hoàn thành công việc">
-                  <i class="fa-solid fa-user-check"></i> Verified
-                </span>
-                `;
+                if(row.xacnhan === 1 && row.trangthai === 1) {
+                  return `
+                  <span class="badge badge-pill badge-success" data-toggle="tooltip" data-placement="bottom" title="Người hướng dẫn đã xác nhận hoàn thành công việc">
+                    <i class="fa-solid fa-user-check"></i> Verified
+                  </span>
+                  `;
+                } else {
+                  return ``;
+                }
               }
         },
       },
