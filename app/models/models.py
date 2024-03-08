@@ -538,9 +538,9 @@ def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mo
 def them_chi_tiet_cong_viec(id_congviec: int, id_sinhvien: int, trangthai: int, ghichu: str):
     try:
         result = cursor.execute("EXEC InsertChiTietCongViec ?, ?, ?, ?",
-                                id_congviec, id_sinhvien, trangthai, protect_xss(ghichu))
+                                id_congviec, id_sinhvien, trangthai, protect_xss(ghichu)).fetchone()[0]
         cursor.commit()
-        return True
+        return result
     except Exception as e:
         return e
 

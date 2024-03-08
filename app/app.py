@@ -1072,15 +1072,19 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
                 for i in sinhvien:
                     result = them_chi_tiet_cong_viec_controller(
                         id_congviec=id_congviec, id_sinhvien=int(i), trangthai=0, ghichu=ghichu)
-                    congviec = get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(
-                        id_congviec, int(i))
-                    congviec_ghichu = ghichu.replace('<br/>', '\n')
-                    congviec_mota = str(
-                        congviec['motacongviec']).replace('<br>', '\n')
-                    asyncio.create_task(sendMessageHTML(
-                        message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>[{congviec['mssv']}] {congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Nội dung công việc:</b>\n<pre language='c++'>{congviec_mota}</pre>\n<b>Ghi chú:</b>\n<pre language='c++'>{congviec_ghichu}</pre>", chat_id=str(congviec['telegram_id'])))
-                if result:
-                    return JSONResponse(status_code=200, content=result)
+                    if result==1:
+                        congviec = get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(
+                            id_congviec, int(i))
+                        congviec_ghichu = ghichu.replace('<br/>', '\n')
+                        congviec_mota = str(
+                            congviec['motacongviec']).replace('<br>', '\n')
+                        asyncio.create_task(sendMessageHTML(
+                            message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>[{congviec['mssv']}] {congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Nội dung công việc:</b>\n<pre language='c++'>{congviec_mota}</pre>\n<b>Ghi chú:</b>\n<pre language='c++'>{congviec_ghichu}</pre>", chat_id=str(congviec['telegram_id'])))
+                        return JSONResponse(status_code=200, content={'status': 'INSERTED'})
+                    elif result==2:
+                        return JSONResponse(status_code=200, content={'status': 'EVALUATED'})
+                    else:
+                        return JSONResponse(status_code=200, content={'status': 'NOT INSERTED'})
                 else:
                     return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
         except jwt.PyJWTError:
