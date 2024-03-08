@@ -784,7 +784,10 @@ async def update_danh_gia_sv_by_id_route(sinhvienid: str, nhomid: int, ythuckylu
             if permission == "admin":
                 result = update_danh_gia_sv_by_id_controller(sinhvienid, nhomid, ythuckyluat_number, ythuckyluat_text, tuanthuthoigian_number, tuanthuthoigian_text, kienthuc_number, kienthuc_text, kynangnghe_number,
                                                              kynangnghe_text, khanangdoclap_number, khanangdoclap_text, khanangnhom_number, khanangnhom_text, khananggiaiquyetcongviec_number, khananggiaiquyetcongviec_text, danhgiachung_number)
-                return JSONResponse(status_code=200, content={'status': 'OK'})
+                if result:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'EXPIRED'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
@@ -1201,7 +1204,7 @@ async def get_ds_chi_tiet_danh_gia_route(token: str = Cookie(None)):
                 if result:
                     return JSONResponse(status_code=200, content=result)
                 else:
-                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+                    return JSONResponse(status_code=200, content=[])
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     else:

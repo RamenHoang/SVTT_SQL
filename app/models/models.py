@@ -352,8 +352,16 @@ def get_chi_tiet_sinh_vien_da_danh_gia(id: str):
 def get_ds_sinh_vien_by_username(username: str, kythuctap: str, nhomhuongdan: str):
     try:
         result = cursor.execute(
-            "EXEC GetDSSVByNguoiHuongDanID ?, ?, ?", username, kythuctap, nhomhuongdan)
-        return [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': 'Nam' if i[3] == 1 else 'Nữ', 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'detai': i[7], 'nhom': i[8], 'tennhom': i[9]} for i in result]
+            "EXEC GetDSSVByNguoiHuongDanID ?, ?, ?", protect_xss(username), protect_xss(kythuctap), protect_xss(nhomhuongdan))
+        handanhgia = 0
+        # ngayketthuc = get_han_thuc_tap_by_nhom_id(int(nhomhuongdan))['ngayketthuc']
+        # print(ngayketthuc)
+        # if (datetime.datetime.now() - datetime.timedelta(days=3)) <= datetime.datetime.strptime(ngayketthuc, "%Y-%m-%d"):
+        #     handanhgia = 1
+        # else:
+        #     handanhgia = 0
+
+        return [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': 'Nam' if i[3] == 1 else 'Nữ', 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'detai': i[7], 'nhom': i[8], 'tennhom': i[9], 'handanhgia': handanhgia} for i in result]
     except Exception as e:
         return e
 
@@ -401,12 +409,24 @@ def get_chi_tiet_danh_gia_sv_by_id(id: str):
         return e
 
 
+def get_han_thuc_tap_by_nhom_id(id: int):
+    try:
+        i = cursor.execute("EXEC GetHanThucTapByIDNhom ?", id).fetchone()
+        return {'id': i[0], 'ngaybatdau': i[1], 'ngayketthuc': i[2]}
+    except Exception as e:
+        return e
+
+
 def update_danh_gia_sv_by_id(sinhvienid: str, nhomid: int, ythuckyluat_number: float, ythuckyluat_text: str, tuanthuthoigian_number: float, tuanthuthoigian_text: str, kienthuc_number: float, kienthuc_text: str, kynangnghe_number: float, kynangnghe_text: str, khanangdoclap_number: float, khanangdoclap_text: str, khanangnhom_number: float, khanangnhom_text: str, khananggiaiquyetcongviec_number: float, khananggiaiquyetcongviec_text: str, danhgiachung_number: float):
     try:
-        result = cursor.execute("EXEC UpdateDanhGiaSVByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(sinhvienid), nhomid, ythuckyluat_number, protect_xss(ythuckyluat_text), tuanthuthoigian_number, protect_xss(tuanthuthoigian_text), kienthuc_number, protect_xss(
-            kienthuc_text), kynangnghe_number, protect_xss(kynangnghe_text), khanangdoclap_number, protect_xss(khanangdoclap_text), khanangnhom_number, protect_xss(khanangnhom_text), khananggiaiquyetcongviec_number, protect_xss(khananggiaiquyetcongviec_text), danhgiachung_number)
-        cursor.commit()
-        return True
+        ngayketthuc = get_han_thuc_tap_by_nhom_id(nhomid)['ngayketthuc']
+        if (datetime.datetime.now() - datetime.timedelta(days=3)) <= datetime.datetime.strptime(ngayketthuc, "%Y-%m-%d"):
+            result = cursor.execute("EXEC UpdateDanhGiaSVByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(sinhvienid), nhomid, ythuckyluat_number, protect_xss(ythuckyluat_text), tuanthuthoigian_number, protect_xss(tuanthuthoigian_text), kienthuc_number, protect_xss(
+                kienthuc_text), kynangnghe_number, protect_xss(kynangnghe_text), khanangdoclap_number, protect_xss(khanangdoclap_text), khanangnhom_number, protect_xss(khanangnhom_text), khananggiaiquyetcongviec_number, protect_xss(khananggiaiquyetcongviec_text), danhgiachung_number)
+            cursor.commit()
+            return True
+        else:
+            return False
     except Exception as e:
         return e
 
@@ -705,7 +725,10 @@ def insert_danh_gia_thuc_tap(sv_id: int, nhd_id: int, dapan_1: int, dapan_2: int
 def get_ds_chi_tiet_danh_gia():
     try:
         result = cursor.execute("EXEC GetDSChiTietDanhGia").fetchall()
-        return [{'id': i[0], 'id_sinhvien': i[1], 'mssv': i[8], 'hoten_sinhvien': i[9], 'tennhom': i[10], 'ngaybatdau': i[12], 'nguoihuongdan_ten': i[13], 'nguoihuongdan_id': i[14], 'tendetai': i[15]} for i in result]
+        if result:
+            return [{'id': i[0], 'id_sinhvien': i[1], 'mssv': i[8], 'hoten_sinhvien': i[9], 'tennhom': i[10], 'ngaybatdau': i[12], 'nguoihuongdan_ten': i[13], 'nguoihuongdan_id': i[14], 'tendetai': i[15]} for i in result]
+        else:
+            return []
     except Exception as e:
         return e
 

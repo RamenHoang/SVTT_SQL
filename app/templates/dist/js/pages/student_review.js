@@ -211,13 +211,28 @@ function create_table(kythuctap, nhomthuctap) {
       {
         data: "id",
         render: function (data, type, row) {
-          return (
-            '<center><a class="btn btn-info btn-sm" id="editBtn" data-id="' +
-            data +
-            '"><i class="fas fa-pencil-alt"></i></a> <a class="btn btn-success btn-sm" id="downloadBtn" data-id="' +
-            data +
-            '"><i class="fa-solid fa-download"></i></a></center>'
-          );
+          if(row.handanhgia==1){
+            return (
+              `<center>
+                <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a class="btn btn-success btn-sm" id="downloadBtn" data-id="${data}">
+                  <i class="fa-solid fa-download"></i>
+                </a>
+              </center>`
+            );
+          }else{
+            return (
+              `<center>
+                <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}">
+                  <i class="fa-solid fa-eye"></i>
+                </a>
+                <a class="btn btn-success btn-sm" id="downloadBtn" data-id="${data}">
+                  <i class="fa-solid fa-download"></i>
+                </a>
+              </center>`);
+          }
         },
       },
     ],
@@ -433,7 +448,7 @@ function create_table(kythuctap, nhomthuctap) {
                   } else {
                     Toast.fire({
                       icon: "error",
-                      title: "Đã xãy ra lỗi",
+                      title: "Đã quá hạn đánh giá",
                     });
                   }
                 },

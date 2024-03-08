@@ -113,6 +113,16 @@ $(document).ready(function () {
   // Bắt sự kiện chọn sinh viên
   $("#filter_sinhvien").on("change", function () {
     let sinhvienid = $(this).val();
+    loadDSCongViec(sinhvienid);
+  });
+
+  // Bắt sự kiện click nút xem
+  $("#viewBtn").on('click', function(){
+    let sinhvienid = $("#filter_sinhvien").val();
+    loadDSCongViec(sinhvienid);
+  });
+
+  function loadDSCongViec(sinhvienid){
     // Destroy first
     if ($.fn.DataTable.isDataTable("#bang_dscongviec")) {
       $("#bang_dscongviec").DataTable().destroy();
@@ -211,5 +221,5 @@ $(document).ready(function () {
         }
       });
     });
-  });
+  }
 });
