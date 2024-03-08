@@ -779,7 +779,6 @@ async def update_danh_gia_sv_by_id_route(sinhvienid: str, nhomid: int, ythuckylu
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
             if permission == "admin":
                 result = update_danh_gia_sv_by_id_controller(sinhvienid, nhomid, ythuckyluat_number, ythuckyluat_text, tuanthuthoigian_number, tuanthuthoigian_text, kienthuc_number, kienthuc_text, kynangnghe_number,
@@ -1075,7 +1074,7 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
                 for i in sinhvien:
                     result = them_chi_tiet_cong_viec_controller(
                         id_congviec=id_congviec, id_sinhvien=int(i), trangthai=0, ghichu=ghichu)
-                    if result==1:
+                    if result == 1:
                         congviec = get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(
                             id_congviec, int(i))
                         congviec_ghichu = ghichu.replace('<br/>', '\n')
@@ -1084,7 +1083,7 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
                         asyncio.create_task(sendMessageHTML(
                             message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>[{congviec['mssv']}] {congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Nội dung công việc:</b>\n<pre language='c++'>{congviec_mota}</pre>\n<b>Ghi chú:</b>\n<pre language='c++'>{congviec_ghichu}</pre>", chat_id=str(congviec['telegram_id'])))
                         return JSONResponse(status_code=200, content={'status': 'INSERTED'})
-                    elif result==2:
+                    elif result == 2:
                         return JSONResponse(status_code=200, content={'status': 'EVALUATED'})
                     else:
                         return JSONResponse(status_code=200, content={'status': 'NOT INSERTED'})

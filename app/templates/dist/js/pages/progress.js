@@ -117,12 +117,12 @@ $(document).ready(function () {
   });
 
   // Bắt sự kiện click nút xem
-  $("#viewBtn").on('click', function(){
+  $("#viewBtn").on('click', function () {
     let sinhvienid = $("#filter_sinhvien").val();
     loadDSCongViec(sinhvienid);
   });
 
-  function loadDSCongViec(sinhvienid){
+  function loadDSCongViec(sinhvienid) {
     // Destroy first
     if ($.fn.DataTable.isDataTable("#bang_dscongviec")) {
       $("#bang_dscongviec").DataTable().destroy();

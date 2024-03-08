@@ -23,11 +23,13 @@ def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str,
 
 def insert_taikhoan_sinhvien(sinhvien_id: int, password: str, is_verified: int):
     try:
-        i = cursor.execute("EXEC InsertTaiKhoanSV ?, ?, ?", sinhvien_id, protect_xss(password), is_verified)
+        i = cursor.execute("EXEC InsertTaiKhoanSV ?, ?, ?",
+                           sinhvien_id, protect_xss(password), is_verified)
         conn.commit()
         return True
     except Exception as e:
         return e
+
 
 def verify_user(username: str, password: str):
     try:
@@ -365,41 +367,50 @@ def get_ds_sinh_vien_by_username(username: str, kythuctap: str, nhomhuongdan: st
     except Exception as e:
         return e
 
+
 def get_dssv_by_kttid_nhomid_username(kythuctap_id: int, nhomhuongdan_id: int, username: str):
     try:
-        result = cursor.execute("EXEC GetDSSVByKTTID_NhomID_NHDUsername ?, ?, ?", kythuctap_id, nhomhuongdan_id, protect_xss(username))
+        result = cursor.execute("EXEC GetDSSVByKTTID_NhomID_NHDUsername ?, ?, ?",
+                                kythuctap_id, nhomhuongdan_id, protect_xss(username))
         return [{'id': i[0], 'mssv': i[1], 'hoten': i[2]} for i in result.fetchall()]
     except Exception as e:
         return e
-    
+
+
 def get_ds_chi_tiet_cong_viec_by_idsinhvien(sinhvien_id: int):
     try:
-        result = cursor.execute("EXEC GetDSChiTietCongViecByIDSinhVien ?", sinhvien_id)
+        result = cursor.execute(
+            "EXEC GetDSChiTietCongViecByIDSinhVien ?", sinhvien_id)
         return [{'id': i[0], 'ngaybatdau': i[1], 'ngayketthuc': i[2], 'tencongviec': i[3], 'mota': i[4], 'ghichu': i[5], 'trangthai': i[6], 'xacnhan': i[7]} for i in result.fetchall()]
     except Exception as e:
         return e
-    
+
+
 def update_xac_nhan_trang_thai_cong_viec(idcongviec: int, username: str):
     try:
-        result = cursor.execute("EXEC UpdateXacNhanTrangThaiCongViec ?, ?", idcongviec, protect_xss(username)).fetchone()[0]
+        result = cursor.execute("EXEC UpdateXacNhanTrangThaiCongViec ?, ?",
+                                idcongviec, protect_xss(username)).fetchone()[0]
         cursor.commit()
-        if result==1:
+        if result == 1:
             return True
         else:
             return False
     except Exception as e:
         return e
 
+
 def update_sv_xac_nhan_hoan_thanh_cong_viec(idcongviec: int, email: str):
     try:
-        result = cursor.execute("EXEC UpdateSVXacHoanThanhThaiCongViec ?, ?", idcongviec, protect_xss(email)).fetchone()[0]
+        result = cursor.execute("EXEC UpdateSVXacHoanThanhThaiCongViec ?, ?",
+                                idcongviec, protect_xss(email)).fetchone()[0]
         cursor.commit()
-        if result==1:
+        if result == 1:
             return True
         else:
             return False
     except Exception as e:
         return e
+
 
 def get_chi_tiet_danh_gia_sv_by_id(id: str):
     try:
@@ -419,8 +430,8 @@ def get_han_thuc_tap_by_nhom_id(id: int):
 
 def update_danh_gia_sv_by_id(sinhvienid: str, nhomid: int, ythuckyluat_number: float, ythuckyluat_text: str, tuanthuthoigian_number: float, tuanthuthoigian_text: str, kienthuc_number: float, kienthuc_text: str, kynangnghe_number: float, kynangnghe_text: str, khanangdoclap_number: float, khanangdoclap_text: str, khanangnhom_number: float, khanangnhom_text: str, khananggiaiquyetcongviec_number: float, khananggiaiquyetcongviec_text: str, danhgiachung_number: float):
     try:
-        ngayketthuc = get_han_thuc_tap_by_nhom_id(nhomid)['ngayketthuc']
-        if (datetime.datetime.now() - datetime.timedelta(days=3)) <= datetime.datetime.strptime(ngayketthuc, "%Y-%m-%d"):
+        thongtinnhom = get_han_thuc_tap_by_nhom_id(nhomid)
+        if (datetime.datetime.now() - datetime.timedelta(days=3)).date() <= thongtinnhom['ngayketthuc']:
             result = cursor.execute("EXEC UpdateDanhGiaSVByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(sinhvienid), nhomid, ythuckyluat_number, protect_xss(ythuckyluat_text), tuanthuthoigian_number, protect_xss(tuanthuthoigian_text), kienthuc_number, protect_xss(
                 kienthuc_text), kynangnghe_number, protect_xss(kynangnghe_text), khanangdoclap_number, protect_xss(khanangdoclap_text), khanangnhom_number, protect_xss(khanangnhom_text), khananggiaiquyetcongviec_number, protect_xss(khananggiaiquyetcongviec_text), danhgiachung_number)
             cursor.commit()
@@ -532,7 +543,8 @@ def xoa_chi_tiet_cong_viec_by_id(id: int):
 
 def xoa_cong_viec_by_id(id: int):
     try:
-        result = cursor.execute("EXEC UpdateXoaCongViecByID ?", id).fetchone()[0]
+        result = cursor.execute(
+            "EXEC UpdateXoaCongViecByID ?", id).fetchone()[0]
         cursor.commit()
         if result == 1:
             return True
@@ -558,7 +570,8 @@ def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mo
 def them_chi_tiet_cong_viec(id_congviec: int, id_sinhvien: int, trangthai: int, ghichu: str):
     try:
         # Gọi stored procedure và truyền tham số
-        result = cursor.execute("EXEC InsertChiTietCongViec ?, ?, ?, ?", id_congviec, id_sinhvien, trangthai, protect_xss(ghichu)).fetchone()[0]
+        result = cursor.execute("EXEC InsertChiTietCongViec ?, ?, ?, ?", id_congviec,
+                                id_sinhvien, trangthai, protect_xss(ghichu)).fetchone()[0]
         # Lấy giá trị của biến đầu ra
         cursor.commit()
         return result
@@ -758,6 +771,7 @@ def get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec(id: int, sv_id: int):
     except Exception as e:
         return e
 
+
 def get_ds_congviec_by_sinhvien_email(email: str):
     try:
         idNhom = cursor.execute(
@@ -765,6 +779,7 @@ def get_ds_congviec_by_sinhvien_email(email: str):
         return get_ds_cong_viec_by_id_nhom(idNhom)
     except Exception as e:
         return e
+
 
 def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv(id: int, email: str):
     try:
