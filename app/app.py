@@ -705,6 +705,7 @@ async def get_ds_sinh_vien_by_username_route(kythuctap: str, nhomthuctap: str, t
             return RedirectResponse('/login')
     return RedirectResponse('/login')
 
+
 @app.get('/get_dssv_by_kttid_nhomid_username')
 async def get_dssv_by_kttid_nhomid_username_route(kythuctap_id: int, nhomhuongdan_id: int, token: str = Cookie(None)):
     if token:
@@ -717,6 +718,7 @@ async def get_dssv_by_kttid_nhomid_username_route(kythuctap_id: int, nhomhuongda
         except jwt.PyJWKError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
+
 
 @app.get('/get_ds_chi_tiet_cong_viec_by_idsinhvien')
 async def get_ds_chi_tiet_cong_viec_by_idsinhvien_route(sinhvienid: int, token: str = Cookie(None)):
@@ -731,6 +733,7 @@ async def get_ds_chi_tiet_cong_viec_by_idsinhvien_route(sinhvienid: int, token: 
             return RedirectResponse('/login')
     return RedirectResponse('/login')
 
+
 @app.post('/update_xac_nhan_trang_thai_cong_viec')
 async def update_xac_nhan_trang_thai_cong_viec_route(idcongviec: int, token: str = Cookie(None)):
     if token:
@@ -739,13 +742,15 @@ async def update_xac_nhan_trang_thai_cong_viec_route(idcongviec: int, token: str
             username = payload.get("sub")
             permission = payload.get("permission")
             if permission == "admin":
-                result = update_xac_nhan_trang_thai_cong_viec_controller(idcongviec, username)
+                result = update_xac_nhan_trang_thai_cong_viec_controller(
+                    idcongviec, username)
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'NOT OK'})
-            elif permission=="student":
-                result = update_sv_xac_nhan_hoan_thanh_cong_viec_controller(idcongviec, username)
+            elif permission == "student":
+                result = update_sv_xac_nhan_hoan_thanh_cong_viec_controller(
+                    idcongviec, username)
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
@@ -753,6 +758,7 @@ async def update_xac_nhan_trang_thai_cong_viec_route(idcongviec: int, token: str
         except jwt.PyJWKError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
+
 
 @app.get('/get_chi_tiet_danh_gia_sv_by_id')
 async def get_chi_tiet_danh_gia_sv_by_id_route(id: str, token: str = Cookie(None)):
@@ -849,7 +855,8 @@ async def thong_tin_sinh_vien_route(sv: ThongTinSV):
         if sent:
             print(result)
             response = JSONResponse(status_code=200, content={'status': 'OK'})
-            insert_taikhoan = insert_taikhoan_sinhvien_controller(result, default_password, 0)
+            insert_taikhoan = insert_taikhoan_sinhvien_controller(
+                result, default_password, 0)
             response.set_cookie('studentid', result,
                                 max_age=5356800)  # Hạn 2 tháng
             return response
@@ -1254,6 +1261,7 @@ async def theodoitiendo(request: Request, token: str = Cookie(None)):
             return RedirectResponse('/login')
     return RedirectResponse('/login')
 
+
 @app.get('/congviecsinhvien')
 async def congviecsinhvien(request: Request, token: str = Cookie(None)):
     if token:
@@ -1268,6 +1276,7 @@ async def congviecsinhvien(request: Request, token: str = Cookie(None)):
             return RedirectResponse('/login')
     return RedirectResponse('/login')
 
+
 @app.get('/get_ds_congviec_by_sinhvien_email')
 async def get_ds_congviec_by_sinhvien_email(token: str = Cookie(None)):
     if token:
@@ -1281,6 +1290,7 @@ async def get_ds_congviec_by_sinhvien_email(token: str = Cookie(None)):
             return RedirectResponse('/login')
     return RedirectResponse('/login')
 
+
 @app.get('/get_chi_tiet_cong_viec_by_id_cong_viec_email_sv')
 async def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_route(id: int, token: str = Cookie(None)):
     if token:
@@ -1289,7 +1299,8 @@ async def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_route(id: int, token: 
             username = payload.get("sub")
             permission = payload.get("permission")
             if permission == "student":
-                result = get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_controller(id, username)
+                result = get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_controller(
+                    id, username)
                 return JSONResponse(status_code=200, content=result)
         except jwt.PyJWTError:
             return RedirectResponse('/login')

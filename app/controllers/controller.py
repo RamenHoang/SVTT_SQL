@@ -148,17 +148,22 @@ def verify_student_controller(email: str, password: str):
 def get_ds_sinh_vien_by_username_controller(username: str, kythuctap: str, nhomhuongdan: str):
     return get_ds_sinh_vien_by_username(username, kythuctap, nhomhuongdan)
 
+
 def get_dssv_by_kttid_nhomid_username_controller(kythuctap_id: int, nhomhuongdan_id: int, username: str):
     return get_dssv_by_kttid_nhomid_username(kythuctap_id, nhomhuongdan_id, username)
+
 
 def get_ds_chi_tiet_cong_viec_by_idsinhvien_controller(sinhvien_id: int):
     return get_ds_chi_tiet_cong_viec_by_idsinhvien(sinhvien_id)
 
+
 def update_xac_nhan_trang_thai_cong_viec_controller(idcongviec: int, username: str):
     return update_xac_nhan_trang_thai_cong_viec(idcongviec, username)
 
+
 def update_sv_xac_nhan_hoan_thanh_cong_viec_controller(idcongviec: int, email: str):
     return update_sv_xac_nhan_hoan_thanh_cong_viec(idcongviec, email)
+
 
 def get_chi_tiet_danh_gia_sv_by_id_controller(id: str):
     return get_chi_tiet_danh_gia_sv_by_id(id)
@@ -218,6 +223,7 @@ def get_danh_sach_truong_controller():
 
 def insert_thong_tin_sinh_vien_controller(mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, truong: str, nganh: str, khoa: int, password: str):
     return insert_sinh_vien(mssv, hoten, gioitinh, sdt, email, diachi, malop, truong, nganh, khoa, password)
+
 
 def insert_taikhoan_sinhvien_controller(sinhvien_id: int, password: str, is_verified: int):
     return insert_taikhoan_sinhvien(sinhvien_id, password, is_verified)
@@ -298,8 +304,10 @@ def get_ds_chi_tiet_danh_gia_by_id_controller(id: int):
 def get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(id: int, sv_id: int):
     return get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec(id, sv_id)
 
+
 def get_ds_congviec_by_sinhvien_email_controller(email: str):
     return get_ds_congviec_by_sinhvien_email(email)
+
 
 def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_controller(id: int, email: str):
     return get_chi_tiet_cong_viec_by_id_cong_viec_email_sv(id, email)
