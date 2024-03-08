@@ -261,9 +261,11 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
     url: "/get_dssv_by_nhom_id?id=" + id_nhom,
     success: function (res) {
       $.each(res, function (idx, val) {
-        $("#modal_sinhvien_select").append(
-          `<option value="${val.id}">${val.hoten}</option>`
-        );
+        if(val.danhgia == 0){
+          $("#modal_sinhvien_select").append(
+            `<option value="${val.id}">${val.hoten}</option>`
+          );
+        }
       });
     },
   });
@@ -284,13 +286,13 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
       type: "POST",
       url: reqUrl,
       success: function (res) {
-        if(res.status=='INSERTED'){
+        if(res['status']=='INSERTED'){
           Toast.fire({
             icon: "success",
             title: "Đã giao việc",
           });
           $("#modal_id").modal("hide");
-        }else if(res.status=='EVALUATED'){
+        }else if(res['status']=='EVALUATED'){
           Toast.fire({
             icon: "warning",
             title: "Không thể giao việc cho sinh viên đã được đánh giá",
@@ -298,7 +300,7 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
         }else{
           Toast.fire({
             icon: "error",
-            title: "Đã giao việc cho sinh viên",
+            title: "Sinh viên đã có công việc trước đó",
           });
         }
       },

@@ -537,8 +537,9 @@ def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mo
 
 def them_chi_tiet_cong_viec(id_congviec: int, id_sinhvien: int, trangthai: int, ghichu: str):
     try:
-        result = cursor.execute("EXEC InsertChiTietCongViec ?, ?, ?, ?",
-                                id_congviec, id_sinhvien, trangthai, protect_xss(ghichu)).fetchone()[0]
+        # Gọi stored procedure và truyền tham số
+        result = cursor.execute("EXEC InsertChiTietCongViec ?, ?, ?, ?", id_congviec, id_sinhvien, trangthai, protect_xss(ghichu)).fetchone()[0]
+        # Lấy giá trị của biến đầu ra
         cursor.commit()
         return result
     except Exception as e:
@@ -556,7 +557,7 @@ def get_dssv_by_id_cong_viec(id: int):
 def get_dssv_by_nhom_id(id: int):
     try:
         result = cursor.execute("EXEC GetDSSVByNhomID ?", id).fetchall()
-        return [{'id': i[0], 'hoten': i[1]} for i in result]
+        return [{'id': i[0], 'hoten': i[1], 'danhgia': i[2]} for i in result]
     except Exception as e:
         return e
 
