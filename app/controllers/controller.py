@@ -311,3 +311,23 @@ def get_ds_congviec_by_sinhvien_email_controller(email: str):
 
 def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_controller(id: int, email: str):
     return get_chi_tiet_cong_viec_by_id_cong_viec_email_sv(id, email)
+
+
+def update_password_controller(username: str, password: str):
+    return update_password(username, password)
+
+
+def get_phan_quyen_controller(username: str):
+    return get_phan_quyen(username)
+
+
+def get_ds_tai_khoan_controller():
+    return get_ds_tai_khoan()
+
+
+def update_xoa_nguoi_huong_dan_by_id_controller(id: int):
+    return update_xoa_nguoi_huong_dan_by_id(id)
+
+
+def update_ban_nguoi_huong_dan_by_id_controller(id: int):
+    return update_ban_nguoi_huong_dan_by_id(id)

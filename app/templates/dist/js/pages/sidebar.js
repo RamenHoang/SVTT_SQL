@@ -49,3 +49,7 @@ function active_nav_link() {
 }
 
 active_nav_link();
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})

@@ -791,3 +791,47 @@ def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv(id: int, email: str):
         return data
     except Exception as e:
         return e
+
+
+def update_password(username: str, password: str):
+    try:
+        result = cursor.execute("EXEC UpdatePassword ?, ?", protect_xss(username), protect_xss(password))
+        cursor.commit()
+        return result.fetchone()[0]
+    except Exception as e:
+        return e
+
+
+def get_phan_quyen(username: str):
+    try:
+        result = cursor.execute("EXEC GetPhanQuyenByUsername ?", protect_xss(username))
+        # Role: {0: "user", 1: "administrator"}
+        return "admin" if result.fetchone()[0] == 1 else "user"
+    except Exception as e:
+        return e
+    
+
+def get_ds_tai_khoan():
+    try:
+        result = cursor.execute("EXEC GetDSTaiKhoanNguoiHuongDan").fetchall()
+        return [{'id': i[0], 'hoten': i[1], 'username': i[2], 'email': i[3], 'role': i[4], 'trangthai': i[5]} for i in result]
+    except Exception as e:
+        return e
+
+
+def update_xoa_nguoi_huong_dan_by_id(id: int):
+    try:
+        result = cursor.execute("EXEC UpdateXoaNguoiHuongDanByID ?", id).fetchone()
+        cursor.commit()
+        return result[0]
+    except Exception as e:
+        return e
+
+
+def update_ban_nguoi_huong_dan_by_id(id: int):
+    try:
+        result = cursor.execute("EXEC UpdateBanNguoiHuongDanByID ?", id).fetchone()
+        cursor.commit()
+        return result[0]
+    except Exception as e:
+        return e

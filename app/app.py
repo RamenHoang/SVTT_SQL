@@ -87,7 +87,7 @@ def verify_user_route(credentials: UserCredentials):
     if '@' in credentials.username:
         return {"isVerified": verify_student_controller(email=credentials.username, password=sha3_256(bytes(credentials.password, 'utf-8')).hexdigest()), "permission": "student"}
     else:
-        return {"isVerified": verify_user_controller(username=credentials.username, password=sha3_256(bytes(credentials.password, 'utf-8')).hexdigest()), "permission": "admin"}
+        return {"isVerified": verify_user_controller(username=credentials.username, password=sha3_256(bytes(credentials.password, 'utf-8')).hexdigest()), "permission": get_phan_quyen_controller(credentials.username)}
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
@@ -152,9 +152,8 @@ async def home(request: Request, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 tong_sinh_vien: int = count_all_sinh_vien_controller()
                 ti_le_da_danh_gia: float = ti_le_sinh_vien_da_danh_gia_controller()
                 so_luong_ket_qua: int = so_luong_sinh_vien_dat_ket_qua_controller()
@@ -171,9 +170,8 @@ async def login(request: Request, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return RedirectResponse(url='/')
             else:
                 return RedirectResponse('/sinhvien')
@@ -201,9 +199,8 @@ async def danhgiasinhvien(request: Request, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return templates.TemplateResponse('student_review.html', context={'request': request})
 
         except jwt.PyJWTError:
@@ -218,7 +215,7 @@ async def giaoviec(request: Request, token: str = Cookie(None)):
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 response = templates.TemplateResponse(
                     'assign.html', context={'request': request})
                 response.set_cookie("username", username, httponly=False)
@@ -233,9 +230,8 @@ async def danhsachdetai(request: Request, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return templates.TemplateResponse('projects.html', context={'request': request})
 
         except jwt.PyJWTError:
@@ -248,9 +244,8 @@ async def danhsachkythuctap(request: Request, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return templates.TemplateResponse('internships.html', context={'request': request})
 
         except jwt.PyJWTError:
@@ -263,9 +258,8 @@ async def danhsachnhomthuctap(request: Request, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return templates.TemplateResponse('groups.html', context={'request': request})
 
         except jwt.PyJWTError:
@@ -283,9 +277,8 @@ async def get_so_luong_sinh_vien_theo_truong_route(token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return get_so_luong_sinh_vien_theo_truong_controller()
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -297,9 +290,8 @@ async def get_so_luong_sinh_vien_theo_nganh_route(token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return get_so_luong_sinh_vien_theo_nganh_controller()
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -311,9 +303,8 @@ async def get_all_sinh_vien_route(token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = get_all_sinh_vien_controller()
                 ds: list = [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3],
                              'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'luuy': i[7]} for i in result]
@@ -345,9 +336,8 @@ async def get_all_de_tai(token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return JSONResponse(status_code=200, content=get_all_de_tai_thuc_tap_controller())
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -359,9 +349,8 @@ async def get_chi_tiet_de_tai_by_id_route(id: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return JSONResponse(status_code=200, content=get_chi_tiet_de_tai_by_id_controller(id))
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -373,9 +362,8 @@ async def update_chi_tiet_de_tai_by_id_route(id: str, ten: str, mota: str, isDel
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = update_chi_tiet_de_tai_by_id_controller(
                     id, ten, mota, isDeleted)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
@@ -389,9 +377,8 @@ async def update_xoa_de_tai_by_id_route(id: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = update_xoa_de_tai_by_id_controller(id)
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
@@ -407,9 +394,8 @@ async def them_de_tai_thuc_tap_route(ten: str, mota: str, isDeleted: int, token:
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = them_de_tai_thuc_tap_controller(ten, mota, isDeleted)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
@@ -422,9 +408,8 @@ async def get_all_ky_thuc_tap_route(token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return JSONResponse(status_code=200, content=get_all_ky_thuc_tap_controller())
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -436,9 +421,8 @@ async def get_chi_tiet_ky_thuc_tap_by_id_route(id: str, token: str = Cookie(None
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return JSONResponse(status_code=200, content=get_chi_tiet_ky_thuc_tap_by_id_controller(id))
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -450,9 +434,8 @@ async def update_chi_tiet_ky_thuc_tap_by_id_route(id: str, ngaybatdau: str, ngay
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = update_chi_tiet_ky_thuc_tap_by_id_controller(
                     id, ngaybatdau, ngayketthuc, isDeleted, ghichu)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
@@ -466,9 +449,8 @@ async def them_ky_thuc_tap_route(ngaybatdau: str, ngayketthuc: str, isDeleted: i
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = them_ky_thuc_tap_controller(
                     ngaybatdau, ngayketthuc, isDeleted, ghichu)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
@@ -482,9 +464,8 @@ async def update_xoa_ky_thuc_tap_by_id_route(id: str, token: str = Cookie(None))
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = update_xoa_ky_thuc_tap_by_id_controller(id)
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
@@ -527,7 +508,7 @@ async def get_ds_nhom_chua_co_cong_viec_route(token: str = Cookie(None)):
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return get_ds_nhom_chua_co_cong_viec_controller(username)
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -539,9 +520,8 @@ async def get_ds_cong_viec_nhom_route(token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return get_ds_cong_viec_nhom_controller()
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -553,9 +533,8 @@ async def them_cong_viec_nhom_route(id: int, ngaybatdau: str, ngayketthuc: str, 
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = them_cong_viec_nhom_controller(
                     id, ngaybatdau, ngayketthuc, ten, mota)
                 if result:
@@ -572,9 +551,8 @@ async def get_dssv_by_nhom_id_route(id: int, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return get_dssv_by_nhom_id_controller(id)
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -586,9 +564,8 @@ async def get_ds_cong_viec_by_id_nhom_route(id: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return get_ds_cong_viec_by_id_nhom_controller(id)
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -610,9 +587,8 @@ async def get_chi_tiet_chinh_sua_nhom_route(token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return get_chi_tiet_chinh_sua_nhom_controller()
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -624,9 +600,8 @@ async def update_chi_tiet_nhom_thuc_tap_by_id_route(id: int, kytt: int, nguoihd:
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = update_chi_tiet_nhom_thuc_tap_by_id_controller(
                     id, kytt, nguoihd, detai, soluong, tennhom, telegram, ghichu, isDeleted)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
@@ -640,9 +615,8 @@ async def update_xoa_nhom_thuc_tap_by_id_route(id: str, token: str = Cookie(None
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = update_xoa_nhom_thuc_tap_by_id_controller(id)
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
@@ -658,9 +632,8 @@ async def them_nhom_thuc_tap_route(nguoihd: str, kytt: str, detai: str, soluong:
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = them_nhom_thuc_tap_controller(
                     nguoihd, kytt, detai, soluong, tennhom, telegram, isDeleted, ghichu)
                 return JSONResponse(status_code=200, content={'status': 'OK'})
@@ -674,9 +647,8 @@ async def get_chi_tiet_sinh_vien_by_id_route(id: str, token: str = Cookie(None))
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 condition = get_trang_thai_sinh_vien_by_id_controller(id)
                 result: dict = {}
                 if condition['trangthai'] == 0:
@@ -699,7 +671,7 @@ async def get_ds_sinh_vien_by_username_route(kythuctap: str, nhomthuctap: str, t
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return JSONResponse(status_code=200, content=get_ds_sinh_vien_by_username_controller(username, kythuctap, nhomthuctap))
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -713,7 +685,7 @@ async def get_dssv_by_kttid_nhomid_username_route(kythuctap_id: int, nhomhuongda
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return JSONResponse(status_code=200, content=get_dssv_by_kttid_nhomid_username_controller(kythuctap_id, nhomhuongdan_id, username))
         except jwt.PyJWKError:
             return RedirectResponse('/login')
@@ -725,9 +697,8 @@ async def get_ds_chi_tiet_cong_viec_by_idsinhvien_route(sinhvienid: int, token: 
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return JSONResponse(status_code=200, content=get_ds_chi_tiet_cong_viec_by_idsinhvien_controller(sinhvienid))
         except jwt.PyJWKError:
             return RedirectResponse('/login')
@@ -741,7 +712,7 @@ async def update_xac_nhan_trang_thai_cong_viec_route(idcongviec: int, token: str
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = update_xac_nhan_trang_thai_cong_viec_controller(
                     idcongviec, username)
                 if result:
@@ -765,9 +736,8 @@ async def get_chi_tiet_danh_gia_sv_by_id_route(id: str, token: str = Cookie(None
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return get_chi_tiet_danh_gia_sv_by_id_controller(id=id)
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -780,7 +750,7 @@ async def update_danh_gia_sv_by_id_route(sinhvienid: str, nhomid: int, ythuckylu
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = update_danh_gia_sv_by_id_controller(sinhvienid, nhomid, ythuckyluat_number, ythuckyluat_text, tuanthuthoigian_number, tuanthuthoigian_text, kienthuc_number, kienthuc_text, kynangnghe_number,
                                                              kynangnghe_text, khanangdoclap_number, khanangdoclap_text, khanangnhom_number, khanangnhom_text, khananggiaiquyetcongviec_number, khananggiaiquyetcongviec_text, danhgiachung_number)
                 if result:
@@ -797,9 +767,8 @@ async def get_id_nhom_by_sv_id_route(id: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = get_id_nhom_by_sv_id_controller(id)
                 return JSONResponse(status_code=200, content={'id': result})
         except jwt.PyJWTError:
@@ -815,7 +784,7 @@ async def xuat_danh_gia(id: str, token: str = Cookie(None)):
             username = payload.get("sub")
             tencty: str = 'Trung tâm CNTT - VNPT Vĩnh Long'
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 i = xuat_phieu_danh_gia_controller(id)
                 if i is not TypeError:
                     r = export(username=username, mssv=i['mssv'], sv_hoten=i['hoten'], sv_lop=i['malop'], tt_donvi=tencty, tt_nguoihuongdan=i['nguoihuongdan'], dg_ythuckyluat_number=i['ythuckyluat_number'], dg_ythuckyluat_text=i['ythuckyluat_text'], dg_tuanthuthoigian_number=i['tuanthuthoigian_number'], dg_tuanthuthoigian_text=i['tuanthuthoigian_text'], dg_kienthuc_number=i['kienthuc_number'], dg_kienthuc_text=i['kienthuc_text'], dg_kynangnghe_number=i[
@@ -851,7 +820,7 @@ async def get_danh_sach_truong_route():
 @app.post('/thong_tin_sinh_vien')
 async def thong_tin_sinh_vien_route(sv: ThongTinSV):
     result = insert_sinh_vien_controller(
-        sv.mssv, sv.hoten, sv.gioitinh, sv.sdt, sv.email, sv.diachi, sv.malop, sv.truong, sv.nganh, sv.khoa, sha3_256(bytes('Vnpt@2024', 'utf-8')).hexdigest())
+        sv.mssv, sv.hoten, sv.gioitinh, sv.sdt, sv.email, sv.diachi, sv.malop, sv.truong, sv.nganh, sv.khoa, sha3_256(bytes(default_password, 'utf-8')).hexdigest())
     if result:
         sent = send_otp_email(sv.email, sv.hoten)
         if sent:
@@ -871,9 +840,8 @@ async def update_xoa_sinh_vien_by_id(id: int, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = update_xoa_sinh_vien_by_id_controller(id)
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
@@ -929,7 +897,7 @@ async def xuat_ds_sinh_vien_da_danh_gia(kythuctap: int, token: str = Cookie(None
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 tencty: str = 'Trung tâm CNTT - VNPT Vĩnh Long'
                 result = get_dssv_da_danh_gia_by_nguoi_huong_dan(
                     username=username, kythuctap=kythuctap)
@@ -966,9 +934,8 @@ async def update_sinh_vien_by_id_route(id: int, mssv: str, hoten: str, gioitinh:
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = update_sinh_vien_by_id_controller(
                     id, mssv, hoten, gioitinh, sdt, email, diachi, malop, truong, nganh, khoa)
                 if result:
@@ -986,9 +953,8 @@ async def get_danh_sach_nhom_theo_ky_id_route(id: int, token: str = Cookie(None)
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = get_danh_sach_nhom_theo_ky_id(id)
                 if result:
                     return JSONResponse(status_code=200, content=result)
@@ -1068,9 +1034,8 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 for i in sinhvien:
                     result = them_chi_tiet_cong_viec_controller(
                         id_congviec=id_congviec, id_sinhvien=int(i), trangthai=0, ghichu=ghichu)
@@ -1110,9 +1075,8 @@ async def xoa_cong_viec_by_id_route(id: int, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = xoa_cong_viec_by_id_controller(id)
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
@@ -1129,9 +1093,8 @@ async def xoa_chi_tiet_cong_viec_by_id_route(id: int, token: str = Cookie(None))
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = xoa_chi_tiet_cong_viec_by_id_controller(id)
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
@@ -1148,9 +1111,8 @@ async def update_chi_tiet_cong_viec_by_id_route(id: int, svid: int, ghichu: str,
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = update_chi_tiet_cong_viec_by_id_controller(
                     id, svid, ghichu)
                 if result:
@@ -1177,7 +1139,6 @@ async def danh_gia_thuc_tap_route(email: str, id_nhd: int, dapan_1: int, dapan_2
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             sv_id = xem_thong_tin_sv(email)
             result = insert_danh_gia_thuc_tap_controller(
                 sv_id['id'], id_nhd, dapan_1, dapan_2, dapan_3, dapan_4, gopy)
@@ -1196,9 +1157,8 @@ async def get_ds_chi_tiet_danh_gia_route(token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = get_ds_chi_tiet_danh_gia_controller()
                 if result:
                     return JSONResponse(status_code=200, content=result)
@@ -1215,9 +1175,8 @@ async def get_ds_chi_tiet_danh_gia_by_id_route(id: int, token: str = Cookie(None
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 result = get_ds_chi_tiet_danh_gia_by_id_controller(id)
                 if result:
                     return JSONResponse(status_code=200, content=result)
@@ -1234,9 +1193,8 @@ async def danh_gia_nhieu_sv_route(dssv: str, ythuckyluat_number: float, ythuckyl
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 if isinstance(eval(dssv), int):
                     nhomid = get_id_nhom_by_sv_id_controller(str(dssv))
                     result = update_danh_gia_sv_by_id_controller(str(dssv), nhomid, ythuckyluat_number, ythuckyluat_text, tuanthuthoigian_number, tuanthuthoigian_text, kienthuc_number, kienthuc_text, kynangnghe_number,
@@ -1258,9 +1216,8 @@ async def theodoitiendo(request: Request, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
-            if permission == "admin":
+            if permission == "admin" or permission == "user":
                 return templates.TemplateResponse('progress.html', context={'request': request})
 
         except jwt.PyJWTError:
@@ -1273,7 +1230,6 @@ async def congviecsinhvien(request: Request, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
             permission = payload.get("permission")
             if permission == "student":
                 return templates.TemplateResponse('sv_tasks.html', context={'request': request})
@@ -1308,6 +1264,80 @@ async def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_route(id: int, token: 
                 result = get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_controller(
                     id, username)
                 return JSONResponse(status_code=200, content=result)
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.get('/quanlytaikhoan')
+async def quan_ly_tai_khoan(request: Request, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin":
+                return templates.TemplateResponse('accounts.html', context={'request': request})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.get('/get_ds_tai_khoan')
+async def get_ds_tai_khoan(token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin":
+                return get_ds_tai_khoan_controller()
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.post('/reset_password')
+async def reset_password_route(username: str, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin":
+                result = update_password_controller(username, sha3_256(bytes(default_password, 'utf-8')).hexdigest())
+                return JSONResponse(status_code=200, content=result)
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.post('/update_xoa_nguoi_huong_dan_by_id')
+async def update_xoa_nguoi_huong_dan_by_id_route(id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin":
+                result = update_xoa_nguoi_huong_dan_by_id_controller(id)
+                if result==1:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'EXISTS'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.post('/update_ban_nguoi_huong_dan_by_id')
+async def update_ban_nguoi_huong_dan_by_id_route(id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin":
+                result = update_ban_nguoi_huong_dan_by_id_controller(id)
+                if result==1:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'IS_ADMIN'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
