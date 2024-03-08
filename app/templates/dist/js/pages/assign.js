@@ -283,12 +283,24 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
     $.ajax({
       type: "POST",
       url: reqUrl,
-      success: function () {
-        Toast.fire({
-          icon: "success",
-          title: "Đã giao việc",
-        });
-        $("#modal_id").modal("hide");
+      success: function (res) {
+        if(res.status=='INSERTED'){
+          Toast.fire({
+            icon: "success",
+            title: "Đã giao việc",
+          });
+          $("#modal_id").modal("hide");
+        }else if(res.status=='EVALUATED'){
+          Toast.fire({
+            icon: "warning",
+            title: "Không thể giao việc cho sinh viên đã được đánh giá",
+          });
+        }else{
+          Toast.fire({
+            icon: "error",
+            title: "Đã giao việc cho sinh viên",
+          });
+        }
       },
       error: function () {
         Toast.fire({
