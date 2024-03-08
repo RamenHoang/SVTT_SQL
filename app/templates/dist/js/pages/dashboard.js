@@ -549,6 +549,9 @@ $("#dashboard_dssinhviendanhgia").DataTable({
     type: "GET",
     url: "/get_ds_chi_tiet_danh_gia",
     dataSrc: "",
+    error: function () {
+      $.fn.dataTable.ext.errMode = "throw";
+    }
   },
   columns: [
     { data: "id" },
