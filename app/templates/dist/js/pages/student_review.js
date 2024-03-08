@@ -211,7 +211,7 @@ function create_table(kythuctap, nhomthuctap) {
       {
         data: "id",
         render: function (data, type, row) {
-          if(row.handanhgia==1){
+          if (row.handanhgia == 1) {
             return (
               `<center>
                 <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}">
@@ -222,7 +222,7 @@ function create_table(kythuctap, nhomthuctap) {
                 </a>
               </center>`
             );
-          }else{
+          } else {
             return (
               `<center>
                 <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}">
@@ -467,46 +467,46 @@ function create_table(kythuctap, nhomthuctap) {
   });
 
   // Handle "Check All" checkbox click event
-  $('#checkAll').on('click', function(){
-      var rows = bangdssv.rows({ 'search': 'applied' }).nodes();
-      $('input[type="checkbox"]', rows).prop('checked', this.checked);
+  $('#checkAll').on('click', function () {
+    var rows = bangdssv.rows({ 'search': 'applied' }).nodes();
+    $('input[type="checkbox"]', rows).prop('checked', this.checked);
   });
 
   // Handle individual checkbox click event
-  $('#bangdssv tbody').on('change', 'input[type="checkbox"]', function(){
-      if(!this.checked){
-          var el = $('#checkAll').get(0);
-          if(el && el.checked && ('indeterminate' in el)){
-              el.indeterminate = true;
-          }
-      }
-  });
-
-  // Bắt sự kiến nút đánh giá nhiều
-$("#reviewBtn").on("click", function () {
-  // Kiem tra neu chua co check box thi bao loi
-  let dsSinhVien = [];
-  $("#bangdssv tr").each(function (idx) {
-    // Kiểm tra checkbox trong mỗi hàng
-    let checkbox = $(this).find("input[type='checkbox']:first");
-
-    if (checkbox.prop("checked")) {
-      let id = checkbox.data("id");
-      if(id !== undefined){
-        dsSinhVien.push(id);
+  $('#bangdssv tbody').on('change', 'input[type="checkbox"]', function () {
+    if (!this.checked) {
+      var el = $('#checkAll').get(0);
+      if (el && el.checked && ('indeterminate' in el)) {
+        el.indeterminate = true;
       }
     }
   });
 
-  if (dsSinhVien.length == 0) {
-    Toast.fire({
-      icon: "warning",
-      title: "Vui lòng chọn sinh viên cần đánh giá",
+  // Bắt sự kiến nút đánh giá nhiều
+  $("#reviewBtn").on("click", function () {
+    // Kiem tra neu chua co check box thi bao loi
+    let dsSinhVien = [];
+    $("#bangdssv tr").each(function (idx) {
+      // Kiểm tra checkbox trong mỗi hàng
+      let checkbox = $(this).find("input[type='checkbox']:first");
+
+      if (checkbox.prop("checked")) {
+        let id = checkbox.data("id");
+        if (id !== undefined) {
+          dsSinhVien.push(id);
+        }
+      }
     });
-  } else {
-    $(".modal-dialog").addClass("modal-lg");
-    $("#modal_title").text(`Đánh giá ${dsSinhVien.length} sinh viên đã chọn`);
-    let html = `
+
+    if (dsSinhVien.length == 0) {
+      Toast.fire({
+        icon: "warning",
+        title: "Vui lòng chọn sinh viên cần đánh giá",
+      });
+    } else {
+      $(".modal-dialog").addClass("modal-lg");
+      $("#modal_title").text(`Đánh giá ${dsSinhVien.length} sinh viên đã chọn`);
+      let html = `
           <form id="editForm">
             <div class="form-group row"> 
               <div class="col-sm-10"> 
@@ -594,59 +594,59 @@ $("#reviewBtn").on("click", function () {
             </div> 
           </div> 
         </form>`;
-    $("#modal_body").empty();
-    $("#modal_body").append(html);
+      $("#modal_body").empty();
+      $("#modal_body").append(html);
 
-    $("#modal_footer").empty();
-    $("#modal_footer").append(
-      `<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>`
-    );
-    $("#modal_id").modal("show");
-
-    // Submit form đánh giá
-    $("#modal_submit_btn").on("click", function () {
-      let ythuckyluat_number = parseFloat($("#ythuckyluat_number").val());
-      let ythuckyluat_text = $("#ythuckyluat_text").val();
-      let tuanthuthoigian_number = parseFloat(
-        $("#tuanthuthoigian_number").val()
+      $("#modal_footer").empty();
+      $("#modal_footer").append(
+        `<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>`
       );
-      let tuanthuthoigian_text = $("#tuanthuthoigian_text").val();
-      let kienthuc_number = parseFloat($("#kienthuc_number").val());
-      let kienthuc_text = $("#kienthuc_text").val();
-      let kynangnghe_number = parseFloat($("#kynangnghe_number").val());
-      let kynangnghe_text = $("#kynangnghe_text").val();
-      let khanangdoclap_number = parseFloat($("#khanangdoclap_number").val());
-      let khanangdoclap_text = $("#khanangdoclap_text").val();
-      let khanangnhom_number = parseFloat($("#khanangnhom_number").val());
-      let khanangnhom_text = $("#khanangnhom_text").val();
-      let khananggiaiquyetcongviec_number = parseFloat(
-        $("#khananggiaiquyetcongviec_number").val()
-      );
-      let khananggiaiquyetcongviec_text = $(
-        "#khananggiaiquyetcongviec_text"
-      ).val();
-      let danhgiachung_number = parseFloat($("#danhgiachung_number").val());
+      $("#modal_id").modal("show");
 
-      $.ajax({
-        type: `POST`,
-        url: `danh_gia_nhieu_sv?dssv=${dsSinhVien}&ythuckyluat_number=${ythuckyluat_number}&ythuckyluat_text=${ythuckyluat_text}&tuanthuthoigian_number=${tuanthuthoigian_number}&tuanthuthoigian_text=${tuanthuthoigian_text}&kienthuc_number=${kienthuc_number}&kienthuc_text=${kienthuc_text}&kynangnghe_number=${kynangnghe_number}&kynangnghe_text=${kynangnghe_text}&khanangdoclap_number=${khanangdoclap_number}&khanangdoclap_text=${khanangdoclap_text}&khanangnhom_number=${khanangnhom_number}&khanangnhom_text=${khanangnhom_text}&khananggiaiquyetcongviec_number=${khananggiaiquyetcongviec_number}&khananggiaiquyetcongviec_text=${khananggiaiquyetcongviec_text}&danhgiachung_number=${danhgiachung_number}`,
-        success: function () {
-          Toast.fire({
-            icon: "success",
-            title: "Đã lưu đánh giá",
-          });
-          $("#modal_id").modal("hide");
-          bangdssv.ajax.reload();
-        },
-        error: function () {
-          Toast.fire({
-            icon: "error",
-            title: "Lưu đánh giá thất bại",
-          });
-        },
+      // Submit form đánh giá
+      $("#modal_submit_btn").on("click", function () {
+        let ythuckyluat_number = parseFloat($("#ythuckyluat_number").val());
+        let ythuckyluat_text = $("#ythuckyluat_text").val();
+        let tuanthuthoigian_number = parseFloat(
+          $("#tuanthuthoigian_number").val()
+        );
+        let tuanthuthoigian_text = $("#tuanthuthoigian_text").val();
+        let kienthuc_number = parseFloat($("#kienthuc_number").val());
+        let kienthuc_text = $("#kienthuc_text").val();
+        let kynangnghe_number = parseFloat($("#kynangnghe_number").val());
+        let kynangnghe_text = $("#kynangnghe_text").val();
+        let khanangdoclap_number = parseFloat($("#khanangdoclap_number").val());
+        let khanangdoclap_text = $("#khanangdoclap_text").val();
+        let khanangnhom_number = parseFloat($("#khanangnhom_number").val());
+        let khanangnhom_text = $("#khanangnhom_text").val();
+        let khananggiaiquyetcongviec_number = parseFloat(
+          $("#khananggiaiquyetcongviec_number").val()
+        );
+        let khananggiaiquyetcongviec_text = $(
+          "#khananggiaiquyetcongviec_text"
+        ).val();
+        let danhgiachung_number = parseFloat($("#danhgiachung_number").val());
+
+        $.ajax({
+          type: `POST`,
+          url: `danh_gia_nhieu_sv?dssv=${dsSinhVien}&ythuckyluat_number=${ythuckyluat_number}&ythuckyluat_text=${ythuckyluat_text}&tuanthuthoigian_number=${tuanthuthoigian_number}&tuanthuthoigian_text=${tuanthuthoigian_text}&kienthuc_number=${kienthuc_number}&kienthuc_text=${kienthuc_text}&kynangnghe_number=${kynangnghe_number}&kynangnghe_text=${kynangnghe_text}&khanangdoclap_number=${khanangdoclap_number}&khanangdoclap_text=${khanangdoclap_text}&khanangnhom_number=${khanangnhom_number}&khanangnhom_text=${khanangnhom_text}&khananggiaiquyetcongviec_number=${khananggiaiquyetcongviec_number}&khananggiaiquyetcongviec_text=${khananggiaiquyetcongviec_text}&danhgiachung_number=${danhgiachung_number}`,
+          success: function () {
+            Toast.fire({
+              icon: "success",
+              title: "Đã lưu đánh giá",
+            });
+            $("#modal_id").modal("hide");
+            bangdssv.ajax.reload();
+          },
+          error: function () {
+            Toast.fire({
+              icon: "error",
+              title: "Lưu đánh giá thất bại",
+            });
+          },
+        });
       });
-    });
-  }
-});
+    }
+  });
 
 }
