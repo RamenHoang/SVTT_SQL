@@ -79,7 +79,7 @@ class ThongTinSV(BaseModel):
 
 SECRET_KEY = "BN3298"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60*6
+ACCESS_TOKEN_EXPIRE_MINUTES = 60*3
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
