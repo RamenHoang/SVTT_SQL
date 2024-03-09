@@ -1441,3 +1441,18 @@ async def them_nguoi_huong_dan(hoten: str, sdt: str, email: str, chucdanh: str, 
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
+
+
+@app.get('/checkIsAdmin')
+async def check_is_admin(token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin":
+                return JSONResponse(status_code=200, content={'status': 'OK'})
+            else:
+                return JSONResponse(status_code=200, content={'status': 'NOT_OK'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
