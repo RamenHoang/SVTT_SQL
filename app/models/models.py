@@ -876,7 +876,15 @@ def update_chi_tiet_tai_khoan_by_id(id: int, hoten: str, sdt: str, email: str, c
     try:
         result = cursor.execute("EXEC UpdateChiTietTaiKhoanByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", id, protect_xss(hoten), protect_xss(sdt), protect_xss(email), protect_xss(chucdanh), protect_xss(phong), protect_xss(zalo), protect_xss(facebook), protect_xss(github), protect_xss(avatar)).fetchone()
         cursor.commit()
-        print(result)
+        return result[0]
+    except Exception as e:
+        return e
+
+
+def them_nguoi_huong_dan(hoten: str, sdt: str, email: str, chucdanh: str, phong: str, username: str, password: str, zalo: str, facebook: str, github: str, avatar: str):
+    try:
+        result = cursor.execute("EXEC InsertNguoiHuongDan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(hoten), protect_xss(sdt), protect_xss(email), protect_xss(chucdanh), protect_xss(phong), protect_xss(username), protect_xss(password), protect_xss(zalo), protect_xss(facebook), protect_xss(github), protect_xss(avatar)).fetchone()
+        conn.commit()
         return result[0]
     except Exception as e:
         return e

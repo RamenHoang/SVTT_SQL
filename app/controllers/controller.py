@@ -350,3 +350,7 @@ def get_thong_tin_nguoi_huong_dan_by_id_controller(id: int):
 
 def update_chi_tiet_tai_khoan_by_id_controller(id: int, hoten: str, sdt: str, email: str, chucdanh: str, phong: str, zalo: str, facebook: str, github: str, avatar: str):
     return update_chi_tiet_tai_khoan_by_id(id, hoten, sdt, email, chucdanh, phong, zalo, facebook, github, avatar)
+
+
+def them_nguoi_huong_dan_controller(hoten: str, sdt: str, email: str, chucdanh: str, phong: str, username: str, password: str, zalo: str, facebook: str, github: str, avatar: str):
+    return them_nguoi_huong_dan(hoten, sdt, email, chucdanh, phong, username, password, zalo, facebook, github, avatar)

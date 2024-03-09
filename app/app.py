@@ -1417,11 +1417,27 @@ async def update_chi_tiet_tai_khoan_by_id(id: int, hoten: str, sdt: str, email: 
             permission = payload.get("permission")
             if permission == "admin":
                 result = update_chi_tiet_tai_khoan_by_id_controller(id, hoten, sdt, email, chucdanh, phong, zalo, facebook, github, avatar)
-                print(result)
                 if result==1:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'NOT_UPDATE'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.post('/them_nguoi_huong_dan')
+async def them_nguoi_huong_dan(hoten: str, sdt: str, email: str, chucdanh: str, phong: str, username: str, zalo: str, facebook: str, github: str, avatar: str, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin":
+                result = them_nguoi_huong_dan_controller(hoten, sdt, email, chucdanh, phong, username, sha3_256(bytes(default_password, 'utf-8')).hexdigest(), zalo, facebook, github, avatar)
+                if result==1:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'NOT_CREATE'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
