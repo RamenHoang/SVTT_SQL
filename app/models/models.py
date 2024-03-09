@@ -835,3 +835,30 @@ def update_ban_nguoi_huong_dan_by_id(id: int):
         return result[0]
     except Exception as e:
         return e
+
+
+def update_active_nguoi_huong_dan_by_id(id: int):
+    try:
+        result = cursor.execute("EXEC UpdateActiveNguoiHuongDanByID ?", id).fetchone()
+        cursor.commit()
+        return result[0]
+    except Exception as e:
+        return e
+
+
+def update_reset_mat_khau_nguoi_huong_dan_by_id(id: int, password: str):
+    try:
+        result = cursor.execute("EXEC UpdateResetMatKhauNguoiHuongDanByID ?, ?", id, protect_xss(password)).fetchone()
+        cursor.commit()
+        return result[0]
+    except Exception as e:
+        return e
+
+
+def update_phan_quyen_nguoi_huong_dan_by_id(id: int, role: int):
+    try:
+        result = cursor.execute("EXEC UpdateQuyenNguoiHuongDanByID ?, ?", id, role).fetchone()
+        cursor.commit()
+        return result[0]
+    except Exception as e:
+        return e

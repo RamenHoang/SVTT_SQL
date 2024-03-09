@@ -331,3 +331,14 @@ def update_xoa_nguoi_huong_dan_by_id_controller(id: int):
 
 def update_ban_nguoi_huong_dan_by_id_controller(id: int):
     return update_ban_nguoi_huong_dan_by_id(id)
+
+
+def update_active_nguoi_huong_dan_by_id_controller(id: int):
+    return update_active_nguoi_huong_dan_by_id(id)
+
+def update_reset_mat_khau_nguoi_huong_dan_by_id_controller(id: int, password: str):
+    return update_reset_mat_khau_nguoi_huong_dan_by_id(id, password)
+
+
+def update_phan_quyen_nguoi_huong_dan_by_id_controller(id: int, role: int):
+    return update_phan_quyen_nguoi_huong_dan_by_id(id, role)
