@@ -883,8 +883,14 @@ def update_chi_tiet_tai_khoan_by_id(id: int, hoten: str, sdt: str, email: str, c
 
 def them_nguoi_huong_dan(hoten: str, sdt: str, email: str, chucdanh: str, phong: str, username: str, password: str, zalo: str, facebook: str, github: str, avatar: str):
     try:
-        result = cursor.execute("EXEC InsertNguoiHuongDan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(hoten), protect_xss(sdt), protect_xss(email), protect_xss(chucdanh), protect_xss(phong), protect_xss(username), protect_xss(password), protect_xss(zalo), protect_xss(facebook), protect_xss(github), protect_xss(avatar)).fetchone()
+        insert_nhd = cursor.execute("EXEC InsertNguoiHuongDan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(hoten), protect_xss(sdt), protect_xss(email), protect_xss(chucdanh), protect_xss(phong), protect_xss(username), protect_xss(password), protect_xss(zalo), protect_xss(facebook), protect_xss(github), protect_xss(avatar))
+        kq_insert_nhd = insert_nhd.fetchone()[0]
         conn.commit()
-        return result[0]
+
+        insert_phanquyen = cursor.execute("EXEC InsertPhanQuyen ?, ?", kq_insert_nhd, 0)
+        kq_insert_phanquyen = insert_phanquyen.fetchone()[0]
+        conn.commit()
+        
+        return kq_insert_phanquyen
     except Exception as e:
         return e

@@ -1434,7 +1434,7 @@ async def them_nguoi_huong_dan(hoten: str, sdt: str, email: str, chucdanh: str, 
             permission = payload.get("permission")
             if permission == "admin":
                 result = them_nguoi_huong_dan_controller(hoten, sdt, email, chucdanh, phong, username, sha3_256(bytes(default_password, 'utf-8')).hexdigest(), zalo, facebook, github, avatar)
-                if result==1:
+                if isinstance(result, int):
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'NOT_CREATE'})
