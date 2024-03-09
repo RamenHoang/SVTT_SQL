@@ -52,4 +52,15 @@ active_nav_link();
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
-})
+});
+
+// Kiểm tra nếu là admin thì hiện menu hệ thống
+$.ajax({
+  type: `GET`,
+  url: `checkIsAdmin`,
+  success: function(res){
+    if(res.status=='OK'){
+      $("#menu_hethong").prop("hidden", false);
+    }
+  }
+});
