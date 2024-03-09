@@ -793,11 +793,12 @@ def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv(id: int, email: str):
         return e
 
 
-def update_password(username: str, password: str):
+def update_password(username: str, old_password: str, new_password: str):
     try:
-        result = cursor.execute("EXEC UpdatePassword ?, ?", protect_xss(username), protect_xss(password))
+        result = cursor.execute("EXEC UpdatePassword ?, ?, ?", protect_xss(username), protect_xss(old_password), protect_xss(new_password))
+        kq = result.fetchone()[0]
         cursor.commit()
-        return result.fetchone()[0]
+        return kq
     except Exception as e:
         return e
 

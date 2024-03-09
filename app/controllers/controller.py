@@ -313,8 +313,8 @@ def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_controller(id: int, email: s
     return get_chi_tiet_cong_viec_by_id_cong_viec_email_sv(id, email)
 
 
-def update_password_controller(username: str, password: str):
-    return update_password(username, password)
+def update_password_controller(username: str, old_password: str, new_password: str):
+    return update_password(username, old_password, new_password)
 
 
 def get_phan_quyen_controller(username: str):

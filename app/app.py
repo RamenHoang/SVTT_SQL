@@ -1296,14 +1296,18 @@ async def get_ds_tai_khoan(token: str = Cookie(None)):
 
 
 @app.post('/update_password')
-async def update_password_route(username: str, token: str = Cookie(None)):
+async def update_password_route(old_password: str, new_password: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             permission = payload.get("permission")
-            if permission == "admin":
-                result = update_password_controller(username, sha3_256(bytes(default_password, 'utf-8')).hexdigest())
-                return JSONResponse(status_code=200, content=result)
+            username = payload.get("sub")
+            if permission == "admin" or permission == "user":
+                result = update_password_controller(username, sha3_256(bytes(old_password, 'utf-8')).hexdigest(), sha3_256(bytes(new_password, 'utf-8')).hexdigest())
+                if result==1:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'NOT_MODIFY'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
@@ -1453,6 +1457,19 @@ async def check_is_admin(token: str = Cookie(None)):
                 return JSONResponse(status_code=200, content={'status': 'OK'})
             else:
                 return JSONResponse(status_code=200, content={'status': 'NOT_OK'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.get('/doimatkhau')
+async def doi_mat_Khau(request: Request, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin" or permission == "user":
+                return templates.TemplateResponse('change_password.html', context={'request': request})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
