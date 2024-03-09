@@ -1295,8 +1295,8 @@ async def get_ds_tai_khoan(token: str = Cookie(None)):
     return RedirectResponse('/login')
 
 
-@app.post('/reset_password')
-async def reset_password_route(username: str, token: str = Cookie(None)):
+@app.post('/update_password')
+async def update_password_route(username: str, token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -1304,6 +1304,21 @@ async def reset_password_route(username: str, token: str = Cookie(None)):
             if permission == "admin":
                 result = update_password_controller(username, sha3_256(bytes(default_password, 'utf-8')).hexdigest())
                 return JSONResponse(status_code=200, content=result)
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.post('/reset_password')
+async def reset_password_route(id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin":
+                result = update_reset_mat_khau_nguoi_huong_dan_by_id_controller(id, sha3_256(bytes(default_password, 'utf-8')).hexdigest())
+                if result==1:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
@@ -1338,6 +1353,43 @@ async def update_ban_nguoi_huong_dan_by_id_route(id: int, token: str = Cookie(No
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'IS_ADMIN'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.post('/update_active_nguoi_huong_dan_by_id')
+async def update_active_nguoi_huong_dan_by_id_route(id: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin":
+                result = update_active_nguoi_huong_dan_by_id_controller(id)
+                if result==1:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'NOT_BANNED'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.post('/update_phan_quyen_nguoi_huong_dan_by_id')
+async def update_phan_quyen_nguoi_huong_dan_by_id_route(id: int, role: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin":
+                if(role <= 1):
+                    result = update_phan_quyen_nguoi_huong_dan_by_id_controller(id, role)
+                    if result==1:
+                        return JSONResponse(status_code=200, content={'status': 'OK'})
+                    else:
+                        return JSONResponse(status_code=200, content={'status': 'NOT_UPDATE'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'INCORRECT_ROLE'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
