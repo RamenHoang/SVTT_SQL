@@ -60,7 +60,7 @@ $.ajax({
   url: `checkIsAdmin`,
   success: function(res){
     if(res.status=='OK'){
-      $("#menu_hethong").prop("hidden", false);
+      $("#hethong_quanlytaikhoan").prop("hidden", false);
     }
   }
 });
