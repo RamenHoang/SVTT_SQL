@@ -803,6 +803,17 @@ def update_password(username: str, old_password: str, new_password: str):
         return e
 
 
+def update_password_sv(email: str, old_password: str, new_password: str):
+    try:
+        result = cursor.execute("EXEC UpdatePasswordSV ?, ?, ?", protect_xss(email), protect_xss(old_password), protect_xss(new_password))
+        kq = result.fetchone()[0]
+        cursor.commit()
+        print(kq)
+        return kq
+    except Exception as e:
+        return e
+
+
 def get_phan_quyen(username: str):
     try:
         result = cursor.execute("EXEC GetPhanQuyenByUsername ?", protect_xss(username))
