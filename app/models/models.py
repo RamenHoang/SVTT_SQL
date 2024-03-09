@@ -862,3 +862,21 @@ def update_phan_quyen_nguoi_huong_dan_by_id(id: int, role: int):
         return result[0]
     except Exception as e:
         return e
+
+
+def get_thong_tin_nguoi_huong_dan_by_id(id: int):
+    try:
+        result = cursor.execute("EXEC GetChiTietTaiKhoanByID ?", id).fetchone()
+        return {'id': result[0], 'hoten': result[1], 'sdt': result[2], 'email': result[3], 'chucdanh': result[4], 'phong': result[5], 'zalo': result[6], 'facebook': result[7], 'github': result[8], 'avatar': result[9]}
+    except Exception as e:
+        return e
+
+
+def update_chi_tiet_tai_khoan_by_id(id: int, hoten: str, sdt: str, email: str, chucdanh: str, phong: str, zalo: str, facebook: str, github: str, avatar: str):
+    try:
+        result = cursor.execute("EXEC UpdateChiTietTaiKhoanByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", id, protect_xss(hoten), protect_xss(sdt), protect_xss(email), protect_xss(chucdanh), protect_xss(phong), protect_xss(zalo), protect_xss(facebook), protect_xss(github), protect_xss(avatar)).fetchone()
+        cursor.commit()
+        print(result)
+        return result[0]
+    except Exception as e:
+        return e
