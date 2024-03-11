@@ -829,9 +829,9 @@ async def thong_tin_sinh_vien_route(sv: ThongTinSV):
         sent = send_otp_email(sv.email, sv.hoten)
         if sent:
             print(result)
-            response = JSONResponse(status_code=200, content={'status': 'OK'})
             insert_taikhoan = insert_taikhoan_sinhvien_controller(
-                result, default_password, 0)
+                result, sha3_256(bytes(default_password, 'utf-8')).hexdigest(), 1)
+            response = JSONResponse(status_code=200, content={'status': 'OK'})
             response.set_cookie('studentid', result,
                                 max_age=5356800)  # Hạn 2 tháng
             return response
