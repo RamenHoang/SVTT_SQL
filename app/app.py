@@ -85,9 +85,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def verify_user_route(credentials: UserCredentials):
     if '@' in credentials.username:
-        return {"isVerified": verify_student_controller(email=credentials.username, password=sha3_256(bytes(credentials.password, 'utf-8')).hexdigest()), "permission": "student"}
+        id = verify_student_controller(email=credentials.username, password=sha3_256(bytes(credentials.password, 'utf-8')).hexdigest())
+        if id:
+            return {"isVerified": True, "permission": "student", "id": int(id)}
     else:
-        return {"isVerified": verify_user_controller(username=credentials.username, password=sha3_256(bytes(credentials.password, 'utf-8')).hexdigest()), "permission": get_phan_quyen_controller(credentials.username)}
+        id = verify_user_controller(username=credentials.username, password=sha3_256(bytes(credentials.password, 'utf-8')).hexdigest())
+        if id:
+            return {"isVerified": True, "permission": get_phan_quyen_controller(credentials.username), "id": int(id)}
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
@@ -120,7 +124,7 @@ async def login_for_access_token(credentials: UserCredentials):
         access_token_expires = datetime.timedelta(
             minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-            data={"sub": credentials.username, "permission": result['permission']}, expires_delta=access_token_expires)
+            data={"sub": credentials.username, "permission": result['permission'], "id": result['id']}, expires_delta=access_token_expires)
         response = JSONResponse(
             {"access_token": access_token, "token_type": "bearer"})
         response.set_cookie("token", access_token, httponly=False)
@@ -1497,6 +1501,26 @@ async def update_password_sv_route(old_password: str, new_password: str, token: 
             username = payload.get("sub")
             if permission == "student":
                 result = update_password_sv_controller(username, sha3_256(bytes(old_password, 'utf-8')).hexdigest(), sha3_256(bytes(new_password, 'utf-8')).hexdigest())
+                if result==1:
+                    return JSONResponse(status_code=200, content={'status': 'OK'})
+                else:
+                    return JSONResponse(status_code=200, content={'status': 'NOT_MODIFY'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.post('/update_thong_tin_sv')
+async def update_thong_tin_sv_route(mssv: str, hoten: str, gioitinh: int, sdt: str, diachi: str, malop: str, khoa: int, nganh: int, truong: int, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            sv_id = payload.get("id")
+            email = payload.get("sub")
+            print(payload)
+            if permission == "student":
+                result = update_thong_tin_sv_controller(sv_id, mssv, hoten, gioitinh, sdt, email, diachi, malop, khoa, nganh, truong)
                 if result==1:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:

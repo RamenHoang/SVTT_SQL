@@ -35,8 +35,8 @@ def verify_user(username: str, password: str):
     try:
         result = cursor.execute("LoginUser ?, ?", protect_xss(
             username), protect_xss(password)).fetchone()[0]
-        if result == 1:
-            return True
+        if result != None:
+            return result
         else:
             return False
     except Exception as e:
@@ -47,8 +47,8 @@ def verify_student(email: str, password: str):
     try:
         result = cursor.execute("LoginStudent ?, ?", protect_xss(
             email), protect_xss(password)).fetchone()[0]
-        if result == 1:
-            return True
+        if result != None:
+            return result
         else:
             return False
     except Exception as e:
@@ -904,5 +904,16 @@ def them_nguoi_huong_dan(hoten: str, sdt: str, email: str, chucdanh: str, phong:
         conn.commit()
         
         return kq_insert_phanquyen
+    except Exception as e:
+        return e
+    
+
+def update_thong_tin_sv(sv_id: int, mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, khoa: int, nganh: int, truong: int):
+    try:
+        print("EXEC UpdateSinhVienByID '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}'".format(sv_id, protect_xss(mssv), protect_xss(hoten), gioitinh, protect_xss(sdt), protect_xss(email), protect_xss(diachi), protect_xss(malop), khoa, truong, nganh))
+        update = cursor.execute("EXEC UpdateSinhVienByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", sv_id, protect_xss(mssv), protect_xss(hoten), gioitinh, protect_xss(sdt), protect_xss(email), protect_xss(diachi), protect_xss(malop), khoa, truong, nganh)
+        r = update.fetchone()
+        cursor.commit()
+        return r[0]
     except Exception as e:
         return e
