@@ -65,9 +65,8 @@ $(document).ready(function () {
                         </tr>
                         <tr>
                             <td>Nhóm:</td>
-                            <td>${
-                              res.nhomhuongdan === null ? "" : res.nhomhuongdan
-                            }</td>
+                            <td>${res.nhomhuongdan === null ? "" : res.nhomhuongdan
+            }</td>
                         </tr>
                     `;
 
@@ -226,9 +225,9 @@ $(document).ready(function () {
       submitDanhGia(email, groupid);
     }
   });
-  
+
   // Bắt sự kiện chỉnh sửa thông tin cá nhân
-  $("#editInfoBtn").on("click", function() {
+  $("#editInfoBtn").on("click", function () {
     let mssv = document.getElementById("table_svinfo_mssv").innerHTML;
     let hoten = document.getElementById("table_svinfo_hoten").innerHTML;
     let khoa = document.getElementById("table_svinfo_khoa").innerHTML;
@@ -306,7 +305,7 @@ $(document).ready(function () {
         $("#modal_nganh_input").append(html);
       },
     });
-    
+
     $.ajax({
       type: "GET",
       url: "get_danh_sach_truong",
@@ -319,7 +318,7 @@ $(document).ready(function () {
       },
     });
 
-    $("#saveChanges").on("click", function(){
+    $("#saveChanges").on("click", function () {
       let mssv_input = $("#modal_mssv_input").val();
       let hoten_input = $("#modal_hoten_input").val();
       let gioitinh_input = $("#modal_gioitinh_input").val();
@@ -333,13 +332,13 @@ $(document).ready(function () {
       $.ajax({
         type: `POST`,
         url: `update_thong_tin_sv?mssv=${mssv_input}&hoten=${hoten_input}&gioitinh=${gioitinh_input}&sdt=${sdt_input}&diachi=${diachi_input}&malop=${malop_input}&khoa=${khoa_input}&nganh=${nganh_input}&truong=${truong_input}`,
-        success: function(res){
+        success: function (res) {
           Toast.fire({
             icon: "success",
             title: `Đã cập nhật thông tin`
           });
         },
-        error: function() {
+        error: function () {
           Toast.fire({
             icon: "error",
             title: `Đã xảy ra lỗi, vui lòng thử lại sau`

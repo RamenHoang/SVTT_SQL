@@ -316,6 +316,7 @@ def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv_controller(id: int, email: s
 def update_password_controller(username: str, old_password: str, new_password: str):
     return update_password(username, old_password, new_password)
 
+
 def update_password_sv_controller(email: str, old_password: str, new_password: str):
     return update_password_sv(email, old_password, new_password)
 
@@ -339,6 +340,7 @@ def update_ban_nguoi_huong_dan_by_id_controller(id: int):
 def update_active_nguoi_huong_dan_by_id_controller(id: int):
     return update_active_nguoi_huong_dan_by_id(id)
 
+
 def update_reset_mat_khau_nguoi_huong_dan_by_id_controller(id: int, password: str):
     return update_reset_mat_khau_nguoi_huong_dan_by_id(id, password)
 
@@ -357,6 +359,7 @@ def update_chi_tiet_tai_khoan_by_id_controller(id: int, hoten: str, sdt: str, em
 
 def them_nguoi_huong_dan_controller(hoten: str, sdt: str, email: str, chucdanh: str, phong: str, username: str, password: str, zalo: str, facebook: str, github: str, avatar: str):
     return them_nguoi_huong_dan(hoten, sdt, email, chucdanh, phong, username, password, zalo, facebook, github, avatar)
+
 
 def update_thong_tin_sv_controller(sv_id: int, mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, khoa: int, nganh: int, truong: int):
     return update_thong_tin_sv(sv_id, mssv, hoten, gioitinh, sdt, email, diachi, malop, khoa, nganh, truong)

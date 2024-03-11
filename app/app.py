@@ -85,11 +85,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def verify_user_route(credentials: UserCredentials):
     if '@' in credentials.username:
-        id = verify_student_controller(email=credentials.username, password=sha3_256(bytes(credentials.password, 'utf-8')).hexdigest())
+        id = verify_student_controller(email=credentials.username, password=sha3_256(
+            bytes(credentials.password, 'utf-8')).hexdigest())
         if id:
             return {"isVerified": True, "permission": "student", "id": int(id)}
     else:
-        id = verify_user_controller(username=credentials.username, password=sha3_256(bytes(credentials.password, 'utf-8')).hexdigest())
+        id = verify_user_controller(username=credentials.username, password=sha3_256(
+            bytes(credentials.password, 'utf-8')).hexdigest())
         if id:
             return {"isVerified": True, "permission": get_phan_quyen_controller(credentials.username), "id": int(id)}
 
@@ -1307,8 +1309,9 @@ async def update_password_route(old_password: str, new_password: str, token: str
             permission = payload.get("permission")
             username = payload.get("sub")
             if permission == "admin" or permission == "user":
-                result = update_password_controller(username, sha3_256(bytes(old_password, 'utf-8')).hexdigest(), sha3_256(bytes(new_password, 'utf-8')).hexdigest())
-                if result==1:
+                result = update_password_controller(username, sha3_256(bytes(
+                    old_password, 'utf-8')).hexdigest(), sha3_256(bytes(new_password, 'utf-8')).hexdigest())
+                if result == 1:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'NOT_MODIFY'})
@@ -1324,8 +1327,9 @@ async def reset_password_route(id: int, token: str = Cookie(None)):
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             permission = payload.get("permission")
             if permission == "admin":
-                result = update_reset_mat_khau_nguoi_huong_dan_by_id_controller(id, sha3_256(bytes(default_password, 'utf-8')).hexdigest())
-                if result==1:
+                result = update_reset_mat_khau_nguoi_huong_dan_by_id_controller(
+                    id, sha3_256(bytes(default_password, 'utf-8')).hexdigest())
+                if result == 1:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
@@ -1340,7 +1344,7 @@ async def update_xoa_nguoi_huong_dan_by_id_route(id: int, token: str = Cookie(No
             permission = payload.get("permission")
             if permission == "admin":
                 result = update_xoa_nguoi_huong_dan_by_id_controller(id)
-                if result==1:
+                if result == 1:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'EXISTS'})
@@ -1357,7 +1361,7 @@ async def update_ban_nguoi_huong_dan_by_id_route(id: int, token: str = Cookie(No
             permission = payload.get("permission")
             if permission == "admin":
                 result = update_ban_nguoi_huong_dan_by_id_controller(id)
-                if result==1:
+                if result == 1:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'IS_ADMIN'})
@@ -1374,7 +1378,7 @@ async def update_active_nguoi_huong_dan_by_id_route(id: int, token: str = Cookie
             permission = payload.get("permission")
             if permission == "admin":
                 result = update_active_nguoi_huong_dan_by_id_controller(id)
-                if result==1:
+                if result == 1:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'NOT_BANNED'})
@@ -1390,9 +1394,10 @@ async def update_phan_quyen_nguoi_huong_dan_by_id_route(id: int, role: int, toke
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             permission = payload.get("permission")
             if permission == "admin":
-                if(role <= 1):
-                    result = update_phan_quyen_nguoi_huong_dan_by_id_controller(id, role)
-                    if result==1:
+                if (role <= 1):
+                    result = update_phan_quyen_nguoi_huong_dan_by_id_controller(
+                        id, role)
+                    if result == 1:
                         return JSONResponse(status_code=200, content={'status': 'OK'})
                     else:
                         return JSONResponse(status_code=200, content={'status': 'NOT_UPDATE'})
@@ -1424,8 +1429,9 @@ async def update_chi_tiet_tai_khoan_by_id(id: int, hoten: str, sdt: str, email: 
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             permission = payload.get("permission")
             if permission == "admin":
-                result = update_chi_tiet_tai_khoan_by_id_controller(id, hoten, sdt, email, chucdanh, phong, zalo, facebook, github, avatar)
-                if result==1:
+                result = update_chi_tiet_tai_khoan_by_id_controller(
+                    id, hoten, sdt, email, chucdanh, phong, zalo, facebook, github, avatar)
+                if result == 1:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'NOT_UPDATE'})
@@ -1441,7 +1447,8 @@ async def them_nguoi_huong_dan(hoten: str, sdt: str, email: str, chucdanh: str, 
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             permission = payload.get("permission")
             if permission == "admin":
-                result = them_nguoi_huong_dan_controller(hoten, sdt, email, chucdanh, phong, username, sha3_256(bytes(default_password, 'utf-8')).hexdigest(), zalo, facebook, github, avatar)
+                result = them_nguoi_huong_dan_controller(hoten, sdt, email, chucdanh, phong, username, sha3_256(
+                    bytes(default_password, 'utf-8')).hexdigest(), zalo, facebook, github, avatar)
                 if isinstance(result, int):
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
@@ -1500,8 +1507,9 @@ async def update_password_sv_route(old_password: str, new_password: str, token: 
             permission = payload.get("permission")
             username = payload.get("sub")
             if permission == "student":
-                result = update_password_sv_controller(username, sha3_256(bytes(old_password, 'utf-8')).hexdigest(), sha3_256(bytes(new_password, 'utf-8')).hexdigest())
-                if result==1:
+                result = update_password_sv_controller(username, sha3_256(bytes(
+                    old_password, 'utf-8')).hexdigest(), sha3_256(bytes(new_password, 'utf-8')).hexdigest())
+                if result == 1:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'NOT_MODIFY'})
@@ -1520,8 +1528,9 @@ async def update_thong_tin_sv_route(mssv: str, hoten: str, gioitinh: int, sdt: s
             email = payload.get("sub")
             print(payload)
             if permission == "student":
-                result = update_thong_tin_sv_controller(sv_id, mssv, hoten, gioitinh, sdt, email, diachi, malop, khoa, nganh, truong)
-                if result==1:
+                result = update_thong_tin_sv_controller(
+                    sv_id, mssv, hoten, gioitinh, sdt, email, diachi, malop, khoa, nganh, truong)
+                if result == 1:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'NOT_MODIFY'})

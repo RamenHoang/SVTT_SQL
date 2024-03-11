@@ -15,6 +15,15 @@
   <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <style>
+    .input-text {
+        font-family: "Space Grotesk", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+    }
+  </style>
+
+  {% include 'header.html' ignore missing %}
 </head>
 
 <body class="hold-transition login-page">
@@ -22,14 +31,12 @@
     <!-- /.login-logo -->
     <div class="card card-outline card-primary">
       <div class="card-header text-center">
-        <h1>HTQL SVTT</h1>
+        <h3>HỆ THỐNG QUẢN LÝ<br/>SINH VIÊN THỰC TẬP</h3>
       </div>
       <div class="card-body">
-        <p class="login-box-msg">Đăng nhập</p>
-
         <form action="/token" method="post">
           <div class="input-group mb-3">
-            <input type="username" id="username" class="form-control" placeholder="Tài khoản" autofocus>
+            <input type="username" id="username" class="form-control input-text" placeholder="Tài khoản/Email" autofocus>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
@@ -37,7 +44,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="password" id="password" class="form-control" placeholder="Mật khẩu">
+            <input type="password" id="password" class="form-control input-text" placeholder="Mật khẩu">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -47,7 +54,10 @@
           <div class="row">
             <!-- /.col -->
             <div class="col-12">
-              <button type="button" id="loginBtn" class="btn btn-primary btn-block">Đăng nhập</button>
+              <button type="button" id="loginBtn" class="btn btn-primary btn-block">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                ĐĂNG NHẬP
+              </button>
             </div>
             <!-- /.col -->
           </div>
