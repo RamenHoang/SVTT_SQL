@@ -15,8 +15,9 @@ def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str,
     try:
         result = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(MSSV), protect_xss(
             HoTen), GioiTinh, protect_xss(SDT), protect_xss(Email), protect_xss(DiaChi), protect_xss(MaLop), Truong, Nganh, Khoa, 0)
+        r=result.fetchone()
         conn.commit()
-        return result.fetchone()[0]
+        return r[0]
     except Exception as e:
         return e
 
