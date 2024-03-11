@@ -15,7 +15,7 @@ def insert_sinh_vien(MSSV: str, HoTen: str, GioiTinh: int, SDT: str, Email: str,
     try:
         result = cursor.execute("EXEC InsertSinhVien ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(MSSV), protect_xss(
             HoTen), GioiTinh, protect_xss(SDT), protect_xss(Email), protect_xss(DiaChi), protect_xss(MaLop), Truong, Nganh, Khoa, 0)
-        r=result.fetchone()
+        r = result.fetchone()
         conn.commit()
         return r[0]
     except Exception as e:
@@ -796,7 +796,8 @@ def get_chi_tiet_cong_viec_by_id_cong_viec_email_sv(id: int, email: str):
 
 def update_password(username: str, old_password: str, new_password: str):
     try:
-        result = cursor.execute("EXEC UpdatePassword ?, ?, ?", protect_xss(username), protect_xss(old_password), protect_xss(new_password))
+        result = cursor.execute("EXEC UpdatePassword ?, ?, ?", protect_xss(
+            username), protect_xss(old_password), protect_xss(new_password))
         kq = result.fetchone()[0]
         cursor.commit()
         return kq
@@ -806,7 +807,8 @@ def update_password(username: str, old_password: str, new_password: str):
 
 def update_password_sv(email: str, old_password: str, new_password: str):
     try:
-        result = cursor.execute("EXEC UpdatePasswordSV ?, ?, ?", protect_xss(email), protect_xss(old_password), protect_xss(new_password))
+        result = cursor.execute("EXEC UpdatePasswordSV ?, ?, ?", protect_xss(
+            email), protect_xss(old_password), protect_xss(new_password))
         kq = result.fetchone()[0]
         cursor.commit()
         print(kq)
@@ -817,12 +819,13 @@ def update_password_sv(email: str, old_password: str, new_password: str):
 
 def get_phan_quyen(username: str):
     try:
-        result = cursor.execute("EXEC GetPhanQuyenByUsername ?", protect_xss(username))
+        result = cursor.execute(
+            "EXEC GetPhanQuyenByUsername ?", protect_xss(username))
         # Role: {0: "user", 1: "administrator"}
         return "admin" if result.fetchone()[0] == 1 else "user"
     except Exception as e:
         return e
-    
+
 
 def get_ds_tai_khoan():
     try:
@@ -834,7 +837,8 @@ def get_ds_tai_khoan():
 
 def update_xoa_nguoi_huong_dan_by_id(id: int):
     try:
-        result = cursor.execute("EXEC UpdateXoaNguoiHuongDanByID ?", id).fetchone()
+        result = cursor.execute(
+            "EXEC UpdateXoaNguoiHuongDanByID ?", id).fetchone()
         cursor.commit()
         return result[0]
     except Exception as e:
@@ -843,7 +847,8 @@ def update_xoa_nguoi_huong_dan_by_id(id: int):
 
 def update_ban_nguoi_huong_dan_by_id(id: int):
     try:
-        result = cursor.execute("EXEC UpdateBanNguoiHuongDanByID ?", id).fetchone()
+        result = cursor.execute(
+            "EXEC UpdateBanNguoiHuongDanByID ?", id).fetchone()
         cursor.commit()
         return result[0]
     except Exception as e:
@@ -852,7 +857,8 @@ def update_ban_nguoi_huong_dan_by_id(id: int):
 
 def update_active_nguoi_huong_dan_by_id(id: int):
     try:
-        result = cursor.execute("EXEC UpdateActiveNguoiHuongDanByID ?", id).fetchone()
+        result = cursor.execute(
+            "EXEC UpdateActiveNguoiHuongDanByID ?", id).fetchone()
         cursor.commit()
         return result[0]
     except Exception as e:
@@ -861,7 +867,8 @@ def update_active_nguoi_huong_dan_by_id(id: int):
 
 def update_reset_mat_khau_nguoi_huong_dan_by_id(id: int, password: str):
     try:
-        result = cursor.execute("EXEC UpdateResetMatKhauNguoiHuongDanByID ?, ?", id, protect_xss(password)).fetchone()
+        result = cursor.execute(
+            "EXEC UpdateResetMatKhauNguoiHuongDanByID ?, ?", id, protect_xss(password)).fetchone()
         cursor.commit()
         return result[0]
     except Exception as e:
@@ -870,7 +877,8 @@ def update_reset_mat_khau_nguoi_huong_dan_by_id(id: int, password: str):
 
 def update_phan_quyen_nguoi_huong_dan_by_id(id: int, role: int):
     try:
-        result = cursor.execute("EXEC UpdateQuyenNguoiHuongDanByID ?, ?", id, role).fetchone()
+        result = cursor.execute(
+            "EXEC UpdateQuyenNguoiHuongDanByID ?, ?", id, role).fetchone()
         cursor.commit()
         return result[0]
     except Exception as e:
@@ -887,7 +895,8 @@ def get_thong_tin_nguoi_huong_dan_by_id(id: int):
 
 def update_chi_tiet_tai_khoan_by_id(id: int, hoten: str, sdt: str, email: str, chucdanh: str, phong: str, zalo: str, facebook: str, github: str, avatar: str):
     try:
-        result = cursor.execute("EXEC UpdateChiTietTaiKhoanByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", id, protect_xss(hoten), protect_xss(sdt), protect_xss(email), protect_xss(chucdanh), protect_xss(phong), protect_xss(zalo), protect_xss(facebook), protect_xss(github), protect_xss(avatar)).fetchone()
+        result = cursor.execute("EXEC UpdateChiTietTaiKhoanByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", id, protect_xss(hoten), protect_xss(sdt), protect_xss(
+            email), protect_xss(chucdanh), protect_xss(phong), protect_xss(zalo), protect_xss(facebook), protect_xss(github), protect_xss(avatar)).fetchone()
         cursor.commit()
         return result[0]
     except Exception as e:
@@ -896,23 +905,27 @@ def update_chi_tiet_tai_khoan_by_id(id: int, hoten: str, sdt: str, email: str, c
 
 def them_nguoi_huong_dan(hoten: str, sdt: str, email: str, chucdanh: str, phong: str, username: str, password: str, zalo: str, facebook: str, github: str, avatar: str):
     try:
-        insert_nhd = cursor.execute("EXEC InsertNguoiHuongDan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(hoten), protect_xss(sdt), protect_xss(email), protect_xss(chucdanh), protect_xss(phong), protect_xss(username), protect_xss(password), protect_xss(zalo), protect_xss(facebook), protect_xss(github), protect_xss(avatar))
+        insert_nhd = cursor.execute("EXEC InsertNguoiHuongDan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", protect_xss(hoten), protect_xss(sdt), protect_xss(email), protect_xss(
+            chucdanh), protect_xss(phong), protect_xss(username), protect_xss(password), protect_xss(zalo), protect_xss(facebook), protect_xss(github), protect_xss(avatar))
         kq_insert_nhd = insert_nhd.fetchone()[0]
         conn.commit()
 
-        insert_phanquyen = cursor.execute("EXEC InsertPhanQuyen ?, ?", kq_insert_nhd, 0)
+        insert_phanquyen = cursor.execute(
+            "EXEC InsertPhanQuyen ?, ?", kq_insert_nhd, 0)
         kq_insert_phanquyen = insert_phanquyen.fetchone()[0]
         conn.commit()
-        
+
         return kq_insert_phanquyen
     except Exception as e:
         return e
-    
+
 
 def update_thong_tin_sv(sv_id: int, mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, khoa: int, nganh: int, truong: int):
     try:
-        print("EXEC UpdateSinhVienByID '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}'".format(sv_id, protect_xss(mssv), protect_xss(hoten), gioitinh, protect_xss(sdt), protect_xss(email), protect_xss(diachi), protect_xss(malop), khoa, truong, nganh))
-        update = cursor.execute("EXEC UpdateSinhVienByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", sv_id, protect_xss(mssv), protect_xss(hoten), gioitinh, protect_xss(sdt), protect_xss(email), protect_xss(diachi), protect_xss(malop), khoa, truong, nganh)
+        print("EXEC UpdateSinhVienByID '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}'".format(sv_id, protect_xss(
+            mssv), protect_xss(hoten), gioitinh, protect_xss(sdt), protect_xss(email), protect_xss(diachi), protect_xss(malop), khoa, truong, nganh))
+        update = cursor.execute("EXEC UpdateSinhVienByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", sv_id, protect_xss(mssv), protect_xss(
+            hoten), gioitinh, protect_xss(sdt), protect_xss(email), protect_xss(diachi), protect_xss(malop), khoa, truong, nganh)
         r = update.fetchone()
         cursor.commit()
         return r[0]
