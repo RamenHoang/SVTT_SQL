@@ -211,7 +211,7 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
         let telegram = $("#modal_telegram_input").val();
         let ghichu = $("#modal_ghichu_text")
           .val()
-          .replace(/[\r\n]+/g, "<br/>");
+          .replace(/[\r\n]+/g, "<br>");
         $.ajax({
           type: "POST",
           url:
@@ -377,7 +377,7 @@ $("#themkythuctap_btn").click(function () {
         let telegram = $("#modal_telegram_input").val();
         let ghichu = $("#modal_ghichu_text")
           .val()
-          .replace(/[\r\n]+/g, "<br/>");
+          .replace(/[\r\n]+/g, "<br>");
 
         $.ajax({
           type: "POST",

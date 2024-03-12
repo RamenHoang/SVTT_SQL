@@ -356,15 +356,7 @@ def get_ds_sinh_vien_by_username(username: str, kythuctap: str, nhomhuongdan: st
     try:
         result = cursor.execute(
             "EXEC GetDSSVByNguoiHuongDanID ?, ?, ?", protect_xss(username), protect_xss(kythuctap), protect_xss(nhomhuongdan))
-        handanhgia = 0
-        # ngayketthuc = get_han_thuc_tap_by_nhom_id(int(nhomhuongdan))['ngayketthuc']
-        # print(ngayketthuc)
-        # if (datetime.datetime.now() - datetime.timedelta(days=3)) <= datetime.datetime.strptime(ngayketthuc, "%Y-%m-%d"):
-        #     handanhgia = 1
-        # else:
-        #     handanhgia = 0
-
-        return [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': 'Nam' if i[3] == 1 else 'Nữ', 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'detai': i[7], 'nhom': i[8], 'tennhom': i[9], 'handanhgia': handanhgia} for i in result]
+        return [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': 'Nam' if i[3] == 1 else 'Nữ', 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'detai': i[7], 'nhom': i[8], 'tennhom': i[9], 'handanhgia': int(datetime.datetime.combine(i[10], datetime.datetime.min.time()).timestamp())} for i in result]
     except Exception as e:
         return e
 
@@ -416,7 +408,7 @@ def update_sv_xac_nhan_hoan_thanh_cong_viec(idcongviec: int, email: str):
 def get_chi_tiet_danh_gia_sv_by_id(id: str):
     try:
         i = cursor.execute("EXEC GetChiTietDanhGiaSVByID ?", id).fetchone()
-        return {'ythuckyluat_number': i[3], 'ythuckyluat_text': i[4], 'tuanthuthoigian_number': i[5], 'tuanthuthoigian_text': i[6], 'kienthuc_number': i[7], 'kienthuc_text': i[8], 'kynangnghe_number': i[9], 'kynangnghe_text': i[10], 'khanangdoclap_number': i[11], 'khanangdoclap_text': i[12], 'khanangnhom_number': i[13], 'khanangnhom_text': i[14], 'khananggiaiquyetcongviec_number': i[15], 'khananggiaiquyetcongviec_text': i[16], 'danhgiachung_number': i[17]}
+        return {'ythuckyluat_number': i[3], 'ythuckyluat_text': i[4], 'tuanthuthoigian_number': i[5], 'tuanthuthoigian_text': i[6], 'kienthuc_number': i[7], 'kienthuc_text': i[8], 'kynangnghe_number': i[9], 'kynangnghe_text': i[10], 'khanangdoclap_number': i[11], 'khanangdoclap_text': i[12], 'khanangnhom_number': i[13], 'khanangnhom_text': i[14], 'khananggiaiquyetcongviec_number': i[15], 'khananggiaiquyetcongviec_text': i[16], 'danhgiachung_number': i[17], 'handanhgia': int(datetime.datetime.combine(i[33], datetime.datetime.min.time()).timestamp())}
     except Exception as e:
         return e
 

@@ -171,7 +171,7 @@ $("#bangdskythuctap").on("click", "#editBtn", function () {
         let ngayketthuc = dates[1];
         let ghichu = $("#modal_ghichu_text")
           .val()
-          .replace(/[\r\n]+/g, "<br/>");
+          .replace(/[\r\n]+/g, "<br>");
 
         $.ajax({
           type: "POST",
@@ -334,7 +334,7 @@ $("#themkythuctap_btn").click(function () {
     let ngayketthuc = dates[1];
     let ghichu = $("#modal_ghichu_text")
       .val()
-      .replace(/[\r\n]+/g, "<br/>");
+      .replace(/[\r\n]+/g, "<br>");
 
     $.ajax({
       type: "POST",

@@ -154,7 +154,7 @@ $(document).ready(function () {
               Toast.fire({
                 icon: "error",
                 title:
-                  "Nhóm đã đủ số lượng.<br/>Vui lòng liên hệ người hướng dẫn.",
+                  "Nhóm đã đủ số lượng.<br>Vui lòng liên hệ người hướng dẫn.",
               });
             },
           });
@@ -171,7 +171,7 @@ $(document).ready(function () {
     let cau_4 = $("input[name='q4']:checked").val();
     let gopy = $("#gopy")
       .val()
-      .replace(/[\r\n]+/g, "<br/>");
+      .replace(/[\r\n]+/g, "<br>");
 
     if (
       cau_1 == undefined ||

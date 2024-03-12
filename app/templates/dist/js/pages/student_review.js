@@ -1,3 +1,7 @@
+let currentDate = new Date();
+currentDate.setDate(currentDate.getDate() + 3);
+let currentTimestamp = parseInt(currentDate.getTime()/1000);
+
 var Toast = Swal.mixin({
   toast: true,
   position: "top-end",
@@ -211,7 +215,7 @@ function create_table(kythuctap, nhomthuctap) {
       {
         data: "id",
         render: function (data, type, row) {
-          if (row.handanhgia == 1) {
+          if (row.handanhgia >= currentTimestamp) {
             return (
               `<center>
                 <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}">
@@ -225,7 +229,7 @@ function create_table(kythuctap, nhomthuctap) {
           } else {
             return (
               `<center>
-                <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}">
+                <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}" data-edit="false">
                   <i class="fa-solid fa-eye"></i>
                 </a>
                 <a class="btn btn-success btn-sm" id="downloadBtn" data-id="${data}">
@@ -382,9 +386,14 @@ function create_table(kythuctap, nhomthuctap) {
         }
 
         $("#modal_footer").empty();
-        $("#modal_footer").append(
-          `<button type="button" class="btn btn-primary" data-id="${id}" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>`
-        );
+        if(res.handanhgia <= currentTimestamp){
+          $("input, textarea").prop("disabled", true);
+          $("#modal_footer").html(``);
+        }else{
+          $("#modal_footer").append(
+            `<button type="button" class="btn btn-primary" data-id="${id}" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>`
+          );
+        }
         $("#modal_id").modal("show");
 
         // Tính năng lưu thay đổi

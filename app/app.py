@@ -1048,7 +1048,7 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
                     if result == 1:
                         congviec = get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(
                             id_congviec, int(i))
-                        congviec_ghichu = ghichu.replace('<br/>', '\n')
+                        congviec_ghichu = ghichu.replace('<br>', '\n')
                         congviec_mota = str(
                             congviec['motacongviec']).replace('<br>', '\n')
                         asyncio.create_task(sendMessageHTML(
