@@ -144,9 +144,10 @@ $(document).ready(function () {
       },
       columns: [
         {
-          data: "id",
-          render: function (data, type, row) {
-            return "<center>" + data + "</center>";
+          data: null,
+          render: function (data, type, row, meta) {
+            // Use meta.row to get the current row index, and add 1 to start from 1
+            return "<center>" + (meta.row + 1) + "</center>";
           },
         },
         { data: "ngaybatdau" },

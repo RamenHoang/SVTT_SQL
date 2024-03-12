@@ -203,7 +203,13 @@ $(function () {
         dataSrc: "",
       },
       columns: [
-        { data: "id" },
+        {
+          data: null,
+          render: function (data, type, row, meta) {
+            // Use meta.row to get the current row index, and add 1 to start from 1
+            return "<center>" + (meta.row + 1) + "</center>";
+          },
+        },
         { data: "mssv" },
         { data: "hoten" },
         {
@@ -554,7 +560,13 @@ $("#dashboard_dssinhviendanhgia").DataTable({
     }
   },
   columns: [
-    { data: "id" },
+    {
+      data: null,
+      render: function (data, type, row, meta) {
+        // Use meta.row to get the current row index, and add 1 to start from 1
+        return "<center>" + (meta.row + 1) + "</center>";
+      },
+    },
     { data: "mssv" },
     { data: "hoten_sinhvien" },
     { data: "tennhom" },
