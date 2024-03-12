@@ -92,7 +92,7 @@ $(document).ready(function () {
                                   </div>
                                 </h3>
                               <div class="timeline-body" id="congviec" style="background-color:${bg_color} !important; cursor: pointer;" onclick="load_ChiTietCongViec(${val.id})">
-                                <strong>${val.ten}</strong><br/><br/> 
+                                <strong>${val.ten}</strong> 
                                 <p>${val.mota}</p>
                               </div>
                               </div>
@@ -185,7 +185,7 @@ $(document).ready(function () {
       let tencongviec = $("#tencongviec").val();
       let mota = $("#mota")
         .val()
-        .replace(/[\r\n]+/g, "<br/>");
+        .replace(/[\r\n]+/g, "");
       let nhomid = $("#filter_chonnhom").val();
 
       $.ajax({
@@ -276,7 +276,7 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
     let dssv_select = $("#modal_sinhvien_select").val();
     let ghichu = $("#modal_ghichu_text")
       .val()
-      .replace(/[\r\n]+/g, "<br/>");
+      .replace(/[\r\n]+/g, "");
     let reqUrl = `/them_chi_tiet_cong_viec?id_congviec=${id_congviec}&ghichu=${ghichu}`;
     $.each(dssv_select, function (idx, val) {
       reqUrl += `&sinhvien=${val}`;
@@ -460,7 +460,7 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet) {
     let id_sinhvien = $("#modal_edit_sinhvien_select").val();
     let ghichu = $("#modal_edit_ghichu_text")
       .val()
-      .replace(/[\r\n]+/g, "<br/>");
+      .replace(/[\r\n]+/g, "");
 
     $.ajax({
       type: "POST",

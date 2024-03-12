@@ -66,7 +66,7 @@ $(document).ready(function () {
                                   <b id="ngay" class="col-lg-10">${val.ngaybatdau} <i class="fa-solid fa-arrow-right"></i> ${val.ngayketthuc}</b>
                                 </h3>
                               <div class="timeline-body" id="congviec" style="background-color:${bg_color} !important; cursor: pointer;" onclick="load_ChiTietCongViec(${val.id})">
-                                <strong>${val.ten}</strong><br/><br/> 
+                                <strong>${val.ten}</strong><br><br> 
                                 <p>${val.mota}</p>
                               </div>
                               </div>

@@ -92,7 +92,7 @@ $("#bangdsdetai").on("click", "#editBtn", function () {
         let ten = $("#modal_tendetai_input").val();
         let mota = $("#modal_motadetai_input")
           .val()
-          .replace(/[\r\n]+/g, "<br/>");
+          .replace(/[\r\n]+/g, "<br>");
         let xoa = $("#modal_hoatdong_check").is(":checked");
         let isDeleted = xoa ? 0 : 1;
 
@@ -192,7 +192,7 @@ $("#themdetai_btn").click(function () {
     let ten = $("#modal_tendetai_input").val();
     let mota = $("#modal_motadetai_input")
       .val()
-      .replace(/[\r\n]+/g, "<br/>");
+      .replace(/[\r\n]+/g, "<br>");
     let xoa = $("#modal_hoatdong_check").is(":checked");
     let isDeleted = xoa ? 0 : 1;
 
