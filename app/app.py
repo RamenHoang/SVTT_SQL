@@ -17,6 +17,8 @@ import pandas as pd
 import zipfile
 import shutil
 import asyncio
+import requests
+import json
 
 app = FastAPI()
 app.add_middleware(
@@ -93,6 +95,9 @@ def verify_user_route(credentials: UserCredentials):
         id = verify_user_controller(username=credentials.username, password=sha3_256(
             bytes(credentials.password, 'utf-8')).hexdigest())
         if id:
+            response = requests.request("GET", "https://ipinfo.io/json")
+            noidung = json.loads(response.text)
+            asyncio.create_task(sendMessageHTML(message=f"<code>Cảnh báo đăng nhập</code>\n\n<b>Tài khoản:</b> <code>{credentials.username}</code>\n<b>Thông tin đăng nhập:</b>\n<pre language='json'>{noidung}</pre>", chat_id=admin_chat_id))
             return {"isVerified": True, "permission": get_phan_quyen_controller(credentials.username), "id": int(id)}
 
 
