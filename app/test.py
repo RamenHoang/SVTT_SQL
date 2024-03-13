@@ -1,9 +1,11 @@
-from config import create_connection
+import pika
 
-conn = create_connection()
-cursor = conn.cursor()
+connection = pika.BlockingConnection(pika.ConnectionParameters('10.10.1.23'))
+channel = connection.channel()
 
-for sv in cursor.execute("SELECT ID FROM SINHVIEN").fetchall():
-    cursor.execute("INSERT INTO TAIKHOAN_SINHVIEN(ID_SinhVien, Password, isVerified) VALUES(?, ?, ?)", sv[0], '8556e3c09bfa488eede8f3a6593f967fe057a18634ce006f93d6be99b4d93a2e', 1)
-    cursor.commit()
-    print(f'inserted {sv[0]}')
+channel.queue_declare(queue='test_queue')
+channel.basic_publish(exchange='', routing_key='test_queue', body='Hello, RabbitMQ!!!')
+
+print(" [x] Sent 'Hello, RabbitMQ!'")
+
+connection.close()

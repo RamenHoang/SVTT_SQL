@@ -19,6 +19,7 @@ email_password = os.getenv('EMAIL_PASSWORD')
 email_name = os.getenv('EMAIL_NAME')
 
 telegram_token = os.getenv('TELEGRAM_TOKEN')
+admin_chat_id = os.getenv('ADMIN_CHAT_ID')
 
 default_password = os.getenv('DEFAULT_PASSWORD')
 
