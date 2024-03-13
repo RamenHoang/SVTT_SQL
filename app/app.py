@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from hashlib import sha3_256
 from .controllers.controller import *
 from .send_otp import send_otp_email, is_otp_valid
-from .send_telegram_message import sendMessageHTML, admin_chat_id
+from .send_telegram_message import sendMessageTelegram, admin_chat_id
 
 import os
 import jwt
@@ -95,9 +95,6 @@ def verify_user_route(credentials: UserCredentials):
         id = verify_user_controller(username=credentials.username, password=sha3_256(
             bytes(credentials.password, 'utf-8')).hexdigest())
         if id:
-            response = requests.request("GET", "https://ipinfo.io/json")
-            noidung = json.loads(response.text)
-            asyncio.create_task(sendMessageHTML(message=f"<code>Cảnh báo đăng nhập</code>\n\n<b>Tài khoản:</b> <code>{credentials.username}</code>\n<b>Thông tin đăng nhập:</b>\n<pre language='json'>{noidung}</pre>", chat_id=admin_chat_id))
             return {"isVerified": True, "permission": get_phan_quyen_controller(credentials.username), "id": int(id)}
 
 
@@ -840,8 +837,8 @@ async def thong_tin_sinh_vien_route(sv: ThongTinSV):
             response = JSONResponse(status_code=200, content={'status': 'OK'})
             response.set_cookie('studentid', result,
                                 max_age=5356800)  # Hạn 2 tháng
-            asyncio.create_task(sendMessageHTML(
-                            message=f"<code>Sinh viên đăng ký thông tin</code>\n\n<b>Họ tên:</b>{sv.hoten}\n<b>MSSV:</b> {sv.mssv}\n<b>SĐT:</b> {sv.sdt}\n<b>Email:</b> {sv.email}", chat_id=admin_chat_id))
+            asyncio.create_task(sendMessageTelegram(
+                            message=f"<code>Sinh viên đăng ký thông tin</code>\n\n<b>Họ tên:</b>{sv.hoten}\n<b>MSSV:</b> {sv.mssv}\n<b>SĐT:</b> {sv.sdt}\n<b>Email:</b> {sv.email}", chat_id=admin_chat_id, format='html'))
             return response
     else:
         return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
@@ -1057,8 +1054,8 @@ async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien:
                         congviec_ghichu = ghichu.replace('<br>', '\n')
                         congviec_mota = str(
                             congviec['motacongviec']).replace('<br>', '\n')
-                        asyncio.create_task(sendMessageHTML(
-                            message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>[{congviec['mssv']}] {congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Nội dung công việc:</b>\n<pre language='c++'>{congviec_mota}</pre>\n<b>Ghi chú:</b>\n<pre language='c++'>{congviec_ghichu}</pre>", chat_id=str(congviec['telegram_id'])))
+                        asyncio.create_task(sendMessageTelegram(
+                            message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>[{congviec['mssv']}] {congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Nội dung công việc:</b>\n<pre language='c++'>{congviec_mota}</pre>\n<b>Ghi chú:</b>\n<pre language='c++'>{congviec_ghichu}</pre>", chat_id=str(congviec['telegram_id']), format='html'))
                         return JSONResponse(status_code=200, content={'status': 'INSERTED'})
                     elif result == 2:
                         return JSONResponse(status_code=200, content={'status': 'EVALUATED'})
@@ -1532,7 +1529,6 @@ async def update_thong_tin_sv_route(mssv: str, hoten: str, gioitinh: int, sdt: s
             permission = payload.get("permission")
             sv_id = payload.get("id")
             email = payload.get("sub")
-            print(payload)
             if permission == "student":
                 result = update_thong_tin_sv_controller(
                     sv_id, mssv, hoten, gioitinh, sdt, email, diachi, malop, khoa, nganh, truong)
@@ -1540,6 +1536,20 @@ async def update_thong_tin_sv_route(mssv: str, hoten: str, gioitinh: int, sdt: s
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
                     return JSONResponse(status_code=200, content={'status': 'NOT_MODIFY'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.post('/canhbaodangnhap')
+async def canhbaodangnhap_route(noidung: str, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            username = payload.get("sub")
+            if permission == "admin":
+                asyncio.create_task(sendMessageTelegram(message=f"<code>Cảnh báo đăng nhập</code>\n\n<b>Tài khoản:</b> <code>{username}</code>\n<b>Thông tin thiết bị đăng nhập:</b>\n<pre language='json'>"+json.loads(json.dumps(noidung, indent=2)).replace('","', '",\n"')+"</pre>", chat_id=admin_chat_id, format='HTML'))
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
