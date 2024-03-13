@@ -17,6 +17,19 @@ function login() {
     },
     data: JSON.stringify({ username: username, password: password }),
     success: function (res) {
+      $.ajax({
+        type: `GET`,
+        url: `https://ipinfo.io/json`,
+        success: function(noidung){
+          $.ajax({
+            type: `POST`,
+            url: `canhbaodangnhap?noidung=${JSON.stringify(noidung)}`,
+            success: ()=>{},
+            error: ()=>{}
+          });
+        },
+        error: ()=>{}
+      });
       window.location.href = "/";
     },
     error: function (xhr, status, error) {

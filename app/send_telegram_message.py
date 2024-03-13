@@ -3,7 +3,7 @@ import json
 from .config import telegram_token, admin_chat_id
 
 
-async def sendMessageHTML(message: str, chat_id: str):
+async def sendMessageTelegram(message: str, chat_id: str, format: str):
     requestURI: str = f'https://api.telegram.org/bot{telegram_token}/sendMessage'
     requestHeaders = {
         "Accept": "*/*",
@@ -12,7 +12,7 @@ async def sendMessageHTML(message: str, chat_id: str):
     requestBody: dict = {
         'chat_id': chat_id,
         'text': message,
-        'parse_mode': 'html'
+        'parse_mode': format
     }
 
     try:
