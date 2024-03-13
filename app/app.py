@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from hashlib import sha3_256
 from .controllers.controller import *
 from .send_otp import send_otp_email, is_otp_valid
-from .send_telegram_message import sendMessageHTML
+from .send_telegram_message import sendMessageHTML, admin_chat_id
 
 import os
 import jwt
@@ -830,12 +830,13 @@ async def thong_tin_sinh_vien_route(sv: ThongTinSV):
     if result:
         sent = send_otp_email(sv.email, sv.hoten)
         if sent:
-            print(result)
             insert_taikhoan = insert_taikhoan_sinhvien_controller(
                 result, sha3_256(bytes(default_password, 'utf-8')).hexdigest(), 1)
             response = JSONResponse(status_code=200, content={'status': 'OK'})
             response.set_cookie('studentid', result,
                                 max_age=5356800)  # Hạn 2 tháng
+            asyncio.create_task(sendMessageHTML(
+                            message=f"<code>Sinh viên đăng ký thông tin</code>\n\n<b>Họ tên:</b>{sv.hoten}\n<b>MSSV:</b> {sv.mssv}\n<b>SĐT:</b> {sv.sdt}\n<b>Email:</b> {sv.email}", chat_id=admin_chat_id))
             return response
     else:
         return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})

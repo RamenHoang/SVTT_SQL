@@ -1,6 +1,6 @@
 import aiohttp
 import json
-from .config import telegram_token
+from .config import telegram_token, admin_chat_id
 
 
 async def sendMessageHTML(message: str, chat_id: str):
