@@ -838,7 +838,7 @@ async def thong_tin_sinh_vien_route(sv: ThongTinSV):
             response.set_cookie('studentid', result,
                                 max_age=5356800)  # Hạn 2 tháng
             asyncio.create_task(sendMessageTelegram(
-                            message=f"<code>Sinh viên đăng ký thông tin</code>\n\n<b>Họ tên:</b>{sv.hoten}\n<b>MSSV:</b> {sv.mssv}\n<b>SĐT:</b> {sv.sdt}\n<b>Email:</b> {sv.email}", chat_id=admin_chat_id, format='html'))
+                            message=f"<code>Sinh viên đăng ký thông tin</code>\n\n<b>Họ tên: </b>{sv.hoten}\n<b>MSSV:</b> {sv.mssv}\n<b>SĐT:</b> {sv.sdt}\n<b>Email:</b> {sv.email}", chat_id=admin_chat_id, format='html'))
             return response
     else:
         return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
