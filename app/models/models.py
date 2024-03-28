@@ -803,7 +803,6 @@ def update_password_sv(email: str, old_password: str, new_password: str):
             email), protect_xss(old_password), protect_xss(new_password))
         kq = result.fetchone()[0]
         cursor.commit()
-        print(kq)
         return kq
     except Exception as e:
         return e
@@ -914,8 +913,6 @@ def them_nguoi_huong_dan(hoten: str, sdt: str, email: str, chucdanh: str, phong:
 
 def update_thong_tin_sv(sv_id: int, mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, khoa: int, nganh: int, truong: int):
     try:
-        print("EXEC UpdateSinhVienByID '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}'".format(sv_id, protect_xss(
-            mssv), protect_xss(hoten), gioitinh, protect_xss(sdt), protect_xss(email), protect_xss(diachi), protect_xss(malop), khoa, truong, nganh))
         update = cursor.execute("EXEC UpdateSinhVienByID ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", sv_id, protect_xss(mssv), protect_xss(
             hoten), gioitinh, protect_xss(sdt), protect_xss(email), protect_xss(diachi), protect_xss(malop), khoa, truong, nganh)
         r = update.fetchone()

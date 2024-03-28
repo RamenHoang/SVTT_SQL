@@ -54,7 +54,7 @@ $.ajax({
 
 if (document.cookie.indexOf("studentid") == -1) {
   $("#submitBtn").on("click", function () {
-    $('input[type="text"], input[type="email"], input[type="number"]').each(
+    $('.card-body input[type="text"], input[type="email"], input[type="number"]').each(
       function () {
         if ($(this).val() === "") {
           Toast.fire({
