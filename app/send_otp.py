@@ -86,7 +86,6 @@ def is_otp_valid(email, entered_otp):
         result = cursor.fetchone()
         expiry_time = result[0]
         isVerified = result[1]
-        print(expiry_time, isVerified)
         if expiry_time:
             if int(isVerified) == 0:
                 # expiry_time[1] = 0 là chưa xác thực thì xác thực rồi cập nhật lại = 1
