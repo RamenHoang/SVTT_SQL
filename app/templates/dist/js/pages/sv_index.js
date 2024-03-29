@@ -93,12 +93,11 @@ $(document).ready(function () {
             val.tendetai +
             "</option>";
         });
+        $("#danhsachnhom").append(html);
       } else {
-        html +=
-          '<option value="" selected>Hiện tại chưa có nhóm hoặc hết hạn chọn nhóm</option>';
+        $("#danhsachnhom").html('<option selected>Hiện tại chưa có nhóm hoặc hết hạn chọn nhóm</option>');
       }
 
-      $("#danhsachnhom").append(html);
     },
   });
 
