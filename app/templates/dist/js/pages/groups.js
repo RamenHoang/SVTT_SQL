@@ -185,7 +185,7 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
       $("#modal_soluong_input").val(res.nhomthuctap_soluong);
 
       // Ghi chú
-      $("#modal_ghichu_text").val(res.ghichu.replace(/<br\/>/g, "\r\n"));
+      $("#modal_ghichu_text").val(res.ghichu.replace(/<br>/g, "\r\n"));
 
       // Trạng thái nhóm
       if (res.xoa == 0) {

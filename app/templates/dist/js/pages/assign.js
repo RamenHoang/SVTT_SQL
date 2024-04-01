@@ -185,7 +185,7 @@ $(document).ready(function () {
       let tencongviec = $("#tencongviec").val();
       let mota = $("#mota")
         .val()
-        .replace(/[\r\n]+/g, "");
+        .replace(/[\r\n]+/g, "<br>");
       let nhomid = $("#filter_chonnhom").val();
 
       $.ajax({
@@ -276,7 +276,7 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
     let dssv_select = $("#modal_sinhvien_select").val();
     let ghichu = $("#modal_ghichu_text")
       .val()
-      .replace(/[\r\n]+/g, "");
+      .replace(/[\r\n]+/g, "<br>");
     let reqUrl = `/them_chi_tiet_cong_viec?id_congviec=${id_congviec}&ghichu=${ghichu}`;
     $.each(dssv_select, function (idx, val) {
       reqUrl += `&sinhvien=${val}`;
@@ -448,7 +448,7 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet) {
         success: function (res) {
           $("#modal_edit_sinhvien_select").val(res[0].id_sinhvien);
           $("#modal_edit_ghichu_text").val(
-            res[0].ghichu.replace(/<br\/>/g, "\r\n")
+            res[0].ghichu.replace(/<br>/g, "\r\n")
           );
         },
       });
@@ -460,7 +460,7 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet) {
     let id_sinhvien = $("#modal_edit_sinhvien_select").val();
     let ghichu = $("#modal_edit_ghichu_text")
       .val()
-      .replace(/[\r\n]+/g, "");
+      .replace(/[\r\n]+/g, "<br>");
 
     $.ajax({
       type: "POST",
