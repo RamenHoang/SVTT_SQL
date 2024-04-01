@@ -149,7 +149,7 @@ $("#bangdskythuctap").on("click", "#editBtn", function () {
 
       $("#modal_body").append(html);
       // Set giá trị ghichu
-      $("#modal_ghichu_text").val(res.ghichu.replace(/<br\/>/g, "\r\n"));
+      $("#modal_ghichu_text").val(res.ghichu.replace(/<br>/g, "\r\n"));
       if (res.xoa == 0) {
         $("#modal_hoatdong_check").prop("checked", true);
       } else {
