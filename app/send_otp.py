@@ -100,7 +100,6 @@ def is_otp_valid(email, entered_otp):
             return False
 
     except Exception as e:
-        print("Error:", e)
         return False
 
 

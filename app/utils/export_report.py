@@ -72,5 +72,4 @@ def export(username, mssv, sv_hoten, sv_lop, tt_donvi, tt_nguoihuongdan, dg_ythu
 
         return output_docx
     except Exception as e:
-        print(e)
         return False
