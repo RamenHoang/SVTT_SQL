@@ -213,6 +213,10 @@ def get_goi_y_xa_phuong_controller(q: str):
     return get_goi_y_xa_phuong(q)
 
 
+def get_ds_dia_chi_controller():
+    return get_ds_dia_chi()
+
+
 def get_danh_sach_nganh_controller():
     return get_danh_sach_nganh()
 
