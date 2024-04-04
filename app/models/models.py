@@ -1,3 +1,4 @@
+from sympy import EX
 from ..config import create_connection
 from ..send_otp import is_otp_valid
 import datetime
@@ -594,6 +595,14 @@ def get_goi_y_xa_phuong(q: str):
         result = cursor.execute(
             "SELECT DiaChi FROM XaPhuong WHERE DiaChi LIKE '%' + ? + '%'", q).fetchall()
         return [i[0] for i in result]
+    except Exception as e:
+        return e
+
+
+def get_ds_dia_chi():
+    try:
+        results = cursor.execute("SELECT ID, DiaChi FROM XaPhuong").fetchall()
+        return [{'id': i[0], 'xaphuong': i[1]} for i in results]
     except Exception as e:
         return e
 

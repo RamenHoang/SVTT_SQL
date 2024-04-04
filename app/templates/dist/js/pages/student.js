@@ -12,21 +12,18 @@ function clear_modal() {
   $("#modal_footer").empty();
 }
 
-$("#sinhvien_diachi").autocomplete({
-  source: function (req, res) {
-    let url = "/goi_y_dia_chi?q=" + req.term;
-
-    $.ajax({
-      type: "GET",
-      url: url,
-      dataType: "json",
-      success: function (data) {
-        res(data);
-      },
+$.ajax({
+  type: "GET",
+  url: "get_ds_dia_chi",
+  success: function (res) {
+    let html = "";
+    $.each(res, function (idx, val) {
+      html += '<option value="' + val.xaphuong + '">' + val.xaphuong + "</option>";
     });
+    $("#sinhvien_diachi").append(html);
   },
-  minLength: 1,
 });
+
 
 $.ajax({
   type: "GET",
