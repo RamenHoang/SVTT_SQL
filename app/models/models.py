@@ -598,6 +598,14 @@ def get_goi_y_xa_phuong(q: str):
         return e
 
 
+def get_ds_dia_chi():
+    try:
+        results = cursor.execute("SELECT ID, DiaChi FROM XaPhuong").fetchall()
+        return [{'id': i[0], 'xaphuong': i[1]} for i in results]
+    except Exception as e:
+        return e
+
+
 def get_danh_sach_nganh():
     try:
         result = cursor.execute("SELECT ID, Ten FROM Nganh").fetchall()
