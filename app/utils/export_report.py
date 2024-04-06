@@ -1,6 +1,6 @@
 from mailmerge import MailMerge
+from docx2pdf import convert
 
-import subprocess
 import os
 
 def export(username, mssv, sv_hoten, sv_lop, tt_donvi, tt_nguoihuongdan, dg_ythuckyluat_text, dg_tuanthuthoigian_text, dg_kienthuc_text, dg_kynangnghe_text, dg_khanangdoclap_text, dg_khanangnhom_text, dg_khananggiaiquyetcongviec_text, dg_ythuckyluat_number, dg_tuanthuthoigian_number, dg_kienthuc_number, dg_kynangnghe_number, dg_khanangdoclap_number, dg_khanangnhom_number, dg_khananggiaiquyetcongviec_number, dg_danhgiachung_number) -> bool:
@@ -67,39 +67,10 @@ def export(username, mssv, sv_hoten, sv_lop, tt_donvi, tt_nguoihuongdan, dg_ythu
 
         # Chuyển đổi file DOCX thành PDF
         output_pdf = os.path.join(output_path, f"{mssv}.pdf")
-        docx_to_pdf(output_docx, output_pdf)
+        convert(output_docx, output_pdf)
 
         document.close()
 
         return output_pdf
     except Exception as e:
-        return False
-
-def docx_to_pdf(docx_path, output_pdf_path):
-    """
-    Chuyển đổi file DOCX sang PDF bằng cách sử dụng LibreOffice command line.
-    
-    Parameters:
-        docx_path (str): Đường dẫn tới file DOCX.
-        output_pdf_path (str): Đường dẫn đến vị trí mà file PDF sẽ được lưu.
-
-    Returns:
-        bool: True nếu chuyển đổi thành công, False nếu không thành công.
-    """
-    try:
-        # Kiểm tra xem file DOCX có tồn tại không
-        if not os.path.exists(docx_path):
-            return False
-
-        # Sử dụng LibreOffice để chuyển đổi
-        command = ['libreoffice', '--headless', '--convert-to', 'pdf', docx_path, '--outdir', os.path.dirname(output_pdf_path)]
-        subprocess.run(command)
-        
-        # Kiểm tra xem file PDF đã được tạo ra không
-        if not os.path.exists(output_pdf_path):
-            return False
-        
-        return True
-    except Exception as e:
-        print(f"Lỗi khi chuyển đổi: {e}")
         return False
