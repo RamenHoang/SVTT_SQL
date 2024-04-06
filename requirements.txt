@@ -11,3 +11,4 @@ python-dotenv
 pyotp
 bleach
 aiohttp
+requests
