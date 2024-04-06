@@ -424,6 +424,19 @@ async def get_all_ky_thuc_tap_route(token: str = Cookie(None)):
     return RedirectResponse('/login')
 
 
+@app.get('/get_ky_thuc_tap_by_username')
+async def get_ky_thuc_tap_by_username_route(token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin" or permission == "user":
+                return JSONResponse(status_code=200, content=get_ky_thuc_tap_by_username_controller(payload.get("sub")))
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
 @app.get('/get_chi_tiet_ky_thuc_tap_by_id')
 async def get_chi_tiet_ky_thuc_tap_by_id_route(id: str, token: str = Cookie(None)):
     if token:
@@ -969,7 +982,7 @@ async def get_danh_sach_nhom_theo_ky_id_route(id: int, token: str = Cookie(None)
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             permission = payload.get("permission")
             if permission == "admin" or permission == "user":
-                result = get_danh_sach_nhom_theo_ky_id(id)
+                result = get_danh_sach_nhom_theo_ky_id(id, payload.get("sub"))
                 if result:
                     return JSONResponse(status_code=200, content=result)
                 else:

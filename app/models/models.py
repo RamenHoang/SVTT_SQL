@@ -1,3 +1,4 @@
+from sympy import use
 from ..config import create_connection
 from ..send_otp import is_otp_valid
 import datetime
@@ -189,6 +190,14 @@ def get_all_ky_thuc_tap():
     except Exception as e:
         return e
 
+def get_ky_thuc_tap_by_username(username: str):
+    try:
+        result = cursor.execute("EXEC GetDSKyThucTapByUsername ?", protect_xss(username)).fetchall()
+        data = [{'id': i[2], 'ngaybatdau': i[0], 'ngayketthuc': i[1],
+                 'thoihan': i[3], 'ghichu': i[4]} for i in result]
+        return data
+    except Exception as e:
+        return e
 
 def get_chi_tiet_ky_thuc_tap_by_id(id: str):
     try:
@@ -247,7 +256,7 @@ def get_ds_nhom_thuc_tap():
     try:
         result = cursor.execute("EXEC GetDSNhomThucTap")
         data = [{'id': i[0], 'nguoihuongdan': i[2], 'ngaybatdau': i[3], 'tendetai': i[5], 'mota': i[6],
-                 'xoa': i[1], 'soluong': i[10], 'ghichu': i[11], 'tennhom': i[12], 'telegram_id': i[13]} for i in result]
+                 'xoa': i[1], 'soluong': i[10], 'ghichu': i[11], 'tennhom': i[12], 'telegram_id': i[13], 'thoihan': i[14]} for i in result]
         return data
     except Exception as e:
         return e
@@ -674,10 +683,10 @@ def update_sinh_vien_by_id(id: int, mssv: str, hoten: str, gioitinh: int, sdt: s
         return e
 
 
-def get_danh_sach_nhom_theo_ky_id(id: int):
+def get_danh_sach_nhom_theo_ky_id(id: int, username: str):
     try:
-        result = cursor.execute("EXEC GetDSNhomTheoKyID ?", id)
-        return [{'id': i[0], 'tennhom': i[1], 'tendetai': i[2]} for i in result.fetchall()]
+        result = cursor.execute("EXEC GetDSNhomTheoKyID ?, ?", id, protect_xss(username))
+        return [{'id': i[0], 'tennhom': i[1], 'tendetai': i[2], 'thoihan': i[3], 'ghichu': i[4]} for i in result.fetchall()]
     except Exception as e:
         return e
 
