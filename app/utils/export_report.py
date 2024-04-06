@@ -66,11 +66,11 @@ def export(username, mssv, sv_hoten, sv_lop, tt_donvi, tt_nguoihuongdan, dg_ythu
         document.write(output_docx)
 
         # Chuyển đổi file DOCX thành PDF
-        output_pdf = os.path.join(output_path, f"{mssv}.pdf")
-        convert(output_docx, output_pdf)
+        # output_pdf = os.path.join(output_path, f"{mssv}.pdf")
+        # convert(output_docx, output_pdf)
 
         document.close()
 
-        return output_pdf
+        return output_docx
     except Exception as e:
         return False

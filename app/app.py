@@ -813,10 +813,7 @@ async def xuat_danh_gia(id: str, token: str = Cookie(None)):
                     if r:
                         with open(r, 'rb') as f:
                             docx_content = f.read()
-
-                        os.remove(os.path.join(f'DOCX/{username}', f"{i['mssv']}.pdf"))
-                        os.remove(os.path.join(f'DOCX/{username}', f"{i['mssv']}.docx"))
-                        return Response(content=docx_content, media_type="application/pdf")
+                        return Response(content=docx_content, media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document", headers={"Content-Disposition": f"attachment; filename=phieu_danh_gia_{str(i['mssv'])}.docx"})
                     else:
                         return JSONResponse(status_code=400, content={'status': 'ERR'})
                 else:
