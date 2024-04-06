@@ -1,4 +1,3 @@
-from sympy import use
 from ..config import create_connection
 from ..send_otp import is_otp_valid
 import datetime
