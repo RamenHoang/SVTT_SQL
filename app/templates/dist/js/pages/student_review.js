@@ -20,7 +20,7 @@ function loadFilter() {
   // load kỳ thực tập
   $.ajax({
     type: "GET",
-    url: "/get_all_ky_thuc_tap",
+    url: "/get_ky_thuc_tap_by_username",
     success: function (data) {
       let filter_kythuctap = $("#filter_kythuctap");
       data.forEach((element) => {
@@ -91,7 +91,7 @@ $("#downloadBtn").on("click", function () {
 
   $.ajax({
     type: "GET",
-    url: "get_all_ky_thuc_tap",
+    url: "get_ky_thuc_tap_by_username",
     success: function (res) {
       $("#modal_title").text("Download đánh giá theo kỳ thực tập");
       html =

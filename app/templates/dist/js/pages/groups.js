@@ -60,14 +60,28 @@ let bangdsnhomthuctap = $("#bangdsnhomthuctap").DataTable({
     },
     {
       data: "id",
-      render: function (data, type, row) {
-        return (
-          '<center><a class="btn btn-info btn-sm" id="editBtn" data-id="' +
-          data +
-          '"><i class="fas fa-pencil-alt"></i></a>  <a class="btn btn-danger btn-sm" data-id="' +
-          data +
-          '" id="deleteBtn"><i class="fas fa-trash"></i></a></center>'
-        );
+      render: function (data, type, row, meta) {
+        if(row.thoihan==0){
+          return (
+            `<center>
+              <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}">
+                <i class="fas fa-pencil-alt"></i>
+              </a>  
+              <a class="btn btn-danger btn-sm" data-id="${data}" id="deleteBtn">
+                <i class="fas fa-trash"></i>
+              </a>
+            </center>`
+          );
+        }else{
+          return `<center>
+                    <button class="btn btn-info btn-sm" id="editBtn" disabled>
+                      <i class="fas fa-pencil-alt"></i>
+                    </button>  
+                    <button class="btn btn-danger btn-sm" id="deleteBtn" disabled>
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </center>`;
+        }
       },
     },
   ],

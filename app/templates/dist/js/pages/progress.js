@@ -68,12 +68,14 @@ function loadKyThucTap() {
   // Load ky thuc tap
   $.ajax({
     type: `GET`,
-    url: `get_all_ky_thuc_tap`,
+    url: `get_ky_thuc_tap_by_username`,
     success: function (res) {
       $.each(res, function (idx, val) {
-        $("#filter_kythuctap").append(`
-          <option value="${val["id"]}">${val["ngaybatdau"]} - ${val["ngayketthuc"]}</option>
-        `);
+        if(val['thoihan']!==1){
+          $("#filter_kythuctap").append(`
+            <option value="${val["id"]}">${val["ngaybatdau"]} - ${val["ngayketthuc"]}</option>
+          `);
+        }
       });
       $("#filter_kythuctap").change();
     },

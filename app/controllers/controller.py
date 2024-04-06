@@ -66,6 +66,10 @@ def get_all_ky_thuc_tap_controller():
     return get_all_ky_thuc_tap()
 
 
+def get_ky_thuc_tap_by_username_controller(username: str):
+    return get_ky_thuc_tap_by_username(username)
+
+
 def get_chi_tiet_ky_thuc_tap_by_id_controller(id: str):
     return get_chi_tiet_ky_thuc_tap_by_id(id)
 
@@ -249,8 +253,8 @@ def update_sinh_vien_by_id_controller(id: int, mssv: str, hoten: str, gioitinh: 
     return update_sinh_vien_by_id(id, mssv, hoten, gioitinh, sdt, email, diachi, malop, truong, nganh, khoa)
 
 
-def get_danh_sach_nhom_theo_ky_id_controller(id: int):
-    return get_danh_sach_nhom_theo_ky_id(id)
+def get_danh_sach_nhom_theo_ky_id_controller(id: int, username: str):
+    return get_danh_sach_nhom_theo_ky_id(id, username)
 
 
 def get_ho_ten_sv_by_email_controller(email: str):
