@@ -1,4 +1,6 @@
 from mailmerge import MailMerge
+from docx2pdf import convert
+
 import os
 
 def export(username, mssv, sv_hoten, sv_lop, tt_donvi, tt_nguoihuongdan, dg_ythuckyluat_text, dg_tuanthuthoigian_text, dg_kienthuc_text, dg_kynangnghe_text, dg_khanangdoclap_text, dg_khanangnhom_text, dg_khananggiaiquyetcongviec_text, dg_ythuckyluat_number, dg_tuanthuthoigian_number, dg_kienthuc_number, dg_kynangnghe_number, dg_khanangdoclap_number, dg_khanangnhom_number, dg_khananggiaiquyetcongviec_number, dg_danhgiachung_number) -> bool:
@@ -63,13 +65,12 @@ def export(username, mssv, sv_hoten, sv_lop, tt_donvi, tt_nguoihuongdan, dg_ythu
         output_docx = os.path.join(output_path, f"{mssv}.docx")
         document.write(output_docx)
 
-        # Chuyển đổi file docx đã merge thành file pdf
-        # output_pdf = os.path.join(output_path, f"{mssv}.pdf")
-        # convert(output_docx, output_pdf)
+        # Chuyển đổi file DOCX thành PDF
+        output_pdf = os.path.join(output_path, f"{mssv}.pdf")
+        convert(output_docx, output_pdf)
 
-        # Đóng đối tượng MailMerge
         document.close()
 
-        return output_docx
+        return output_pdf
     except Exception as e:
         return False

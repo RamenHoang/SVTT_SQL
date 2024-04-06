@@ -34,11 +34,15 @@ function loadFilter() {
 
 $("#bangdssv").on("click", "#downloadBtn", function () {
   let id = $(this).data("id");
+  Toast.fire({
+    icon: "info",
+    title: "Đang tạo file đánh giá",
+  });
   $.ajax({
     type: "GET",
     url: "/xuat_danh_gia?id=" + id,
     success: function (res) {
-      window.location.href = "/xuat_danh_gia?id=" + id;
+      window.open("/xuat_danh_gia?id=" + id, '_blank', 'noopener', 'noreferrer');
     },
     error: function (xhr, status, error) {
       Toast.fire({
