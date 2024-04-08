@@ -1575,3 +1575,4 @@ async def canhbaodangnhap_route(noidung: str, token: str = Cookie(None)):
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
+
