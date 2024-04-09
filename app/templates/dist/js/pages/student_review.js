@@ -1,6 +1,6 @@
 let currentDate = new Date();
 currentDate.setDate(currentDate.getDate() + 3);
-let currentTimestamp = parseInt(currentDate.getTime()/1000);
+let currentTimestamp = parseInt(currentDate.getTime() / 1000);
 
 var Toast = Swal.mixin({
   toast: true,
@@ -38,19 +38,16 @@ $("#bangdssv").on("click", "#downloadBtn", function () {
     icon: "info",
     title: "Đang tạo file đánh giá",
   });
-  $.ajax({
-    type: "GET",
-    url: "/xuat_danh_gia?id=" + id,
-    success: function (res) {
-      window.open("/xuat_danh_gia?id=" + id, '_blank', 'noopener', 'noreferrer');
-    },
-    error: function (xhr, status, error) {
-      Toast.fire({
-        icon: "warning",
-        title: "Sinh viên chưa có đánh giá",
-      });
-    },
+  window.open("/xuat_danh_gia?id=" + id, '_blank', 'noopener', 'noreferrer');
+});
+
+$("#bangdssv").on("click", "#xuatPhieuTiepNhanBtn", function () {
+  let id = $(this).data("id");
+  Toast.fire({
+    icon: "info",
+    title: "Đang xuất phiếu tiếp nhận",
   });
+  window.open(`ctu_xuat_phieu_tiep_nhan?id=${id}`, '_blank', 'noopener', 'noreferrer');
 });
 
 $("#uploadBtn").click(function () {
@@ -219,15 +216,16 @@ function create_table(kythuctap, nhomthuctap) {
       },
       {
         data: "id",
-        render: function (data, type, row) {
+        render: function (data, type, row, meta) {
           if (row.handanhgia >= currentTimestamp) {
             return (
               `<center>
                 <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
+                ${row.kyhieu_truong == "CTU" ? `<a class="btn btn-primary btn-sm" id="xuatPhieuTiepNhanBtn" data-id="${data}"><i class="fa-solid fa-file-export"></i></a>` : ""}
                 <a class="btn btn-success btn-sm" id="downloadBtn" data-id="${data}">
-                  <i class="fa-solid fa-download"></i>
+                  <i class="fa-solid fa-print"></i>
                 </a>
               </center>`
             );
@@ -238,7 +236,7 @@ function create_table(kythuctap, nhomthuctap) {
                   <i class="fa-solid fa-eye"></i>
                 </a>
                 <a class="btn btn-success btn-sm" id="downloadBtn" data-id="${data}">
-                  <i class="fa-solid fa-download"></i>
+                  <i class="fa-solid fa-print"></i>
                 </a>
               </center>`);
           }
@@ -391,10 +389,10 @@ function create_table(kythuctap, nhomthuctap) {
         }
 
         $("#modal_footer").empty();
-        if(res.handanhgia <= currentTimestamp){
+        if (res.handanhgia <= currentTimestamp) {
           $("input, textarea").prop("disabled", true);
           $("#modal_footer").html(``);
-        }else{
+        } else {
           $("#modal_footer").append(
             `<button type="button" class="btn btn-primary" data-id="${id}" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>`
           );

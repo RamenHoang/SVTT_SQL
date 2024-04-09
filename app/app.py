@@ -828,17 +828,62 @@ async def xuat_danh_gia(id: str, token: str = Cookie(None)):
                         "r7_number": str(i['khananggiaiquyetcongviec_number']),
                         "r8_number": str(i['danhgiachung_number'])
                     }
-                    r = add_text_to_pdf('phieudanhgia_vlute.pdf', f"{i['mssv']}.pdf", data, username)
+                    headers = {
+                        "Content-Disposition": f"inline; filename={i['mssv']}.pdf",  # Mở tệp PDF trong trình duyệt
+                        "Content-Type": "application/pdf",  # Loại nội dung của tệp PDF
+                    }
+                    r = vlute_xuat_danh_gia('pdf/phieudanhgia_vlute.pdf', f"{i['mssv']}.pdf", data, username)
                     if r:
                         with open(r, 'rb') as f:
                             docx_content = f.read()
 
                         os.remove(os.path.join(f'DOCX/{username}', f"{i['mssv']}.pdf"))
-                        return Response(content=docx_content, media_type="application/pdf")
+                        return Response(content=docx_content, headers=headers)
                     else:
                         return JSONResponse(status_code=400, content={'status': 'ERR'})
                 else:
                     return JSONResponse(status_code=404, content={'status': 'Sinh viên chưa có đánh giá'})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')
+
+
+@app.get('/ctu_xuat_phieu_tiep_nhan')
+async def ctu_xuat_phieu_tiep_nhan_route(id: str, token: str = Cookie(None)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            permission = payload.get("permission")
+            if permission == "admin" or permission == "user":
+                i = ctu_xuat_phieu_tiep_nhan_controller(id)
+                if i is not TypeError:
+                    data: dict = {
+                        "ngaybatdau": i['ngaybatdau'],
+                        "ngayketthuc": i['ngayketthuc'],
+                        "nhd_hoten": i['nguoihuongdan'],
+                        "nhd_sdt": i['sdt_nguoihuongdan'],
+                        "nhd_email": i['email_nguoihuongdan'],
+                        "sv_hoten": i['hoten'],
+                        "sv_mssv": i['mssv'],
+                        "sv_malop": i['malop'],
+                        "sv_nganh": i['nganh']
+                    }
+                    headers = {
+                        "Content-Disposition": f"inline; filename={i['mssv']}.pdf",  # Mở tệp PDF trong trình duyệt
+                        "Content-Type": "application/pdf",  # Loại nội dung của tệp PDF
+                    }
+                    r = ctu_xuat_phieu_tiep_nhan('pdf/phieutiepnhan_ctu.pdf', f"phieutiepnhan_{i['mssv']}.pdf", data, username)
+                    if r:
+                        with open(r, 'rb') as f:
+                            docx_content = f.read()
+
+                        os.remove(os.path.join(f'DOCX/{username}', f"phieutiepnhan_{i['mssv']}.pdf"))
+                        return Response(content=docx_content, headers=headers)
+                    else:
+                        return JSONResponse(status_code=400, content={'status': 'ERR'})
+                else:
+                    return JSONResponse(status_code=404, content={'status': 'Lỗi khi xuất phiếu'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')

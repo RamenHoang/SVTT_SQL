@@ -346,7 +346,7 @@ def get_chi_tiet_sinh_vien_da_co_nhom(id: str):
     try:
         i = cursor.execute(
             "EXEC GetThongTinChiTietSVDaCoNhomByID ?", id).fetchone()
-        return {'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': f'{i[4]}', 'email': i[5], 'diachi': i[6], 'malop': i[7], 'khoa': i[8], 'nganh': i[9], 'id_nganh': i[10], 'truong': i[11], 'id_truong': i[12], 'nguoihuongdan': i[13], 'ngaybatdau': i[14], 'tendetai': i[15], 'tennhom': i[16]}
+        return {'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'sdt': f'{i[4]}', 'email': i[5], 'diachi': i[6], 'malop': i[7], 'khoa': i[8], 'nganh': i[9], 'id_nganh': i[10], 'truong': i[11], 'id_truong': i[12], 'nguoihuongdan': i[13], 'ngaybatdau': i[14], 'tendetai': i[15], 'tennhom': i[16], 'sdt_nguoihuongdan': i[17], 'email_nguoihuongdan': i[18], 'username_nguoihuongdan': i[19], 'ngayketthuc': i[20]}
     except Exception as e:
         return e
 
@@ -364,7 +364,7 @@ def get_ds_sinh_vien_by_username(username: str, kythuctap: str, nhomhuongdan: st
     try:
         result = cursor.execute(
             "EXEC GetDSSVByNguoiHuongDanID ?, ?, ?", protect_xss(username), protect_xss(kythuctap), protect_xss(nhomhuongdan))
-        return [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': 'Nam' if i[3] == 1 else 'Nữ', 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'detai': i[7], 'nhom': i[8], 'tennhom': i[9], 'handanhgia': int(datetime.datetime.combine(i[10], datetime.datetime.min.time()).timestamp())} for i in result]
+        return [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': 'Nam' if i[3] == 1 else 'Nữ', 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'detai': i[7], 'nhom': i[8], 'tennhom': i[9], 'handanhgia': int(datetime.datetime.combine(i[10], datetime.datetime.min.time()).timestamp()), 'kyhieu_truong': i[11]} for i in result]
     except Exception as e:
         return e
 
