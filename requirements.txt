@@ -12,4 +12,5 @@ pyotp
 bleach
 aiohttp
 requests
-docx2pdf
+reportlab
+PyPDF2

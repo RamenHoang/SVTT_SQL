@@ -808,14 +808,32 @@ async def xuat_danh_gia(id: str, token: str = Cookie(None)):
             if permission == "admin" or permission == "user":
                 i = xuat_phieu_danh_gia_controller(id)
                 if i is not TypeError:
-                    r = export(username=username, mssv=i['mssv'], sv_hoten=i['hoten'], sv_lop=i['malop'], tt_donvi=tencty, tt_nguoihuongdan=i['nguoihuongdan'], dg_ythuckyluat_number=i['ythuckyluat_number'], dg_ythuckyluat_text=i['ythuckyluat_text'], dg_tuanthuthoigian_number=i['tuanthuthoigian_number'], dg_tuanthuthoigian_text=i['tuanthuthoigian_text'], dg_kienthuc_number=i['kienthuc_number'], dg_kienthuc_text=i['kienthuc_text'], dg_kynangnghe_number=i[
-                               'kynangnghe_number'], dg_kynangnghe_text=i['kynangnghe_text'], dg_khanangdoclap_number=i['khanangdoclap_number'], dg_khanangdoclap_text=i['khanangdoclap_text'], dg_khanangnhom_number=i['khanangnhom_number'], dg_khanangnhom_text=i['khanangnhom_text'], dg_khananggiaiquyetcongviec_number=i['khananggiaiquyetcongviec_number'], dg_khananggiaiquyetcongviec_text=i['khananggiaiquyetcongviec_text'], dg_danhgiachung_number=i['danhgiachung_number'])
+                    data: dict = {
+                        "student_fullname": i['hoten'],
+                        "student_class": i['malop'],
+                        "mentor_fullname": i['nguoihuongdan'],
+                        "r1_text": i['ythuckyluat_text'],
+                        "r2_text": i['tuanthuthoigian_text'],
+                        "r3_text": i['kienthuc_text'],
+                        "r4_text": i['kynangnghe_text'],
+                        "r5_text": i['khanangdoclap_text'],
+                        "r6_text": i['khanangnhom_text'],
+                        "r7_text": i['khananggiaiquyetcongviec_text'],
+                        "r1_number": str(i['ythuckyluat_number']),
+                        "r2_number": str(i['tuanthuthoigian_number']),
+                        "r3_number": str(i['kienthuc_number']),
+                        "r4_number": str(i['kynangnghe_number']),
+                        "r5_number": str(i['khanangdoclap_number']),
+                        "r6_number": str(i['khanangnhom_number']),
+                        "r7_number": str(i['khananggiaiquyetcongviec_number']),
+                        "r8_number": str(i['danhgiachung_number'])
+                    }
+                    r = add_text_to_pdf('phieudanhgia_vlute.pdf', f"{i['mssv']}.pdf", data, username)
                     if r:
                         with open(r, 'rb') as f:
                             docx_content = f.read()
 
                         os.remove(os.path.join(f'DOCX/{username}', f"{i['mssv']}.pdf"))
-                        os.remove(os.path.join(f'DOCX/{username}', f"{i['mssv']}.docx"))
                         return Response(content=docx_content, media_type="application/pdf")
                     else:
                         return JSONResponse(status_code=400, content={'status': 'ERR'})
