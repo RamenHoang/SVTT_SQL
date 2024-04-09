@@ -103,20 +103,107 @@ def ctu_xuat_phieu_tiep_nhan(input_pdf_path: str, output_pdf_path: str, data: di
 
     return os.path.join(output_path, output_pdf_path)
 
-# if __name__=="__main__":
-#     data: dict = {
-#         "ngaybatdau": "13/05/2024",
-#         "ngayketthuc": "05/07/2024",
-#         "nhd_hoten": "Phan Thanh Giảng",
-#         "nhd_sdt": "0914747190",
-#         "nhd_email": "giangpt.vlg@vnpt.vn",
-#         "sv_hoten": "Phan Thanh Giảng",
-#         "sv_mssv": "B1609816",
-#         "sv_malop": "DI16Z6A2",
-#         "sv_nganh": "Khoa học Máy tính"
-#     }
-#     # Đường dẫn tới file PDF đầu vào và file PDF đầu ra
-#     input_pdf_path = 'pdf/phieutiepnhan_ctu.pdf'
-#     output_pdf_path = 'output.pdf'
-#     # Thêm văn bản vào PDF
-#     ctu_xuat_phieu_tiep_nhan(input_pdf_path, output_pdf_path, data, "giangpt")
+
+def ctu_xuat_phieu_giao_viec(input_pdf_path: str, output_pdf_path: str, data: dict, username: str):
+    # Đọc file PDF đầu vào
+    reader = PdfReader(input_pdf_path)
+    writer = PdfWriter()
+
+    # Lấy số lượng trang của PDF
+    num_pages = len(reader.pages)
+
+    # Tải font Times New Roman hỗ trợ tiếng Việt
+    pdfmetrics.registerFont(TTFont('Times_New_Roman', 'times.ttf'))
+
+    # Tạo một trang mới với reportlab
+    c = canvas.Canvas("temp.pdf")
+    c.setFont("Times_New_Roman", 13)
+    c.setFillColor(colors.black)
+    c.drawString(170, 759, data['sv_hoten'])
+    c.drawString(430, 759, data['sv_mssv'])
+    c.drawString(250, 713, data['ngaybatdau'])
+    c.drawString(365, 713, data['ngayketthuc'])
+    c.drawString(220, 729, data['nhd_hoten'])
+    c.setFont("Times_New_Roman", 11)
+    c.drawString(85, 627, data['tuan1_batdau'])
+    c.drawString(85, 604, data['tuan1_ketthuc'])
+    c.drawString(150, 650, data['tuan1_congviec'])
+    c.drawString(85, 565, data['tuan2_batdau'])
+    c.drawString(85, 541, data['tuan2_ketthuc'])
+    c.drawString(150, 587, data['tuan2_congviec'])
+    c.drawString(85, 500, data['tuan3_batdau'])
+    c.drawString(85, 476, data['tuan3_ketthuc'])
+    c.drawString(150, 525, data['tuan3_congviec'])
+    c.drawString(85, 435, data['tuan4_batdau'])
+    c.drawString(85, 411, data['tuan4_ketthuc'])
+    c.drawString(150, 460, data['tuan4_congviec'])
+    c.drawString(85, 371, data['tuan5_batdau'])
+    c.drawString(85, 347, data['tuan5_ketthuc'])
+    c.drawString(150, 395, data['tuan5_congviec'])
+    c.drawString(85, 307, data['tuan6_batdau'])
+    c.drawString(85, 283, data['tuan6_ketthuc'])
+    c.drawString(150, 330, data['tuan6_congviec'])
+    c.drawString(85, 245, data['tuan7_batdau'])
+    c.drawString(85, 221, data['tuan7_ketthuc'])
+    c.drawString(150, 265, data['tuan7_congviec'])
+    c.drawString(85, 180, data['tuan8_batdau'])
+    c.drawString(85, 157, data['tuan8_ketthuc'])
+    c.drawString(150, 205, data['tuan8_congviec'])
+    c.drawString(245, 43, data['sv_hoten'])
+    c.drawString(425, 43, data['nhd_hoten'])
+    c.save()
+
+    # Đọc trang mới được tạo
+    new_page = PdfReader("temp.pdf").pages[0]
+
+    # Duyệt qua từng trang và thêm văn bản
+    for page in reader.pages:
+        page.merge_page(new_page)
+        writer.add_page(page)
+
+    output_path = os.path.join('DOCX', username)
+    os.makedirs(output_path, exist_ok=True)
+
+    # Ghi tệp PDF đầu ra
+    with open(os.path.join(output_path, output_pdf_path), 'wb') as output_pdf:
+        writer.write(output_pdf)
+
+    return os.path.join(output_path, output_pdf_path)
+
+if __name__=="__main__":
+    data: dict = {
+        "ngaybatdau": "13/05/2024",
+        "ngayketthuc": "05/07/2024",
+        "nhd_hoten": "Phan Thanh Giảng",
+        "sv_hoten": "Phan Thanh Giảng",
+        "sv_mssv": "B1609816",
+        "tuan1_batdau": "13/05/2024",
+        "tuan1_ketthuc": "19/05/2024",
+        "tuan1_congviec": "Công việc tuần 1",
+        "tuan2_batdau": "20/05/2024",
+        "tuan2_ketthuc": "25/05/2024",
+        "tuan2_congviec": "Công việc tuần 2",
+        "tuan3_batdau": "27/05/2024",
+        "tuan3_ketthuc": "01/06/2024",
+        "tuan3_congviec": "Công việc tuần 3",
+        "tuan4_batdau": "03/06/2024",
+        "tuan4_ketthuc": "08/06/2024",
+        "tuan4_congviec": "Công việc tuần 4",
+        "tuan5_batdau": "10/06/2024",
+        "tuan5_ketthuc": "15/06/2024",
+        "tuan5_congviec": "Công việc tuần 5",
+        "tuan6_batdau": "17/06/2024",
+        "tuan6_ketthuc": "22/06/2024",
+        "tuan6_congviec": "Công việc tuần 6",
+        "tuan7_batdau": "24/06/2024",
+        "tuan7_ketthuc": "29/06/2024",
+        "tuan7_congviec": "Công việc tuần 7",
+        "tuan8_batdau": "01/07/2024",
+        "tuan8_ketthuc": "05/07/2024",
+        "tuan8_congviec": "Công việc tuần 8"
+    }
+    # Đường dẫn tới file PDF đầu vào và file PDF đầu ra
+    input_pdf_path = 'pdf/phieugiaoviec_ctu.pdf'
+    output_pdf_path = 'output.pdf'
+    # Thêm văn bản vào PDF
+    ctu_xuat_phieu_giao_viec(input_pdf_path, output_pdf_path, data, "giangpt")
