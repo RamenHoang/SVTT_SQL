@@ -233,33 +233,33 @@ def ctu_xuat_phieu_danh_gia(input_pdf_path: str, output_pdf_path: str, data: dic
     return os.path.join(output_path, output_pdf_path)
 
 # if __name__=="__main__":
-#     data: dict = {
-#         "nhd_hoten": "Phan Thanh Giảng",
-#         "nhd_sdt": "0914747190",
-#         "nhd_email": "giangpt.vlg@vnpt.vn",
-#         "sv_hoten": "Phan Thanh Giảng",
-#         "sv_mssv": "B1609816",
-#         "ngaybatdau": "13/05/2024",
-#         "ngayketthuc": "05/07/2024",
-#         "thuchiennoiquy": 100,
-#         "chaphanhgiogiac": 99,
-#         "thaidogiaotiep": 98,
-#         "thaidolamviec": 97,
-#         "dapungyeucau": 96,
-#         "tinhthanhochoi": 95,
-#         "sangkien": 94,
-#         "baocaotiendo": 93,
-#         "hoanthanhcongviec": 92,
-#         "ketquadonggop": 91,
-#         "tong": 100,
-#         "nhanxetkhac": "Hoàn thành tốt kì thực tập",
-#         "phuhopthucte": True,
-#         "khongphuhopthucte": True,
-#         "tangcuongkynangmem": True,
-#         "tangcuongngoaingu": True,
-#         "tangcuongkynangnhom": True,
-#         "dexuat": "Không có đề xuất gì thêm"
-#     }
+    # data: dict = {
+    #     "nhd_hoten": "Phan Thanh Giảng",
+    #     "nhd_sdt": "0914747190",
+    #     "nhd_email": "giangpt.vlg@vnpt.vn",
+    #     "sv_hoten": "Phan Thanh Giảng",
+    #     "sv_mssv": "B1609816",
+    #     "ngaybatdau": "13/05/2024",
+    #     "ngayketthuc": "05/07/2024",
+    #     "thuchiennoiquy": 100,
+    #     "chaphanhgiogiac": 99,
+    #     "thaidogiaotiep": 98,
+    #     "thaidolamviec": 97,
+    #     "dapungyeucau": 96,
+    #     "tinhthanhochoi": 95,
+    #     "sangkien": 94,
+    #     "baocaotiendo": 93,
+    #     "hoanthanhcongviec": 92,
+    #     "ketquadonggop": 91,
+    #     "tong": 100,
+    #     "nhanxetkhac": "Hoàn thành tốt kì thực tập",
+    #     "phuhopthucte": True,
+    #     "khongphuhopthucte": True,
+    #     "tangcuongkynangmem": True,
+    #     "tangcuongngoaingu": True,
+    #     "tangcuongkynangnhom": True,
+    #     "dexuat": "Không có đề xuất gì thêm"
+    # }
 #     # Đường dẫn tới file PDF đầu vào và file PDF đầu ra
 #     input_pdf_path = 'pdf/phieudanhgia_ctu.pdf'
 #     output_pdf_path = 'output.pdf'

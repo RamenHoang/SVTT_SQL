@@ -376,3 +376,7 @@ def update_thong_tin_sv_controller(sv_id: int, mssv: str, hoten: str, gioitinh: 
 
 def ctu_xuat_phieu_tiep_nhan_controller(sv_id: int):
     return get_chi_tiet_sinh_vien_da_co_nhom(sv_id)
+
+
+def ctu_xuat_phieu_giao_viec_controller(sv_id: int, username: str):
+    return ctu_xuat_phieu_giao_viec_model(sv_id, username)
