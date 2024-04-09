@@ -6,6 +6,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from hashlib import sha3_256
+
+from torch import NoneType
 from .controllers.controller import *
 from .send_otp import send_otp_email, is_otp_valid
 from .send_telegram_message import sendMessageTelegram, admin_chat_id
@@ -803,44 +805,46 @@ async def xuat_danh_gia(id: str, token: str = Cookie(None)):
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
-            tencty: str = 'Trung tâm CNTT - VNPT Vĩnh Long'
             permission = payload.get("permission")
             if permission == "admin" or permission == "user":
                 i = xuat_phieu_danh_gia_controller(id)
-                if i is not TypeError:
-                    data: dict = {
-                        "student_fullname": i['hoten'],
-                        "student_class": i['malop'],
-                        "mentor_fullname": i['nguoihuongdan'],
-                        "r1_text": i['ythuckyluat_text'],
-                        "r2_text": i['tuanthuthoigian_text'],
-                        "r3_text": i['kienthuc_text'],
-                        "r4_text": i['kynangnghe_text'],
-                        "r5_text": i['khanangdoclap_text'],
-                        "r6_text": i['khanangnhom_text'],
-                        "r7_text": i['khananggiaiquyetcongviec_text'],
-                        "r1_number": str(i['ythuckyluat_number']),
-                        "r2_number": str(i['tuanthuthoigian_number']),
-                        "r3_number": str(i['kienthuc_number']),
-                        "r4_number": str(i['kynangnghe_number']),
-                        "r5_number": str(i['khanangdoclap_number']),
-                        "r6_number": str(i['khanangnhom_number']),
-                        "r7_number": str(i['khananggiaiquyetcongviec_number']),
-                        "r8_number": str(i['danhgiachung_number'])
-                    }
-                    headers = {
-                        "Content-Disposition": f"inline; filename={i['mssv']}.pdf",  # Mở tệp PDF trong trình duyệt
-                        "Content-Type": "application/pdf",  # Loại nội dung của tệp PDF
-                    }
-                    r = vlute_xuat_danh_gia('pdf/phieudanhgia_vlute.pdf', f"{i['mssv']}.pdf", data, username)
-                    if r:
-                        with open(r, 'rb') as f:
-                            docx_content = f.read()
+                headers = {
+                    "Content-Disposition": f"inline; filename={i['mssv']}.pdf",  # Mở tệp PDF trong trình duyệt
+                    "Content-Type": "application/pdf",  # Loại nội dung của tệp PDF
+                }
+                if i is not TypeError and i is not None:
+                    if i['kyhieu_truong'] == "VLUTE":
+                        data: dict = {
+                            "student_fullname": i['hoten'],
+                            "student_class": i['malop'],
+                            "mentor_fullname": i['nguoihuongdan'],
+                            "r1_text": i['ythuckyluat_text'],
+                            "r2_text": i['tuanthuthoigian_text'],
+                            "r3_text": i['kienthuc_text'],
+                            "r4_text": i['kynangnghe_text'],
+                            "r5_text": i['khanangdoclap_text'],
+                            "r6_text": i['khanangnhom_text'],
+                            "r7_text": i['khananggiaiquyetcongviec_text'],
+                            "r1_number": str(i['ythuckyluat_number']),
+                            "r2_number": str(i['tuanthuthoigian_number']),
+                            "r3_number": str(i['kienthuc_number']),
+                            "r4_number": str(i['kynangnghe_number']),
+                            "r5_number": str(i['khanangdoclap_number']),
+                            "r6_number": str(i['khanangnhom_number']),
+                            "r7_number": str(i['khananggiaiquyetcongviec_number']),
+                            "r8_number": str(i['danhgiachung_number'])
+                        }
+                        r = vlute_xuat_danh_gia('pdf/phieudanhgia_vlute.pdf', f"{i['mssv']}.pdf", data, username)
+                        if r:
+                            with open(r, 'rb') as f:
+                                docx_content = f.read()
 
-                        os.remove(os.path.join(f'DOCX/{username}', f"{i['mssv']}.pdf"))
-                        return Response(content=docx_content, headers=headers)
+                            os.remove(os.path.join(f'DOCX/{username}', f"{i['mssv']}.pdf"))
+                            return Response(content=docx_content, headers=headers)
+                        else:
+                            return JSONResponse(status_code=400, content={'status': 'ERR'})
                     else:
-                        return JSONResponse(status_code=400, content={'status': 'ERR'})
+                        return JSONResponse(status_code=200, content={'status': 'Phiếu chỉ dành cho sinh viên SPKT Vĩnh Long (VLUTE)'})
                 else:
                     return JSONResponse(status_code=404, content={'status': 'Sinh viên chưa có đánh giá'})
         except jwt.PyJWTError:

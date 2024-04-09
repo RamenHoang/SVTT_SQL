@@ -6,6 +6,8 @@ from reportlab.lib import colors
 from io import BytesIO
 import os
 
+from sympy import true
+
 def vlute_xuat_danh_gia(input_pdf_path: str, output_pdf_path: str, data: dict, username: str):
     # Đọc file PDF đầu vào
     reader = PdfReader(input_pdf_path)
@@ -170,40 +172,96 @@ def ctu_xuat_phieu_giao_viec(input_pdf_path: str, output_pdf_path: str, data: di
 
     return os.path.join(output_path, output_pdf_path)
 
-if __name__=="__main__":
-    data: dict = {
-        "ngaybatdau": "13/05/2024",
-        "ngayketthuc": "05/07/2024",
-        "nhd_hoten": "Phan Thanh Giảng",
-        "sv_hoten": "Phan Thanh Giảng",
-        "sv_mssv": "B1609816",
-        "tuan1_batdau": "13/05/2024",
-        "tuan1_ketthuc": "19/05/2024",
-        "tuan1_congviec": "Công việc tuần 1",
-        "tuan2_batdau": "20/05/2024",
-        "tuan2_ketthuc": "25/05/2024",
-        "tuan2_congviec": "Công việc tuần 2",
-        "tuan3_batdau": "27/05/2024",
-        "tuan3_ketthuc": "01/06/2024",
-        "tuan3_congviec": "Công việc tuần 3",
-        "tuan4_batdau": "03/06/2024",
-        "tuan4_ketthuc": "08/06/2024",
-        "tuan4_congviec": "Công việc tuần 4",
-        "tuan5_batdau": "10/06/2024",
-        "tuan5_ketthuc": "15/06/2024",
-        "tuan5_congviec": "Công việc tuần 5",
-        "tuan6_batdau": "17/06/2024",
-        "tuan6_ketthuc": "22/06/2024",
-        "tuan6_congviec": "Công việc tuần 6",
-        "tuan7_batdau": "24/06/2024",
-        "tuan7_ketthuc": "29/06/2024",
-        "tuan7_congviec": "Công việc tuần 7",
-        "tuan8_batdau": "01/07/2024",
-        "tuan8_ketthuc": "05/07/2024",
-        "tuan8_congviec": "Công việc tuần 8"
-    }
-    # Đường dẫn tới file PDF đầu vào và file PDF đầu ra
-    input_pdf_path = 'pdf/phieugiaoviec_ctu.pdf'
-    output_pdf_path = 'output.pdf'
-    # Thêm văn bản vào PDF
-    ctu_xuat_phieu_giao_viec(input_pdf_path, output_pdf_path, data, "giangpt")
+
+def ctu_xuat_phieu_danh_gia(input_pdf_path: str, output_pdf_path: str, data: dict, username: str):
+    # Đọc file PDF đầu vào
+    reader = PdfReader(input_pdf_path)
+    writer = PdfWriter()
+
+    # Lấy số lượng trang của PDF
+    num_pages = len(reader.pages)
+
+    # Tải font Times New Roman hỗ trợ tiếng Việt
+    pdfmetrics.registerFont(TTFont('Times_New_Roman', 'times.ttf'))
+
+    # Tạo một trang mới với reportlab
+    c = canvas.Canvas("temp.pdf")
+    c.setFont("Times_New_Roman", 13)
+    c.drawString(255, 725, data['nhd_hoten'])
+    c.drawString(125, 707, data['nhd_sdt'])
+    c.drawString(385, 707, data['nhd_email'])
+    c.drawString(210, 671, data['sv_hoten'])
+    c.drawString(398, 671, data['sv_mssv'])
+    c.drawString(250, 653, data['ngaybatdau'])
+    c.drawString(405, 653, data['ngayketthuc'])
+    c.drawString(480, 590, str(data['thuchiennoiquy']))
+    c.drawString(480, 568, str(data['chaphanhgiogiac']))
+    c.drawString(480, 540, str(data['thaidogiaotiep']))
+    c.drawString(480, 515, str(data['thaidolamviec']))
+    c.drawString(480, 470, str(data['dapungyeucau']))
+    c.drawString(480, 450, str(data['tinhthanhochoi']))
+    c.drawString(480, 427, str(data['sangkien']))
+    c.drawString(480, 385, str(data['baocaotiendo']))
+    c.drawString(480, 365, str(data['hoanthanhcongviec']))
+    c.drawString(480, 342, str(data['ketquadonggop']))
+    c.drawString(480, 320, str(data['tong']))
+    c.drawString(235, 290, data['nhanxetkhac'])
+    c.drawString(58, 230, 'x' if data['phuhopthucte'] else '')
+    c.drawString(203, 230, 'x' if data['khongphuhopthucte'] else '')
+    c.drawString(382, 230, 'x' if data['tangcuongkynangmem'] else '')
+    c.drawString(58, 215, 'x' if data['tangcuongngoaingu'] else '')
+    c.drawString(203, 215, 'x' if data['tangcuongkynangnhom'] else '')
+    c.drawString(265, 200, data['dexuat'])
+    c.drawString(380, 20, data['nhd_hoten'])
+    c.save()
+
+    # Đọc trang mới được tạo
+    new_page = PdfReader("temp.pdf").pages[0]
+
+    # Duyệt qua từng trang và thêm văn bản
+    for page in reader.pages:
+        page.merge_page(new_page)
+        writer.add_page(page)
+
+    output_path = os.path.join('DOCX', username)
+    os.makedirs(output_path, exist_ok=True)
+
+    # Ghi tệp PDF đầu ra
+    with open(os.path.join(output_path, output_pdf_path), 'wb') as output_pdf:
+        writer.write(output_pdf)
+
+    return os.path.join(output_path, output_pdf_path)
+
+# if __name__=="__main__":
+#     data: dict = {
+#         "nhd_hoten": "Phan Thanh Giảng",
+#         "nhd_sdt": "0914747190",
+#         "nhd_email": "giangpt.vlg@vnpt.vn",
+#         "sv_hoten": "Phan Thanh Giảng",
+#         "sv_mssv": "B1609816",
+#         "ngaybatdau": "13/05/2024",
+#         "ngayketthuc": "05/07/2024",
+#         "thuchiennoiquy": 100,
+#         "chaphanhgiogiac": 99,
+#         "thaidogiaotiep": 98,
+#         "thaidolamviec": 97,
+#         "dapungyeucau": 96,
+#         "tinhthanhochoi": 95,
+#         "sangkien": 94,
+#         "baocaotiendo": 93,
+#         "hoanthanhcongviec": 92,
+#         "ketquadonggop": 91,
+#         "tong": 100,
+#         "nhanxetkhac": "Hoàn thành tốt kì thực tập",
+#         "phuhopthucte": True,
+#         "khongphuhopthucte": True,
+#         "tangcuongkynangmem": True,
+#         "tangcuongngoaingu": True,
+#         "tangcuongkynangnhom": True,
+#         "dexuat": "Không có đề xuất gì thêm"
+#     }
+#     # Đường dẫn tới file PDF đầu vào và file PDF đầu ra
+#     input_pdf_path = 'pdf/phieudanhgia_ctu.pdf'
+#     output_pdf_path = 'output.pdf'
+#     # Thêm văn bản vào PDF
+#     ctu_xuat_phieu_danh_gia(input_pdf_path, output_pdf_path, data, "giangpt")
