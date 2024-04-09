@@ -372,3 +372,7 @@ def them_nguoi_huong_dan_controller(hoten: str, sdt: str, email: str, chucdanh: 
 
 def update_thong_tin_sv_controller(sv_id: int, mssv: str, hoten: str, gioitinh: int, sdt: str, email: str, diachi: str, malop: str, khoa: int, nganh: int, truong: int):
     return update_thong_tin_sv(sv_id, mssv, hoten, gioitinh, sdt, email, diachi, malop, khoa, nganh, truong)
+
+
+def ctu_xuat_phieu_tiep_nhan_controller(sv_id: int):
+    return get_chi_tiet_sinh_vien_da_co_nhom(sv_id)
