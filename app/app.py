@@ -858,32 +858,35 @@ async def ctu_xuat_phieu_tiep_nhan_route(id: str, token: str = Cookie(None)):
             if permission == "admin" or permission == "user":
                 i = ctu_xuat_phieu_tiep_nhan_controller(id)
                 if i is not TypeError:
-                    data: dict = {
-                        "ngaybatdau": i['ngaybatdau'],
-                        "ngayketthuc": i['ngayketthuc'],
-                        "nhd_hoten": i['nguoihuongdan'],
-                        "nhd_sdt": i['sdt_nguoihuongdan'],
-                        "nhd_email": i['email_nguoihuongdan'],
-                        "sv_hoten": i['hoten'],
-                        "sv_mssv": i['mssv'],
-                        "sv_malop": i['malop'],
-                        "sv_nganh": i['nganh']
-                    }
-                    headers = {
-                        "Content-Disposition": f"inline; filename={i['mssv']}.pdf",  # Mở tệp PDF trong trình duyệt
-                        "Content-Type": "application/pdf",  # Loại nội dung của tệp PDF
-                    }
-                    r = ctu_xuat_phieu_tiep_nhan('pdf/phieutiepnhan_ctu.pdf', f"phieutiepnhan_{i['mssv']}.pdf", data, username)
-                    if r:
-                        with open(r, 'rb') as f:
-                            docx_content = f.read()
+                    if i['kyhieu_truong']=="CTU":
+                        data: dict = {
+                            "ngaybatdau": i['ngaybatdau'],
+                            "ngayketthuc": i['ngayketthuc'],
+                            "nhd_hoten": i['nguoihuongdan'],
+                            "nhd_sdt": i['sdt_nguoihuongdan'],
+                            "nhd_email": i['email_nguoihuongdan'],
+                            "sv_hoten": i['hoten'],
+                            "sv_mssv": i['mssv'],
+                            "sv_malop": i['malop'],
+                            "sv_nganh": i['nganh']
+                        }
+                        headers = {
+                            "Content-Disposition": f"inline; filename={i['mssv']}.pdf",  # Mở tệp PDF trong trình duyệt
+                            "Content-Type": "application/pdf",  # Loại nội dung của tệp PDF
+                        }
+                        r = ctu_xuat_phieu_tiep_nhan('pdf/phieutiepnhan_ctu.pdf', f"phieutiepnhan_{i['mssv']}.pdf", data, username)
+                        if r:
+                            with open(r, 'rb') as f:
+                                docx_content = f.read()
 
-                        os.remove(os.path.join(f'DOCX/{username}', f"phieutiepnhan_{i['mssv']}.pdf"))
-                        return Response(content=docx_content, headers=headers)
+                            os.remove(os.path.join(f'DOCX/{username}', f"phieutiepnhan_{i['mssv']}.pdf"))
+                            return Response(content=docx_content, headers=headers)
                     else:
-                        return JSONResponse(status_code=400, content={'status': 'ERR'})
+                        return JSONResponse(status_code=200, content={'status': 'Phiếu chỉ dành cho SV ĐH Cần Thơ (CTU)'})
                 else:
-                    return JSONResponse(status_code=404, content={'status': 'Lỗi khi xuất phiếu'})
+                    return JSONResponse(status_code=400, content={'status': 'ERR'})
+            else:
+                return JSONResponse(status_code=404, content={'status': 'Lỗi khi xuất phiếu'})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
