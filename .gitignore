@@ -6,3 +6,4 @@ DOCX/
 app/__pycache__/*
 app/utils/__pycache__/*
 *.pyc
+temp.pdf
