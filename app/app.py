@@ -7,7 +7,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from hashlib import sha3_256
 
-from torch import NoneType
 from .controllers.controller import *
 from .send_otp import send_otp_email, is_otp_valid
 from .send_telegram_message import sendMessageTelegram, admin_chat_id
