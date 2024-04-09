@@ -808,7 +808,8 @@ async def xuat_danh_gia(id: str, token: str = Cookie(None)):
             if permission == "admin" or permission == "user":
                 i = xuat_phieu_danh_gia_controller(id)
                 headers = {
-                    "Content-Disposition": f"inline; filename={i['mssv']}.pdf",  # Mở tệp PDF trong trình duyệt
+                    # Mở tệp PDF trong trình duyệt
+                    "Content-Disposition": f"inline; filename={i['mssv']}.pdf",
                     "Content-Type": "application/pdf",  # Loại nội dung của tệp PDF
                 }
                 if i is not TypeError and i is not None:
@@ -833,12 +834,14 @@ async def xuat_danh_gia(id: str, token: str = Cookie(None)):
                             "r7_number": str(i['khananggiaiquyetcongviec_number']),
                             "r8_number": str(i['danhgiachung_number'])
                         }
-                        r = vlute_xuat_danh_gia('pdf/phieudanhgia_vlute.pdf', f"{i['mssv']}.pdf", data, username)
+                        r = vlute_xuat_danh_gia(
+                            'pdf/phieudanhgia_vlute.pdf', f"{i['mssv']}.pdf", data, username)
                         if r:
                             with open(r, 'rb') as f:
                                 docx_content = f.read()
 
-                            os.remove(os.path.join(f'DOCX/{username}', f"{i['mssv']}.pdf"))
+                            os.remove(os.path.join(
+                                f'DOCX/{username}', f"{i['mssv']}.pdf"))
                             return Response(content=docx_content, headers=headers)
                         else:
                             return JSONResponse(status_code=400, content={'status': 'ERR'})
@@ -861,7 +864,7 @@ async def ctu_xuat_phieu_tiep_nhan_route(id: str, token: str = Cookie(None)):
             if permission == "admin" or permission == "user":
                 i = ctu_xuat_phieu_tiep_nhan_controller(id)
                 if i is not TypeError:
-                    if i['kyhieu_truong']=="CTU":
+                    if i['kyhieu_truong'] == "CTU":
                         data: dict = {
                             "ngaybatdau": i['ngaybatdau'],
                             "ngayketthuc": i['ngayketthuc'],
@@ -874,15 +877,18 @@ async def ctu_xuat_phieu_tiep_nhan_route(id: str, token: str = Cookie(None)):
                             "sv_nganh": i['nganh']
                         }
                         headers = {
-                            "Content-Disposition": f"inline; filename={i['mssv']}.pdf",  # Mở tệp PDF trong trình duyệt
+                            # Mở tệp PDF trong trình duyệt
+                            "Content-Disposition": f"inline; filename={i['mssv']}.pdf",
                             "Content-Type": "application/pdf",  # Loại nội dung của tệp PDF
                         }
-                        r = ctu_xuat_phieu_tiep_nhan('pdf/phieutiepnhan_ctu.pdf', f"phieutiepnhan_{i['mssv']}.pdf", data, username)
+                        r = ctu_xuat_phieu_tiep_nhan(
+                            'pdf/phieutiepnhan_ctu.pdf', f"phieutiepnhan_{i['mssv']}.pdf", data, username)
                         if r:
                             with open(r, 'rb') as f:
                                 docx_content = f.read()
 
-                            os.remove(os.path.join(f'DOCX/{username}', f"phieutiepnhan_{i['mssv']}.pdf"))
+                            os.remove(os.path.join(
+                                f'DOCX/{username}', f"phieutiepnhan_{i['mssv']}.pdf"))
                             return Response(content=docx_content, headers=headers)
                     else:
                         return JSONResponse(status_code=200, content={'status': 'Phiếu chỉ dành cho SV ĐH Cần Thơ (CTU)'})
@@ -1644,4 +1650,3 @@ async def canhbaodangnhap_route(noidung: str, token: str = Cookie(None)):
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     return RedirectResponse('/login')
-

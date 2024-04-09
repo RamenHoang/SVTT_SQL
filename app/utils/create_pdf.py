@@ -3,10 +3,9 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
-from io import BytesIO
+
 import os
 
-from sympy import true
 
 def vlute_xuat_danh_gia(input_pdf_path: str, output_pdf_path: str, data: dict, username: str):
     # Đọc file PDF đầu vào
@@ -60,6 +59,7 @@ def vlute_xuat_danh_gia(input_pdf_path: str, output_pdf_path: str, data: dict, u
         writer.write(output_pdf)
 
     return os.path.join(output_path, output_pdf_path)
+
 
 def ctu_xuat_phieu_tiep_nhan(input_pdf_path: str, output_pdf_path: str, data: dict, username: str):
     # Đọc file PDF đầu vào

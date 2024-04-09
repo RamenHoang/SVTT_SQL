@@ -189,14 +189,17 @@ def get_all_ky_thuc_tap():
     except Exception as e:
         return e
 
+
 def get_ky_thuc_tap_by_username(username: str):
     try:
-        result = cursor.execute("EXEC GetDSKyThucTapByUsername ?", protect_xss(username)).fetchall()
+        result = cursor.execute(
+            "EXEC GetDSKyThucTapByUsername ?", protect_xss(username)).fetchall()
         data = [{'id': i[2], 'ngaybatdau': i[0], 'ngayketthuc': i[1],
                  'thoihan': i[3], 'ghichu': i[4]} for i in result]
         return data
     except Exception as e:
         return e
+
 
 def get_chi_tiet_ky_thuc_tap_by_id(id: str):
     try:
@@ -687,7 +690,8 @@ def update_sinh_vien_by_id(id: int, mssv: str, hoten: str, gioitinh: int, sdt: s
 
 def get_danh_sach_nhom_theo_ky_id(id: int, username: str):
     try:
-        result = cursor.execute("EXEC GetDSNhomTheoKyID ?, ?", id, protect_xss(username))
+        result = cursor.execute(
+            "EXEC GetDSNhomTheoKyID ?, ?", id, protect_xss(username))
         return [{'id': i[0], 'tennhom': i[1], 'tendetai': i[2], 'thoihan': i[3], 'ghichu': i[4]} for i in result.fetchall()]
     except Exception as e:
         return e
