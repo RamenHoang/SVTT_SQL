@@ -947,7 +947,8 @@ def update_thong_tin_sv(sv_id: int, mssv: str, hoten: str, gioitinh: int, sdt: s
 
 def ctu_xuat_phieu_giao_viec_model(sv_id: int, username: str):
     try:
-        r = cursor.execute("EXEC GetCongViecByIDSinhVien ?, ?", sv_id, protect_xss(username)).fetchall()
+        r = cursor.execute("EXEC GetCongViecByIDSinhVien ?, ?",
+                           sv_id, protect_xss(username)).fetchall()
         if len(r) >= 1:
             return {'sv_hoten': r[0][0], 'sv_mssv': r[0][1], 'nguoihuongdan_hoten': r[0][2], 'kyhieu_truong': r[0][9], 'ktt_ngaybatdau': r[0][3], 'ktt_ngayketthuc': r[0][4], 'congviec': [{'ngaybatdau': i[5], 'ngayketthuc': i[6], 'tencongviec': i[7], 'mota': str(i[8]).replace('<br>', '\n')} for i in r]}
         else:

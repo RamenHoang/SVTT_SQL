@@ -15,6 +15,9 @@ function empty_modal() {
   $("#modal_footer").empty();
 }
 
+// Khởi tạo dropdown
+$('.dropdown-toggle').dropdown()
+
 // load filter
 function loadFilter() {
   // load kỳ thực tập
@@ -32,32 +35,6 @@ function loadFilter() {
   });
 }
 
-$("#bangdssv").on("click", "#downloadBtn", function () {
-  let id = $(this).data("id");
-  Toast.fire({
-    icon: "info",
-    title: "Đang tạo file đánh giá",
-  });
-  window.open("/xuat_danh_gia?id=" + id, '_blank', 'noopener', 'noreferrer');
-});
-
-$("#bangdssv").on("click", "#xuatPhieuTiepNhanBtn", function () {
-  let id = $(this).data("id");
-  Toast.fire({
-    icon: "info",
-    title: "Đang xuất phiếu tiếp nhận",
-  });
-  window.open(`ctu_xuat_phieu_tiep_nhan?id=${id}`, '_blank', 'noopener', 'noreferrer');
-});
-
-$("#bangdssv").on("click", "#xuatPhieuGiaoViec", function () {
-  let id = $(this).data("id");
-  Toast.fire({
-    icon: "info",
-    title: "Đang xuất phiếu giao việc",
-  });
-  window.open(`ctu_xuat_phieu_giao_viec?id=${id}`, '_blank', 'noopener', 'noreferrer');
-});
 
 $("#uploadBtn").click(function () {
   $("#fileInput").click();
@@ -227,26 +204,56 @@ function create_table(kythuctap, nhomthuctap) {
         data: "id",
         render: function (data, type, row, meta) {
           if (row.handanhgia >= currentTimestamp) {
-            return (
-              `<center>
-                <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}">
-                  <i class="fas fa-pencil-alt"></i>
-                </a>
-                ${row.kyhieu_truong == "CTU" ? `<a class="btn btn-primary btn-sm" id="xuatPhieuTiepNhanBtn" data-id="${data}"><i class="fa-solid fa-file-export"></i></a> <a class="btn btn-warning btn-sm" id="xuatPhieuGiaoViec" data-id="${data}"><i class="fa-solid fa-clipboard-check"></i></a>` : ""}
-                <a class="btn btn-success btn-sm" id="downloadBtn" data-id="${data}">
-                  <i class="fa-solid fa-print"></i>
-                </a>
-              </center>`
-            );
+            if (row.kyhieu_truong == "CTU") {
+              return (
+                `<center>
+                  <a class="btn btn-outline-info btn-sm" id="editBtn" data-id="${data}">
+                    <i class="fas fa-pencil-alt"></i>
+                  </a> 
+                  <div class="btn-group dropleft">
+                    <button type="button" class="btn btn-outline-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                      <i class="fa-solid fa-print"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="ctu_xuat_phieu_tiep_nhan?id=${data}" target="_blank">In phiếu tiếp nhận</a>
+                      <a class="dropdown-item" href="ctu_xuat_phieu_giao_viec?id=${data}" target="_blank">In phiếu giao việc</a>
+                      <a class="dropdown-item" href="ctu_xuat_phieu_theo_doi?id=${data}" target="_blank">In phiếu theo dõi</a>
+                      <a class="dropdown-item" href="xuat_danh_gia?id=${data}" target="_blank">In phiếu đánh giá</a>
+                    </div>
+                  </div>
+                </center>`
+              );
+            } else {
+              return (
+                `<center>
+                  <a class="btn btn-outline-info btn-sm" id="editBtn" data-id="${data}">
+                    <i class="fas fa-pencil-alt"></i>
+                  </a> 
+                  <div class="btn-group dropleft">
+                    <button type="button" class="btn btn-outline-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                      <i class="fa-solid fa-print"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="xuat_danh_gia?id=${data}" target="_blank">In phiếu đánh giá</a>
+                    </div>
+                  </div>
+                </center>`
+              );
+            }
           } else {
             return (
               `<center>
-                <a class="btn btn-info btn-sm" id="editBtn" data-id="${data}" data-edit="false">
+                <a class="btn btn-outline-info btn-sm" id="editBtn" data-id="${data}" data-edit="false">
                   <i class="fa-solid fa-eye"></i>
                 </a>
-                <a class="btn btn-success btn-sm" id="downloadBtn" data-id="${data}">
-                  <i class="fa-solid fa-print"></i>
-                </a>
+                <div class="btn-group dropleft">
+                    <button type="button" class="btn btn-outline-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                      <i class="fa-solid fa-print"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="xuat_danh_gia?id=${data}" target="_blank">In phiếu đánh giá</a>
+                    </div>
+                </div>
               </center>`);
           }
         },
