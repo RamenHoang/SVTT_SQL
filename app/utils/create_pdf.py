@@ -5,6 +5,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 
 import os
+import textwrap
 
 
 def vlute_xuat_danh_gia(input_pdf_path: str, output_pdf_path: str, data: dict, username: str):
@@ -129,28 +130,85 @@ def ctu_xuat_phieu_giao_viec(input_pdf_path: str, output_pdf_path: str, data: di
     c.setFont("Times_New_Roman", 11)
     c.drawString(85, 627, data['tuan1_batdau'])
     c.drawString(85, 604, data['tuan1_ketthuc'])
-    c.drawString(150, 650, data['tuan1_congviec'])
+    if (len(data['tuan1_congviec']) <= 53):
+        c.drawString(150, 650, data['tuan1_congviec'])
+    else:
+        wrapped_text = textwrap.wrap(data['tuan1_congviec'], width=53)
+        height = 650
+        for text in wrapped_text:
+            c.drawString(150, height, text)
+            height -= 15
     c.drawString(85, 565, data['tuan2_batdau'])
     c.drawString(85, 541, data['tuan2_ketthuc'])
-    c.drawString(150, 587, data['tuan2_congviec'])
+    if (len(data['tuan2_congviec']) <= 53):
+        c.drawString(150, 587, data['tuan2_congviec'])
+    else:
+        wrapped_text = textwrap.wrap(data['tuan2_congviec'], width=53)
+        height = 587
+        for text in wrapped_text:
+            c.drawString(150, height, text)
+            height -= 15
     c.drawString(85, 500, data['tuan3_batdau'])
     c.drawString(85, 476, data['tuan3_ketthuc'])
-    c.drawString(150, 525, data['tuan3_congviec'])
+    if (len(data['tuan3_congviec']) <= 53):
+        c.drawString(150, 525, data['tuan3_congviec'])
+    else:
+        wrapped_text = textwrap.wrap(data['tuan3_congviec'], width=53)
+        height = 525
+        for text in wrapped_text:
+            c.drawString(150, height, text)
+            height -= 15
     c.drawString(85, 435, data['tuan4_batdau'])
     c.drawString(85, 411, data['tuan4_ketthuc'])
-    c.drawString(150, 460, data['tuan4_congviec'])
+    if (len(data['tuan4_congviec']) <= 53):
+        c.drawString(150, 460, data['tuan4_congviec'])
+    else:
+        wrapped_text = textwrap.wrap(data['tuan4_congviec'], width=53)
+        height = 460
+        for text in wrapped_text:
+            c.drawString(150, height, text)
+            height -= 15
     c.drawString(85, 371, data['tuan5_batdau'])
     c.drawString(85, 347, data['tuan5_ketthuc'])
-    c.drawString(150, 395, data['tuan5_congviec'])
+    if (len(data['tuan5_congviec']) <= 53):
+        c.drawString(150, 395, data['tuan5_congviec'])
+    else:
+        wrapped_text = textwrap.wrap(data['tuan5_congviec'], width=53)
+        height = 395
+        for text in wrapped_text:
+            c.drawString(150, height, text)
+            height -= 15
     c.drawString(85, 307, data['tuan6_batdau'])
     c.drawString(85, 283, data['tuan6_ketthuc'])
-    c.drawString(150, 330, data['tuan6_congviec'])
+    if (len(data['tuan6_congviec']) <= 53):
+        c.drawString(150, 330, data['tuan6_congviec'])
+    else:
+        wrapped_text = textwrap.wrap(data['tuan6_congviec'], width=53)
+        height = 330
+        for text in wrapped_text:
+            c.drawString(150, height, text)
+            height -= 15
     c.drawString(85, 245, data['tuan7_batdau'])
     c.drawString(85, 221, data['tuan7_ketthuc'])
-    c.drawString(150, 265, data['tuan7_congviec'])
+    if (len(data['tuan7_congviec']) <= 53):
+        c.drawString(150, 265, data['tuan7_congviec'])
+    else:
+        wrapped_text = textwrap.wrap(data['tuan7_congviec'], width=53)
+        height = 265
+        for text in wrapped_text:
+            c.drawString(150, height, text)
+            height -= 15
     c.drawString(85, 180, data['tuan8_batdau'])
     c.drawString(85, 157, data['tuan8_ketthuc'])
-    c.drawString(150, 205, data['tuan8_congviec'])
+    if (len(data['tuan8_congviec']) <= 53):
+        c.drawString(150, 205, data['tuan8_congviec'])
+    else:
+        wrapped_text = textwrap.wrap(data['tuan8_congviec'], width=53)
+        height = 205
+        for text in wrapped_text:
+            c.drawString(150, height, text)
+            height -= 15
+    # c.drawString(150, 205, data['tuan8_congviec'])
     c.drawString(245, 43, data['sv_hoten'])
     c.drawString(425, 43, data['nhd_hoten'])
     c.save()
