@@ -18,7 +18,6 @@ import pandas as pd
 import zipfile
 import shutil
 import asyncio
-import requests
 import json
 
 app = FastAPI()
