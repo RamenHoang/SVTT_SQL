@@ -380,3 +380,7 @@ def ctu_xuat_phieu_tiep_nhan_controller(sv_id: int):
 
 def ctu_xuat_phieu_giao_viec_controller(sv_id: int, username: str):
     return ctu_xuat_phieu_giao_viec_model(sv_id, username)
+
+
+def ctu_xuat_phieu_theo_doi_controller(sv_id: int, username: str):
+    return ctu_xuat_phieu_giao_viec_model(sv_id, username)
