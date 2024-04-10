@@ -93,12 +93,6 @@ function create_table(kythuctap, nhomthuctap) {
       },
       { data: "mssv" },
       { data: "hoten" },
-      {
-        data: "gioitinh",
-        render: function (data, type, row) {
-          return "<center>" + data + "</center>";
-        },
-      },
       { data: "nganh" },
       { data: "detai" },
       { data: "tennhom" },
