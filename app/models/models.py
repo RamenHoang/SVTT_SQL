@@ -84,7 +84,7 @@ def ti_le_sinh_vien_da_danh_gia():
 def so_luong_sinh_vien_dat_ket_qua():
     try:
         result = cursor.execute("EXEC GetSoLuongSinhVienDatKetQua").fetchone()
-        return {'dat': result[0], 'khong_dat': result[1]}
+        return {'dat': result[0], 'khong_dat': result[1], 'khong_co_nhom': result[2]}
     except Exception as e:
         return e
 
