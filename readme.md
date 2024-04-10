@@ -2,15 +2,15 @@
 
 ## MÔ TẢ HỆ THỐNG
 
-Hệ thống quản lý sinh viên thực tập nhằm giúp các giảng viên và sinh viên dễ dàng theo dõi và quản lý quá trình thực tập. Dưới đây là mô tả chi tiết về các thành phần của hệ thống:
+Hệ thống quản lý sinh viên thực tập nhằm giúp các người hướng dẫn và sinh viên dễ dàng theo dõi và quản lý quá trình thực tập. Dưới đây là mô tả chi tiết về các thành phần của hệ thống:
 
 ### 1. **Database (MS SQL Server)**
-   - Hệ cơ sở dữ liệu sử dụng MS SQL Server để lưu trữ thông tin về sinh viên, giảng viên, tiến độ thực tập, và các thông tin liên quan.
+   - Hệ cơ sở dữ liệu sử dụng MS SQL Server để lưu trữ thông tin về sinh viên, người hướng dẫn, tiến độ thực tập, và các thông tin liên quan.
    - Cung cấp cơ sở dữ liệu cho ứng dụng và đảm bảo tính nhất quán và an toàn của dữ liệu.
 
 ### 2. **Webserver (Python 3.7+)**
    - Sử dụng Python 3.7 trở lên để phát triển webserver, sử dụng FastAPI.
-   - Cung cấp giao diện web cho giảng viên và sinh viên để quản lý thông tin và tiến độ thực tập.
+   - Cung cấp giao diện web cho người hướng dẫn và sinh viên để quản lý thông tin và tiến độ thực tập.
 
 ### 3. **Docker (Optional)**
    - Tích hợp Docker để đơn giản hóa quá trình triển khai và chạy hệ thống trên nhiều môi trường khác nhau.
