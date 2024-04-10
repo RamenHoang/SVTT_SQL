@@ -315,7 +315,7 @@ function create_table(kythuctap, nhomthuctap) {
   
           $("#modal_footer").empty();
           if (res.handanhgia <= currentTimestamp) {
-            $("input, textarea").prop("disabled", true);
+            $("#modal_id input, #modal_id textarea").prop("disabled", true);
             $("#modal_footer").html(``);
           } else {
             $("#modal_footer").append(
