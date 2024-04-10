@@ -24,8 +24,9 @@ Hệ thống quản lý sinh viên thực tập nhằm giúp các người hư�
    - Mở `cmd` và chạy lệnh `pip install -r requirements.txt` để cài đặt các thư viện cần thiết.
 
 ## PHÁT TRIỂN
-
-
+   - Thêm quản lý danh mục: Trường, Ngành
+   - Thêm endpoint thêm/sửa đánh giá sinh viên CTU
+   - Thêm tính năng xuất đánh giá CTU PDF
 
 ### LƯU Ý: VUI LÒNG KHÔNG SHARE DỮ LIỆU RA BÊN NGOÀI DƯỚI MỌI HÌNH THỨC
 
