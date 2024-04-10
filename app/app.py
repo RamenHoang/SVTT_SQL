@@ -80,8 +80,8 @@ class ThongTinSV(BaseModel):
     khoa: int
 
 
-SECRET_KEY = "BN3298"
-ALGORITHM = "HS256"
+SECRET_KEY = secret_key
+ALGORITHM = algorithm
 ACCESS_TOKEN_EXPIRE_MINUTES = 60*3
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 

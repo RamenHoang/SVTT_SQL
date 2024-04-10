@@ -12,6 +12,9 @@ database = os.getenv('SQL_DATABASE')
 username = os.getenv('SQL_USERNAME')
 password = os.getenv('SQL_PASSWORD')
 
+secret_key = os.getenv('SECRET_KEY')
+algorithm = os.getenv('ALGORITHM')
+
 email_host = os.getenv('EMAIL_HOST')
 email_port = os.getenv('EMAIL_PORT')
 email_username = os.getenv('EMAIL_USERNAME')

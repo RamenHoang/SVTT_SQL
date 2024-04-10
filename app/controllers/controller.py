@@ -2,7 +2,7 @@ from ..models.models import *
 from ..utils.export_report import *
 from ..utils.create_pdf import *
 
-from ..config import default_password
+from ..config import default_password, secret_key, algorithm
 
 
 def insert_sinh_vien_controller(MSSV, HoTen: str, GioiTinh: int, SDT: str, Email: str, DiaChi: str, MaLop: str, Truong: int, Nganh: int, Khoa: int, Password: str) -> bool:
