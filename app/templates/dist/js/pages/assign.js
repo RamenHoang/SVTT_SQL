@@ -261,7 +261,7 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
     url: "/get_dssv_by_nhom_id?id=" + id_nhom,
     success: function (res) {
       $.each(res, function (idx, val) {
-        if(val.danhgia == 0){
+        if (val.danhgia == 0) {
           $("#modal_sinhvien_select").append(
             `<option value="${val.id}">${val.hoten}</option>`
           );
@@ -277,32 +277,33 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
     let ghichu = $("#modal_ghichu_text")
       .val()
       .replace(/[\r\n]+/g, "<br>");
-    let reqUrl = `/them_chi_tiet_cong_viec?id_congviec=${id_congviec}&ghichu=${ghichu}`;
-    $.each(dssv_select, function (idx, val) {
-      reqUrl += `&sinhvien=${val}`;
-    });
+
 
     $.ajax({
       type: "POST",
-      url: reqUrl,
+      url: 'them_chi_tiet_cong_viec',
+      contentType: 'application/json',
+      data: JSON.stringify({ "id_congviec": id_congviec, "ghichu": ghichu, "sinhvien": dssv_select }),
       success: function (res) {
-        if(res['status']=='INSERTED'){
-          Toast.fire({
-            icon: "success",
-            title: "Đã giao việc",
-          });
-          $("#modal_id").modal("hide");
-        }else if(res['status']=='EVALUATED'){
-          Toast.fire({
-            icon: "warning",
-            title: "Không thể giao việc cho sinh viên đã được đánh giá",
-          });
-        }else{
-          Toast.fire({
-            icon: "error",
-            title: "Sinh viên đã có công việc trước đó",
-          });
-        }
+        $.each(res.result, function (idx) {
+          if (res.result[idx] == 1) {
+            Toast.fire({
+              icon: "success",
+              title: `Đã giao việc cho sinh viên ${idx}`,
+            });
+            $("#modal_id").modal("hide");
+          } else if (res.result[idx] == 2) {
+            Toast.fire({
+              icon: "warning",
+              title: `Không thể giao việc cho sinh viên ${idx} vì đã được đánh giá`,
+            });
+          } else {
+            Toast.fire({
+              icon: "error",
+              title: `Sinh viên ${idx} đã có công việc trước đó`,
+            });
+          }
+        });
       },
       error: function () {
         Toast.fire({
@@ -382,16 +383,16 @@ function xoaCongViecByID(id) {
     type: "POST",
     url: `/xoa_cong_viec_by_id?id=${id}`,
     success: function (res) {
-      if(res.status=='OK'){
+      if (res.status == 'OK') {
         Toast.fire({
           icon: "success",
           title: "Đã xóa công việc",
         });
         let nhomid = filter_chonnhom.val();
-  
+
         load_timeline_congviec(nhomid);
         $("#bangdscongviec").empty();
-      }else{
+      } else {
         Toast.fire({
           icon: "warning",
           title: "Không thể xoá công việc do đã có chi tiết công việc"

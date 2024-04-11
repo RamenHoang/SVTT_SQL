@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Depends, HTTPException, Cookie, UploadFile, File, Query
+from fastapi import FastAPI, Request, Depends, HTTPException, Cookie, UploadFile, File, Body
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import Response, JSONResponse, RedirectResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from hashlib import sha3_256
+from typing import List
 
 from .controllers.controller import *
 from .send_otp import send_otp_email, is_otp_valid
@@ -77,6 +78,12 @@ class ThongTinSV(BaseModel):
     truong: int
     nganh: int
     khoa: int
+
+
+class ChiTietCongViec(BaseModel):
+    id_congviec: int
+    ghichu: str
+    sinhvien: List[str]
 
 
 SECRET_KEY = secret_key
@@ -1270,30 +1277,33 @@ async def xem_thong_tin_sv_route(username: str):
 
 
 @app.post('/them_chi_tiet_cong_viec')
-async def them_chi_tiet_cong_viec_route(id_congviec: int, ghichu: str, sinhvien: list[int] = Query(..., description="Danh sách sinh viên"), token: str = Cookie(None)):
+async def them_chi_tiet_cong_viec_route(data: ChiTietCongViec = Body(...), token: str = Cookie(None)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             permission = payload.get("permission")
             if permission == "admin" or permission == "user":
-                for i in sinhvien:
+                inserted_result: dict = {}
+                for i in data.sinhvien:
                     result = them_chi_tiet_cong_viec_controller(
-                        id_congviec=id_congviec, id_sinhvien=int(i), trangthai=0, ghichu=ghichu)
+                        id_congviec=data.id_congviec, id_sinhvien=int(i), trangthai=0, ghichu=data.ghichu)
                     if result == 1:
                         congviec = get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(
-                            id_congviec, int(i))
-                        congviec_ghichu = ghichu.replace('<br>', '\n')
+                            data.id_congviec, int(i))
+                        congviec_ghichu = data.ghichu.replace('<br>', '\n')
                         congviec_mota = str(
                             congviec['motacongviec']).replace('<br>', '\n')
                         asyncio.create_task(sendMessageTelegram(
                             message=f"<code>Thông báo giao việc</code>\n\n<b>Người thực hiện:</b> <code>[{congviec['mssv']}] {congviec['nguoinhanviec']}</code>\n<b>Công việc:</b> {congviec['tencongviec']}\n<b>Thời gian:</b> {congviec['ngaybatdau']} đến {congviec['ngayketthuc']}\n<b>Nội dung công việc:</b>\n<pre language='c++'>{congviec_mota}</pre>\n<b>Ghi chú:</b>\n<pre language='c++'>{congviec_ghichu}</pre>", chat_id=str(congviec['telegram_id']), format='html'))
-                        return JSONResponse(status_code=200, content={'status': 'INSERTED'})
+                        inserted_result[congviec['mssv']] = 1
                     elif result == 2:
-                        return JSONResponse(status_code=200, content={'status': 'EVALUATED'})
+                        inserted_result[congviec['mssv']] = 2
                     else:
-                        return JSONResponse(status_code=200, content={'status': 'NOT INSERTED'})
-                else:
-                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+                        inserted_result[congviec['mssv']] = 3
+
+                return JSONResponse(status_code=200, content={'status': 'INSERTED', 'result': inserted_result})
+            else:
+                return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST', 'result': {}})
         except jwt.PyJWTError:
             return RedirectResponse('/login')
     else:
