@@ -1137,43 +1137,43 @@ async def import_danh_gia_sv(file: UploadFile = File(...), token: str = Cookie(N
         return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
 
 
-@app.get('/xuat_ds_sinh_vien_da_danh_gia')
-async def xuat_ds_sinh_vien_da_danh_gia(kythuctap: int, token: str = Cookie(None)):
-    if token:
-        try:
-            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username = payload.get("sub")
-            permission = payload.get("permission")
-            if permission == "admin" or permission == "user":
-                tencty: str = 'Trung tâm CNTT - VNPT Vĩnh Long'
-                result = get_dssv_da_danh_gia_by_nguoi_huong_dan(
-                    username=username, kythuctap=kythuctap)
-                output_path = os.path.join('DOCX', username)
-                zip_output = os.path.join('DOCX', f'{username}.zip')
-                # Lặp qua danh sách sinh viên có đánh giá, tạo các file docx
-                for i in result:
-                    r = export(username=username, mssv=i['mssv'], sv_hoten=i['hoten'], sv_lop=i['malop'], tt_donvi=tencty, tt_nguoihuongdan=i['nguoihuongdan'], dg_ythuckyluat_number=i['ythuckyluat_number'], dg_ythuckyluat_text=i['ythuckyluat_text'], dg_tuanthuthoigian_number=i['tuanthuthoigian_number'], dg_tuanthuthoigian_text=i['tuanthuthoigian_text'], dg_kienthuc_number=i['kienthuc_number'], dg_kienthuc_text=i['kienthuc_text'], dg_kynangnghe_number=i[
-                               'kynangnghe_number'], dg_kynangnghe_text=i['kynangnghe_text'], dg_khanangdoclap_number=i['khanangdoclap_number'], dg_khanangdoclap_text=i['khanangdoclap_text'], dg_khanangnhom_number=i['khanangnhom_number'], dg_khanangnhom_text=i['khanangnhom_text'], dg_khananggiaiquyetcongviec_number=i['khananggiaiquyetcongviec_number'], dg_khananggiaiquyetcongviec_text=i['khananggiaiquyetcongviec_text'], dg_danhgiachung_number=i['danhgiachung_number'])
+# @app.get('/xuat_ds_sinh_vien_da_danh_gia')
+# async def xuat_ds_sinh_vien_da_danh_gia(kythuctap: int, token: str = Cookie(None)):
+#     if token:
+#         try:
+#             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+#             username = payload.get("sub")
+#             permission = payload.get("permission")
+#             if permission == "admin" or permission == "user":
+#                 tencty: str = 'Trung tâm CNTT - VNPT Vĩnh Long'
+#                 result = get_dssv_da_danh_gia_by_nguoi_huong_dan(
+#                     username=username, kythuctap=kythuctap)
+#                 output_path = os.path.join('DOCX', username)
+#                 zip_output = os.path.join('DOCX', f'{username}.zip')
+#                 # Lặp qua danh sách sinh viên có đánh giá, tạo các file docx
+#                 for i in result:
+#                     r = export(username=username, mssv=i['mssv'], sv_hoten=i['hoten'], sv_lop=i['malop'], tt_donvi=tencty, tt_nguoihuongdan=i['nguoihuongdan'], dg_ythuckyluat_number=i['ythuckyluat_number'], dg_ythuckyluat_text=i['ythuckyluat_text'], dg_tuanthuthoigian_number=i['tuanthuthoigian_number'], dg_tuanthuthoigian_text=i['tuanthuthoigian_text'], dg_kienthuc_number=i['kienthuc_number'], dg_kienthuc_text=i['kienthuc_text'], dg_kynangnghe_number=i[
+#                                'kynangnghe_number'], dg_kynangnghe_text=i['kynangnghe_text'], dg_khanangdoclap_number=i['khanangdoclap_number'], dg_khanangdoclap_text=i['khanangdoclap_text'], dg_khanangnhom_number=i['khanangnhom_number'], dg_khanangnhom_text=i['khanangnhom_text'], dg_khananggiaiquyetcongviec_number=i['khananggiaiquyetcongviec_number'], dg_khananggiaiquyetcongviec_text=i['khananggiaiquyetcongviec_text'], dg_danhgiachung_number=i['danhgiachung_number'])
 
-                # Tạo file nén các file docx
-                with zipfile.ZipFile(zip_output, 'w', compression=zipfile.ZIP_DEFLATED) as zipf:
-                    for root, _, files in os.walk(output_path):
-                        for file in files:
-                            file_path = os.path.join(root, file)
-                            arcname = os.path.relpath(file_path, output_path)
-                            zipf.write(file_path, arcname)
+#                 # Tạo file nén các file docx
+#                 with zipfile.ZipFile(zip_output, 'w', compression=zipfile.ZIP_DEFLATED) as zipf:
+#                     for root, _, files in os.walk(output_path):
+#                         for file in files:
+#                             file_path = os.path.join(root, file)
+#                             arcname = os.path.relpath(file_path, output_path)
+#                             zipf.write(file_path, arcname)
 
-                try:
-                    # Xoá thư mục chứa các file docx vừa nén
-                    shutil.rmtree(
-                        output_path, ignore_errors=False, onerror=None)
-                    # Download file nén
-                    return FileResponse(zip_output, headers={"Content-Disposition": f"attachment; filename=dssv_{username}.zip"})
-                except Exception as e:
-                    return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
-        except jwt.PyJWTError:
-            return RedirectResponse('/login')
-    return RedirectResponse('/login')
+#                 try:
+#                     # Xoá thư mục chứa các file docx vừa nén
+#                     shutil.rmtree(
+#                         output_path, ignore_errors=False, onerror=None)
+#                     # Download file nén
+#                     return FileResponse(zip_output, headers={"Content-Disposition": f"attachment; filename=dssv_{username}.zip"})
+#                 except Exception as e:
+#                     return JSONResponse(status_code=400, content={'status': 'BADDDD REQUEST'})
+#         except jwt.PyJWTError:
+#             return RedirectResponse('/login')
+#     return RedirectResponse('/login')
 
 
 @app.post('/update_sinh_vien_by_id')
