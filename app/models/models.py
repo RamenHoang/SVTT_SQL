@@ -1,4 +1,4 @@
-from ..config import create_connection, redis_cache
+from ..config import create_connection
 from ..send_otp import is_otp_valid
 import datetime
 import bleach
