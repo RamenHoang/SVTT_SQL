@@ -66,7 +66,7 @@ def get_all_sinh_vien():
         else:
             # Lưu kết quả vào Redis với thời gian sống là 1 giờ (3600 giây)
             result = cursor.execute("EXEC GetDSSVDashboard").fetchall()
-            redis_cache.setex('cached_products', 3600, pickle.dumps(result))
+            redis_cache.setex('cached_students', 3600, pickle.dumps(result))
             return result
     except Exception as e:
         return e

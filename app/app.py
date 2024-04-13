@@ -322,7 +322,7 @@ async def get_all_sinh_vien_route(token: str = Cookie(None)):
             if permission == "admin" or permission == "user":
                 result = get_all_sinh_vien_controller()
                 ds: list = [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3],
-                             'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'luuy': i[7]} for i in result]
+                             'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'luuy': i[7]} for i in result['cached_students']]
                 return JSONResponse(status_code=200, content=ds)
         except jwt.PyJWTError:
             return RedirectResponse('/login')
