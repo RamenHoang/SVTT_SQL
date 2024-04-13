@@ -3,10 +3,6 @@ from pathlib import Path
 
 import pyodbc
 import os
-import redis
-
-# Kết nối đến Redis server
-redis_cache = redis.Redis(host='10.10.1.23', port=6379, db=0)
 
 dotenv_path = Path('.env')
 load_dotenv(dotenv_path=dotenv_path)

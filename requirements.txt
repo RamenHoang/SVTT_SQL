@@ -14,5 +14,3 @@ aiohttp
 requests
 reportlab
 PyPDF2
-redis
-pickle

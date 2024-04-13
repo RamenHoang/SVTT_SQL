@@ -2,7 +2,6 @@ from ..config import create_connection, redis_cache
 from ..send_otp import is_otp_valid
 import datetime
 import bleach
-import pickle
 
 conn = create_connection()
 cursor = conn.cursor()
@@ -59,15 +58,8 @@ def verify_student(email: str, password: str):
 
 def get_all_sinh_vien():
     try:
-        # Kiểm tra xem kết quả đã được lưu trong Redis chưa
-        cached_students = redis_cache.get('cached_students')
-        if cached_students:
-            return pickle.loads(cached_students)
-        else:
-            # Lưu kết quả vào Redis với thời gian sống là 1 giờ (3600 giây)
-            result = cursor.execute("EXEC GetDSSVDashboard").fetchall()
-            redis_cache.setex('cached_students', 3600, pickle.dumps(result))
-            return result
+        result = cursor.execute("EXEC GetDSSVDashboard").fetchall()
+        return result
     except Exception as e:
         return e
 
