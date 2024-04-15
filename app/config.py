@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from pathlib import Path
+from redis import Redis
 
 import pyodbc
 import os
@@ -25,6 +26,8 @@ telegram_token = os.getenv('TELEGRAM_TOKEN')
 admin_chat_id = os.getenv('ADMIN_CHAT_ID')
 
 default_password = os.getenv('DEFAULT_PASSWORD')
+
+redis_conn = Redis(host='127.0.0.1', port=6379, db=0)
 
 def create_connection():
     try:
