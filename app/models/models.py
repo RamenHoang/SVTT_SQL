@@ -384,17 +384,9 @@ def get_chi_tiet_sinh_vien_da_danh_gia(id: str):
 
 def get_ds_sinh_vien_by_username(username: str, kythuctap: str, nhomhuongdan: str):
     try:
-        cache_key = "danh_sach_sinh_vien_by_username"
-        cached_data = redis_conn.get(cache_key)
-        if cached_data:
-            return json.loads(cached_data)
-
         result = cursor.execute(
             "EXEC GetDSSVByNguoiHuongDanID ?, ?, ?", protect_xss(username), protect_xss(kythuctap), protect_xss(nhomhuongdan))
         result_data = [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': 'Nam' if i[3] == 1 else 'Nữ', 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'detai': i[7], 'nhom': i[8], 'tennhom': i[9], 'handanhgia': int(datetime.datetime.combine(i[10], datetime.datetime.min.time()).timestamp()), 'kyhieu_truong': i[11]} for i in result]
-
-        redis_conn.set(cache_key, json.dumps(result_data))
-        redis_conn.expire(cache_key, 300)
         return result_data
     except Exception as e:
         return e
