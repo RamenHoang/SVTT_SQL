@@ -110,7 +110,7 @@ function create_table(kythuctap, nhomthuctap) {
         data: "id",
         render: function (data, type, row, meta) {
           if (row.handanhgia >= currentTimestamp) {
-            if (row.kyhieu_truong == "CTU") {
+            if (row.kyhieu_truong == "CTU" || row.kyhieu_truong == "DNC") {
               return (
                 `<center>
                   <a class="btn btn-outline-info btn-sm" id="editBtn" data-id="${data}" data-truong="${row.kyhieu_truong}">
