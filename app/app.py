@@ -868,7 +868,7 @@ async def ctu_xuat_phieu_tiep_nhan_route(id: str, token: str = Cookie(None)):
             if permission == "admin" or permission == "user":
                 i = ctu_xuat_phieu_tiep_nhan_controller(id)
                 if i is not TypeError:
-                    if i['kyhieu_truong'] == "CTU":
+                    if i['kyhieu_truong'] == "CTU" or i['kyhieu_truong'] == "DNC":
                         data: dict = {
                             "ngaybatdau": i['ngaybatdau'],
                             "ngayketthuc": i['ngayketthuc'],
@@ -916,38 +916,25 @@ async def ctu_xuat_phieu_giao_viec_route(id: str, token: str = Cookie(None)):
                 i = ctu_xuat_phieu_giao_viec_controller(id, username)
                 # return JSONResponse(status_code=200, content=i)
                 if i is not TypeError:
-                    if i['kyhieu_truong'] == "CTU":
+                    if i['kyhieu_truong'] == "CTU"  or i['kyhieu_truong'] == "DNC":
                         data: dict = {
                             "sv_hoten": i['sv_hoten'],
                             "sv_mssv": i['sv_mssv'],
                             "ngaybatdau": i['ktt_ngaybatdau'],
                             "ngayketthuc": i['ktt_ngayketthuc'],
-                            "nhd_hoten": i['nguoihuongdan_hoten'],
-                            "tuan1_batdau": i['congviec'][0]['ngaybatdau'],
-                            "tuan1_ketthuc": i['congviec'][0]['ngayketthuc'],
-                            "tuan1_congviec": i['congviec'][0]['tencongviec'],
-                            "tuan2_batdau": i['congviec'][1]['ngaybatdau'],
-                            "tuan2_ketthuc": i['congviec'][1]['ngayketthuc'],
-                            "tuan2_congviec": i['congviec'][1]['tencongviec'],
-                            "tuan3_batdau": i['congviec'][2]['ngaybatdau'],
-                            "tuan3_ketthuc": i['congviec'][2]['ngayketthuc'],
-                            "tuan3_congviec": i['congviec'][2]['tencongviec'],
-                            "tuan4_batdau": i['congviec'][3]['ngaybatdau'],
-                            "tuan4_ketthuc": i['congviec'][3]['ngayketthuc'],
-                            "tuan4_congviec": i['congviec'][3]['tencongviec'],
-                            "tuan5_batdau": i['congviec'][4]['ngaybatdau'],
-                            "tuan5_ketthuc": i['congviec'][4]['ngayketthuc'],
-                            "tuan5_congviec": i['congviec'][4]['tencongviec'],
-                            "tuan6_batdau": i['congviec'][5]['ngaybatdau'],
-                            "tuan6_ketthuc": i['congviec'][5]['ngayketthuc'],
-                            "tuan6_congviec": i['congviec'][5]['tencongviec'],
-                            "tuan7_batdau": i['congviec'][6]['ngaybatdau'],
-                            "tuan7_ketthuc": i['congviec'][6]['ngayketthuc'],
-                            "tuan7_congviec": i['congviec'][6]['tencongviec'],
-                            "tuan8_batdau": i['congviec'][7]['ngaybatdau'],
-                            "tuan8_ketthuc": i['congviec'][7]['ngayketthuc'],
-                            "tuan8_congviec": i['congviec'][7]['tencongviec']
+                            "nhd_hoten": i['nguoihuongdan_hoten']
                         }
+
+                        for cv in range(0, 8):
+                            try:
+                                data[f'tuan{int(cv)+1}_batdau'] = i['congviec'][cv]['ngaybatdau']
+                                data[f'tuan{int(cv)+1}_ketthuc'] = i['congviec'][cv]['ngayketthuc']
+                                data[f'tuan{int(cv)+1}_congviec'] = i['congviec'][cv]['tencongviec']
+                            except IndexError:
+                                data[f'tuan{int(cv)+1}_batdau'] = ""
+                                data[f'tuan{int(cv)+1}_ketthuc'] = ""
+                                data[f'tuan{int(cv)+1}_congviec'] = ""
+
                         headers = {
                             # Mở tệp PDF trong trình duyệt
                             "Content-Disposition": f"inline; filename={i['sv_mssv']}.pdf",
@@ -984,38 +971,25 @@ async def ctu_xuat_phieu_theo_doi_route(id: str, token: str = Cookie(None)):
                 i = ctu_xuat_phieu_theo_doi_controller(id, username)
                 # return JSONResponse(status_code=200, content=i)
                 if i is not TypeError:
-                    if i['kyhieu_truong'] == "CTU":
+                    if i['kyhieu_truong'] == "CTU"  or i['kyhieu_truong'] == "DNC":
                         data: dict = {
                             "sv_hoten": i['sv_hoten'],
                             "sv_mssv": i['sv_mssv'],
                             "ngaybatdau": i['ktt_ngaybatdau'],
                             "ngayketthuc": i['ktt_ngayketthuc'],
-                            "nhd_hoten": i['nguoihuongdan_hoten'],
-                            "tuan1_batdau": i['congviec'][0]['ngaybatdau'],
-                            "tuan1_ketthuc": i['congviec'][0]['ngayketthuc'],
-                            "tuan1_congviec": i['congviec'][0]['tencongviec'],
-                            "tuan2_batdau": i['congviec'][1]['ngaybatdau'],
-                            "tuan2_ketthuc": i['congviec'][1]['ngayketthuc'],
-                            "tuan2_congviec": i['congviec'][1]['tencongviec'],
-                            "tuan3_batdau": i['congviec'][2]['ngaybatdau'],
-                            "tuan3_ketthuc": i['congviec'][2]['ngayketthuc'],
-                            "tuan3_congviec": i['congviec'][2]['tencongviec'],
-                            "tuan4_batdau": i['congviec'][3]['ngaybatdau'],
-                            "tuan4_ketthuc": i['congviec'][3]['ngayketthuc'],
-                            "tuan4_congviec": i['congviec'][3]['tencongviec'],
-                            "tuan5_batdau": i['congviec'][4]['ngaybatdau'],
-                            "tuan5_ketthuc": i['congviec'][4]['ngayketthuc'],
-                            "tuan5_congviec": i['congviec'][4]['tencongviec'],
-                            "tuan6_batdau": i['congviec'][5]['ngaybatdau'],
-                            "tuan6_ketthuc": i['congviec'][5]['ngayketthuc'],
-                            "tuan6_congviec": i['congviec'][5]['tencongviec'],
-                            "tuan7_batdau": i['congviec'][6]['ngaybatdau'],
-                            "tuan7_ketthuc": i['congviec'][6]['ngayketthuc'],
-                            "tuan7_congviec": i['congviec'][6]['tencongviec'],
-                            "tuan8_batdau": i['congviec'][7]['ngaybatdau'],
-                            "tuan8_ketthuc": i['congviec'][7]['ngayketthuc'],
-                            "tuan8_congviec": i['congviec'][7]['tencongviec']
+                            "nhd_hoten": i['nguoihuongdan_hoten']
                         }
+
+                        for cv in range(0, 8):
+                            try:
+                                data[f'tuan{int(cv)+1}_batdau'] = i['congviec'][cv]['ngaybatdau']
+                                data[f'tuan{int(cv)+1}_ketthuc'] = i['congviec'][cv]['ngayketthuc']
+                                data[f'tuan{int(cv)+1}_congviec'] = i['congviec'][cv]['tencongviec']
+                            except IndexError:
+                                data[f'tuan{int(cv)+1}_batdau'] = ""
+                                data[f'tuan{int(cv)+1}_ketthuc'] = ""
+                                data[f'tuan{int(cv)+1}_congviec'] = ""
+                                
                         headers = {
                             # Mở tệp PDF trong trình duyệt
                             "Content-Disposition": f"inline; filename={i['sv_mssv']}.pdf",

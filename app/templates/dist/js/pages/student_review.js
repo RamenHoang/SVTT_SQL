@@ -110,7 +110,7 @@ function create_table(kythuctap, nhomthuctap) {
         data: "id",
         render: function (data, type, row, meta) {
           if (row.handanhgia >= currentTimestamp) {
-            if (row.kyhieu_truong == "CTU" || row.kyhieu_truong == "DNC") {
+            if (row.kyhieu_truong == "VLUTE") {
               return (
                 `<center>
                   <a class="btn btn-outline-info btn-sm" id="editBtn" data-id="${data}" data-truong="${row.kyhieu_truong}">
@@ -121,9 +121,6 @@ function create_table(kythuctap, nhomthuctap) {
                       <i class="fa-solid fa-print"></i>
                     </button>
                     <div class="dropdown-menu">
-                      <a class="dropdown-item" href="ctu_xuat_phieu_tiep_nhan?id=${data}" target="_blank">In phiếu tiếp nhận</a>
-                      <a class="dropdown-item" href="ctu_xuat_phieu_giao_viec?id=${data}" target="_blank">In phiếu giao việc</a>
-                      <a class="dropdown-item" href="ctu_xuat_phieu_theo_doi?id=${data}" target="_blank">In phiếu theo dõi</a>
                       <a class="dropdown-item" href="xuat_danh_gia?id=${data}" target="_blank">In phiếu đánh giá</a>
                     </div>
                   </div>
@@ -140,6 +137,9 @@ function create_table(kythuctap, nhomthuctap) {
                       <i class="fa-solid fa-print"></i>
                     </button>
                     <div class="dropdown-menu">
+                      <a class="dropdown-item" href="ctu_xuat_phieu_tiep_nhan?id=${data}" target="_blank">In phiếu tiếp nhận</a>
+                      <a class="dropdown-item" href="ctu_xuat_phieu_giao_viec?id=${data}" target="_blank">In phiếu giao việc</a>
+                      <a class="dropdown-item" href="ctu_xuat_phieu_theo_doi?id=${data}" target="_blank">In phiếu theo dõi</a>
                       <a class="dropdown-item" href="xuat_danh_gia?id=${data}" target="_blank">In phiếu đánh giá</a>
                     </div>
                   </div>

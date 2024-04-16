@@ -1,4 +1,4 @@
-from ..config import create_connection, redis_conn
+from ..config import create_connection
 from ..send_otp import is_otp_valid
 import datetime
 import bleach
@@ -59,21 +59,9 @@ def verify_student(email: str, password: str):
 
 def get_all_sinh_vien():
     try:
-        cache_key = "danh_sach_sinh_vien_dashboard"
-
-        # Kiểm tra xem dữ liệu đã có trong cache chưa
-        cached_data = redis_conn.get(cache_key)
-        if cached_data:
-            return json.loads(cached_data)
-
         result = cursor.execute("EXEC GetDSSVDashboard").fetchall()
 
         result_data = [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': i[3], 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'luuy': i[7]} for i in result]
-
-
-        # Cache dữ liệu vào Redis
-        redis_conn.set(cache_key, json.dumps(result_data))
-        redis_conn.expire(cache_key, 300)
         return result_data
 
     except Exception as e:
