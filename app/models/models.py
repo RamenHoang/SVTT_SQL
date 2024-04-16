@@ -73,7 +73,7 @@ def get_all_sinh_vien():
 
         # Cache dữ liệu vào Redis
         redis_conn.set(cache_key, json.dumps(result_data))
-
+        redis_conn.expire(cache_key, 300)
         return result_data
 
     except Exception as e:
@@ -394,6 +394,7 @@ def get_ds_sinh_vien_by_username(username: str, kythuctap: str, nhomhuongdan: st
         result_data = [{'id': i[0], 'mssv': i[1], 'hoten': i[2], 'gioitinh': 'Nam' if i[3] == 1 else 'Nữ', 'nganh': i[4], 'truong': i[5], 'trangthai': i[6], 'detai': i[7], 'nhom': i[8], 'tennhom': i[9], 'handanhgia': int(datetime.datetime.combine(i[10], datetime.datetime.min.time()).timestamp()), 'kyhieu_truong': i[11]} for i in result]
 
         redis_conn.set(cache_key, json.dumps(result_data))
+        redis_conn.expire(cache_key, 300)
         return result_data
     except Exception as e:
         return e
