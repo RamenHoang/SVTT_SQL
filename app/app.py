@@ -138,7 +138,7 @@ async def login_for_access_token(credentials: UserCredentials):
             data={"sub": credentials.username, "permission": result['permission'], "id": result['id']}, expires_delta=access_token_expires)
         response = JSONResponse(
             {"access_token": access_token, "token_type": "bearer"})
-        response.set_cookie("token", access_token, httponly=False)
+        response.set_cookie("token", access_token, httponly=True, secure=True)
         response.set_cookie("username", credentials.username, httponly=False)
         return response
     raise HTTPException(
