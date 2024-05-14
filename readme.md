@@ -31,3 +31,5 @@ Hệ thống quản lý sinh viên thực tập nhằm giúp các người hư�
 ### LƯU Ý: VUI LÒNG KHÔNG SHARE DỮ LIỆU RA BÊN NGOÀI DƯỚI MỌI HÌNH THỨC
 
 **Nơi Lưu Trữ Dữ Liệu:** Mọi dữ liệu liên quan đến sinh viên và tiến độ thực tập được lưu trữ an toàn trong cơ sở dữ liệu. Đảm bảo rằng không chia sẻ dữ liệu ra khỏi hệ thống dưới mọi hình thức để đảm bảo tính bảo mật và tuân thủ quy định.
+
+
