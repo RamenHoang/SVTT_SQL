@@ -1,8 +1,7 @@
 from hashlib import sha3_256
-from .app.config import secret_key, algorithm
 
-SECRET_KEY = secret_key
-ALGORITHM = algorithm
+SECRET_KEY = 'BN3298'
+ALGORITHM = 'HS256'
 
 passwd = input("Type password: ")
 print(sha3_256(bytes(passwd, 'utf-8')).hexdigest())
