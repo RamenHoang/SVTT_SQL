@@ -8,6 +8,17 @@ import os
 dotenv_path = Path('.env')
 load_dotenv(dotenv_path=dotenv_path)
 
+
+
+
+import pyodbc
+import os
+
+dotenv_path = Path('.env')
+load_dotenv(dotenv_path=dotenv_path)
+
+
+
 server = os.getenv('SQL_HOST')
 database = os.getenv('SQL_DATABASE')
 username = os.getenv('SQL_USERNAME')
@@ -40,3 +51,4 @@ def create_connection():
         return conn
     finally:
         return conn
+

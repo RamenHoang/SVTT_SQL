@@ -190,7 +190,21 @@ $("#bangdsnhomthuctap").on("click", "#editBtn", function () {
       });
 
       // Tên nhóm
-      $("#modal_tennhom_input").val(res.nhomthuctap_tennhom);
+      $.ajax({
+        type: "GET",
+        url: "/get_all_nhom_thuc_tap",
+        success: function (data) {
+          $.each(data, function (idx, val) {
+            $("#modal_nhom_thuc_tap_select").append(
+              '<option value="' + val.id + '">' + val.tennhom + "</option>"
+            );
+          });
+
+          $("#modal_nhom_thuc_tap_select").val(res.nhom_thuc_tap_id);
+        },
+      });
+
+
 
       // Telegram ID
       $("#modal_telegram_input").val(res.nhomthuctap_telegram);

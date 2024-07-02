@@ -112,7 +112,72 @@
               </div>
               <fiv class="col-lg-8">
                 <table class="table table-bordered table-hover sticky-top display" id="bangdscongviec" hidden>
-                  <tbody></tbody>
+                  <tbody>
+                    <script>
+                      async function handleSelection() {
+                          const selectElement = document.getElementById('groups');
+                          const selectedValue = selectElement.value;
+                          const tableBody = document.getElementById('bangdsnhomthuctap-body');
+              
+                          // Xóa nội dung cũ
+                          tableBody.innerHTML = '';
+              
+                          try {
+                              const response = await fetch(`http://localhost:8000/tasks/${selectedValue}`);
+                              if (!response.ok) {
+                                  throw new Error('Network response was not ok');
+                              }
+                              const tasks = await response.json();
+              
+                              // Tạo và hiển thị các hàng công việc cho nhóm đã chọn
+                              if (tasks.length > 0) {
+                                  tasks.forEach(task => {
+                                      const row = document.createElement('tr');
+                                      ['week', 'start_date', 'end_date', 'task', 'student', 'note'].forEach(key => {
+                                          const td = document.createElement('td');
+                                          td.textContent = task[key];
+                                          row.appendChild(td);
+                                      });
+                                      tableBody.appendChild(row);
+                                  });
+                              } else {
+                                  const row = document.createElement('tr');
+                                  const td = document.createElement('td');
+                                  td.colSpan = 6;
+                                  td.textContent = 'Không có công việc cho nhóm này.';
+                                  row.appendChild(td);
+                                  tableBody.appendChild(row);
+                              }
+                          } catch (error) {
+                              console.error('Fetch error:', error);
+                              const row = document.createElement('tr');
+                              const td = document.createElement('td');
+                              td.colSpan = 6;
+                              td.textContent = 'Có lỗi xảy ra khi tải dữ liệu.';
+                              row.appendChild(td);
+                              tableBody.appendChild(row);
+                          }
+                      }
+              
+                      document.addEventListener('DOMContentLoaded', (event) => {
+                          const selectElement = document.getElementById('groups');
+                          selectElement.addEventListener('change', handleSelection);
+                      });
+                  </script>
+                  </head>
+                  <body>
+                      <div class="container">
+                          <div class="form-group">
+                              <label for="groups"></label>
+                              <select id="groups" name="groups" class="form-control">
+                                  <option value="1">Nhóm 1 - QLSVTT</option>
+                                  <option value="2">Nhóm 2 - QLSVTT</option>
+                                  <option value="3">Nhóm 3 - QLSVTT</option>
+                                  <option value="4">Nhóm 4 - QLSVTT</option>
+                                  <option value="5">Nhóm 5 - QLSVTT</option>
+                              </select>
+                          </div>
+                  </tbody>
                 </table>
               </fiv>
             </div>
@@ -120,7 +185,19 @@
         </div>
 
         <!-- /.card -->
-      </section>
+        
+              
+
+                          </thead>
+                          <tbody id="bangdsnhomthuctap-body">
+                              <!-- Các hàng dữ liệu sẽ được thêm động vào đây -->
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+
+
       <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
@@ -161,6 +238,7 @@
     integrity="sha512-PT0RvABaDhDQugEbpNMwgYBCnGCiTZMh9yOzUsJHDgl/dMhD9yjHAwoumnUk3JydV3QTcIkNDuN40CJxik5+WQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- SELECT2 -->
+
   <link href="plugins/select2/css/select2.css" rel="stylesheet" />
   <script src="plugins/select2/js/select2.js"></script>
   <!-- AdminLTE for demo purposes -->
