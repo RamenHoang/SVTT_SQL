@@ -1,3 +1,5 @@
+import time
+
 from fastapi import FastAPI, Request, Depends, HTTPException, Cookie, UploadFile, File, Body
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import Response, JSONResponse, RedirectResponse, FileResponse
@@ -45,6 +47,12 @@ admin_chat_id = os.getenv('ADMIN_CHAT_ID')
 
 default_password = os.getenv('DEFAULT_PASSWORD')
 
+UPLOAD_DIRECTORY = 'uploads'
+UPLOAD_PATH = os.path.join(os.getcwd(), "app", UPLOAD_DIRECTORY)
+
+if not os.path.exists(UPLOAD_PATH):
+    os.makedirs(UPLOAD_PATH)
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -57,6 +65,7 @@ app.mount("/dist", StaticFiles(directory=os.path.join(os.getcwd(),
           "app", "templates", "dist")), name="dist")
 app.mount("/plugins", StaticFiles(directory=os.path.join(os.getcwd(),
           "app", "templates", "plugins")), name="plugins")
+app.mount("/uploads", StaticFiles(directory=UPLOAD_PATH), name="uploads")
 
 templates = Jinja2Templates(
     directory=os.path.join(os.getcwd(), "app", "templates"))
@@ -114,6 +123,7 @@ class ChiTietCongViec(BaseModel):
     id_congviec: int
     ghichu: str
     sinhvien: List[str]
+    tailieu: str|None = None
 
 
 SECRET_KEY = secret_key
@@ -585,14 +595,14 @@ async def get_ds_cong_viec_nhom_route(token: str = Cookie(None)):
 
 
 @app.post('/them_cong_viec_nhom')
-async def them_cong_viec_nhom_route(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str, token: str = Cookie(None)):
+async def them_cong_viec_nhom_route(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str, token: str = Cookie(None), tailieu = Body()):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             permission = payload.get("permission")
             if permission == "admin" or permission == "user":
                 result = them_cong_viec_nhom_controller(
-                    id, ngaybatdau, ngayketthuc, ten, mota)
+                    id, ngaybatdau, ngayketthuc, ten, mota, tailieu.get('tailieu'))
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
@@ -1288,7 +1298,7 @@ async def them_chi_tiet_cong_viec_route(data: ChiTietCongViec = Body(...), token
                 inserted_result: dict = {}
                 for i in data.sinhvien:
                     result = them_chi_tiet_cong_viec_controller(
-                        id_congviec=data.id_congviec, id_sinhvien=int(i), trangthai=0, ghichu=data.ghichu)
+                        id_congviec=data.id_congviec, id_sinhvien=int(i), trangthai=0, ghichu=data.ghichu, tailieu=data.tailieu)
                     if result == 1:
                         congviec = get_chi_tiet_giao_viec_cho_sv_by_id_cong_viec_controller(
                             data.id_congviec, int(i))
@@ -1359,14 +1369,14 @@ async def xoa_chi_tiet_cong_viec_by_id_route(id: int, token: str = Cookie(None))
 
 
 @app.post('/update_chi_tiet_cong_viec_by_id')
-async def update_chi_tiet_cong_viec_by_id_route(id: int, svid: int, ghichu: str, token: str = Cookie(None)):
+async def update_chi_tiet_cong_viec_by_id_route(id: int, svid: int, ghichu: str, token: str = Cookie(None), tailieu=Body(...)):
     if token:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             permission = payload.get("permission")
             if permission == "admin" or permission == "user":
                 result = update_chi_tiet_cong_viec_by_id_controller(
-                    id, svid, ghichu)
+                    id, svid, ghichu, tailieu.get('tailieu'))
                 if result:
                     return JSONResponse(status_code=200, content={'status': 'OK'})
                 else:
@@ -1798,3 +1808,25 @@ async def canhbaodangnhap_route(noidung: str, token: str = Cookie(None)):
             return RedirectResponse('/login')
     return RedirectResponse('/login')
 
+@app.post('/them_tai_lieu_cong_viec')
+async def them_tai_lieu_cong_viec(token: str = Cookie(None), file: UploadFile = File(...)):
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            permission = payload.get("permission")
+            if permission == "admin" or permission == "user":
+                # Get current timestamp
+                timestamp = int(time.time())
+
+                # Build filename
+                filename = f'{timestamp}_{file.filename}'
+                filepath = os.path.join(UPLOAD_PATH, filename)
+                relative_path = os.path.join(UPLOAD_DIRECTORY, filename)
+                contents = await file.read()
+                with open(filepath, 'wb') as f:
+                    f.write(contents)
+
+                return JSONResponse(status_code=200, content={'status': 'OK', 'path': relative_path})
+        except jwt.PyJWTError:
+            return RedirectResponse('/login')
+    return RedirectResponse('/login')

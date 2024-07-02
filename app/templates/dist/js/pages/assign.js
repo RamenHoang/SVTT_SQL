@@ -34,7 +34,7 @@ $(document).ready(function () {
     success: function (res) {
       $.each(res, function (idx, val) {
         filter_chonnhom.append(
-          '<option value="' + val.id + '">' + val.tennhom + "</option>"
+            '<option value="' + val.id + '">' + val.tennhom + "</option>"
         );
       });
     },
@@ -94,6 +94,7 @@ $(document).ready(function () {
                               <div class="timeline-body" id="congviec" style="background-color:${bg_color} !important; cursor: pointer;" onclick="load_ChiTietCongViec(${val.id})">
                                 <strong>${val.ten}</strong> 
                                 <p>${val.mota}</p>
+                                <a href="${val.tailieu}" target="_blank">Tài liệu</a>
                               </div>
                               </div>
                             </div>`;
@@ -127,6 +128,12 @@ $(document).ready(function () {
               </div> 
             </div>
             <div class="form-group">
+              <label>Tài liệu:</label>
+              <div class="input-group">
+                <input className="form-control" id="tailieucongviec" type="file"/>
+              </div>
+            </div>
+            <div class="form-group">
               <label>Mô tả:</label> 
               <div class="input-group"> 
                 <textarea class="form-control" id="mota" rows="5"></textarea> 
@@ -134,7 +141,7 @@ $(document).ready(function () {
             </div>`;
     $("#modal_body").append(html);
     $("#modal_footer").append(
-      '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'
+        '<button type="button" class="btn btn-primary" id="modal_submit_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'
     );
 
     $("#thoigian").daterangepicker({
@@ -184,44 +191,114 @@ $(document).ready(function () {
       let thoigian_kt = thoigian[1];
       let tencongviec = $("#tencongviec").val();
       let mota = $("#mota")
-        .val()
-        .replace(/[\r\n]+/g, "<br>");
+          .val()
+          .replace(/[\r\n]+/g, "<br>");
       let nhomid = $("#filter_chonnhom").val();
 
-      $.ajax({
-        type: "POST",
-        url:
-          "them_cong_viec_nhom?id=" +
-          nhomid +
-          "&ngaybatdau=" +
-          thoigian_bd +
-          "&ngayketthuc=" +
-          thoigian_kt +
-          "&ten=" +
-          tencongviec +
-          "&mota=" +
-          mota,
-        success: function (res) {
-          if (res.status == "OK") {
+      var formData = new FormData();
+      var fileInput = $('#tailieucongviec')[0].files[0];
+      var tailieu = null;
+
+      if (fileInput) {
+        formData.append('file', fileInput);
+
+        $.ajax({
+          url: 'them_tai_lieu_cong_viec',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
             Toast.fire({
               icon: "success",
-              title: "Đã thêm công việc",
+              title: "Thêm tài liệu thành công",
             });
-            load_timeline_congviec(nhomid);
-          } else {
+
+            const tailieu = response.path;
+
+            $.ajax({
+              type: "POST",
+              url:
+                  "them_cong_viec_nhom?id=" +
+                  nhomid +
+                  "&ngaybatdau=" +
+                  thoigian_bd +
+                  "&ngayketthuc=" +
+                  thoigian_kt +
+                  "&ten=" +
+                  tencongviec +
+                  "&mota=" +
+                  mota,
+              contentType: 'application/json',
+              data: JSON.stringify({tailieu: tailieu}),
+              success: function (res) {
+                if (res.status == "OK") {
+                  Toast.fire({
+                    icon: "success",
+                    title: "Đã thêm công việc",
+                  });
+                  load_timeline_congviec(nhomid);
+                } else {
+                  Toast.fire({
+                    icon: "error",
+                    title: "Thêm công việc không thành công",
+                  });
+                }
+              },
+              error: function (xhr, status, error) {
+                Toast.fire({
+                  icon: "error",
+                  title: "Thêm công việc không thành công",
+                });
+              },
+            });
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            Toast.fire({
+              icon: "error",
+              title: "Thêm tài liệu không thành công",
+            });
+          }
+        });
+      } else {
+        $.ajax({
+          type: "POST",
+          url:
+              "them_cong_viec_nhom?id=" +
+              nhomid +
+              "&ngaybatdau=" +
+              thoigian_bd +
+              "&ngayketthuc=" +
+              thoigian_kt +
+              "&ten=" +
+              tencongviec +
+              "&mota=" +
+              mota,
+          contentType: 'application/json',
+          data: JSON.stringify({tailieu: tailieu}),
+          success: function (res) {
+            if (res.status == "OK") {
+              Toast.fire({
+                icon: "success",
+                title: "Đã thêm công việc",
+              });
+              load_timeline_congviec(nhomid);
+            } else {
+              Toast.fire({
+                icon: "error",
+                title: "Thêm công việc không thành công",
+              });
+            }
+          },
+          error: function (xhr, status, error) {
             Toast.fire({
               icon: "error",
               title: "Thêm công việc không thành công",
             });
-          }
-        },
-        error: function (xhr, status, error) {
-          Toast.fire({
-            icon: "error",
-            title: "Thêm công việc không thành công",
-          });
-        },
-      });
+          },
+        });
+      }
+
       $("#modal_id").modal("hide");
     });
   });
@@ -235,6 +312,12 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
     <label for="modal_sinhvien_select">Sinh viên thực hiện</label>
     <div class="input-group">
       <select id="modal_sinhvien_select" class="form-control select2" style="width: 300px !important;" name="sinhvien[]" multiple="multiple"></select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Tài liệu:</label>
+    <div class="input-group">
+      <input className="form-control" id="modal_create_tailieuchitiet" type="file"/>
     </div>
   </div>
   <div class="form-group">
@@ -252,7 +335,7 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
   </script>`;
   $("#modal_body").append(body);
   $("#modal_footer").append(
-    '<button type="button" class="btn btn-primary" id="modal_luuchitiet_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'
+      '<button type="button" class="btn btn-primary" id="modal_luuchitiet_btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>'
   );
 
   // Hiển thị tất cả sinh viên trong nhóm
@@ -263,7 +346,7 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
       $.each(res, function (idx, val) {
         if (val.danhgia == 0) {
           $("#modal_sinhvien_select").append(
-            `<option value="${val.id}">${val.hoten}</option>`
+              `<option value="${val.id}">${val.hoten}</option>`
           );
         }
       });
@@ -275,43 +358,114 @@ function createModal_ChiTietCongViec(id_congviec, id_nhom) {
   $("#modal_luuchitiet_btn").on("click", function () {
     let dssv_select = $("#modal_sinhvien_select").val();
     let ghichu = $("#modal_ghichu_text")
-      .val()
-      .replace(/[\r\n]+/g, "<br>");
+        .val()
+        .replace(/[\r\n]+/g, "<br>");
+    var formData = new FormData();
+    var fileInput = $('#modal_create_tailieuchitiet')[0].files[0];
+    var tailieu = null;
+    if (fileInput) {
+      formData.append('file', fileInput);
 
+      $.ajax({
+        url: 'them_tai_lieu_cong_viec',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          Toast.fire({
+            icon: "success",
+            title: "Thêm tài liệu thành công",
+          });
 
-    $.ajax({
-      type: "POST",
-      url: 'them_chi_tiet_cong_viec',
-      contentType: 'application/json',
-      data: JSON.stringify({ "id_congviec": id_congviec, "ghichu": ghichu, "sinhvien": dssv_select }),
-      success: function (res) {
-        $.each(res.result, function (idx) {
-          if (res.result[idx] == 1) {
-            Toast.fire({
-              icon: "success",
-              title: `Đã giao việc cho sinh viên ${idx}`,
-            });
-            $("#modal_id").modal("hide");
-          } else if (res.result[idx] == 2) {
-            Toast.fire({
-              icon: "warning",
-              title: `Không thể giao việc cho sinh viên ${idx} vì đã được đánh giá`,
-            });
-          } else {
-            Toast.fire({
-              icon: "error",
-              title: `Sinh viên ${idx} đã có công việc trước đó`,
-            });
-          }
-        });
-      },
-      error: function () {
-        Toast.fire({
-          icon: "error",
-          title: "Giao việc không thành công",
-        });
-      },
-    });
+          tailieu = response.path;
+
+          $.ajax({
+            type: "POST",
+            url: 'them_chi_tiet_cong_viec',
+            contentType: 'application/json',
+            data: JSON.stringify({
+              "id_congviec": id_congviec,
+              "ghichu": ghichu,
+              "sinhvien": dssv_select,
+              tailieu: tailieu
+            }),
+            success: function (res) {
+              $.each(res.result, function (idx) {
+                if (res.result[idx] == 1) {
+                  Toast.fire({
+                    icon: "success",
+                    title: `Đã giao việc cho sinh viên ${idx}`,
+                  });
+                  $("#modal_id").modal("hide");
+                } else if (res.result[idx] == 2) {
+                  Toast.fire({
+                    icon: "warning",
+                    title: `Không thể giao việc cho sinh viên ${idx} vì đã được đánh giá`,
+                  });
+                } else {
+                  Toast.fire({
+                    icon: "error",
+                    title: `Sinh viên ${idx} đã có công việc trước đó`,
+                  });
+                }
+              });
+            },
+            error: function () {
+              Toast.fire({
+                icon: "error",
+                title: "Giao việc không thành công",
+              });
+            },
+          });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          Toast.fire({
+            icon: "error",
+            title: "Thêm tài liệu không thành công",
+          });
+        }
+      });
+    } else {
+      $.ajax({
+        type: "POST",
+        url: 'them_chi_tiet_cong_viec',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "id_congviec": id_congviec,
+          "ghichu": ghichu,
+          "sinhvien": dssv_select,
+          tailieu: tailieu
+        }),
+        success: function (res) {
+          $.each(res.result, function (idx) {
+            if (res.result[idx] == 1) {
+              Toast.fire({
+                icon: "success",
+                title: `Đã giao việc cho sinh viên ${idx}`,
+              });
+              $("#modal_id").modal("hide");
+            } else if (res.result[idx] == 2) {
+              Toast.fire({
+                icon: "warning",
+                title: `Không thể giao việc cho sinh viên ${idx} vì đã được đánh giá`,
+              });
+            } else {
+              Toast.fire({
+                icon: "error",
+                title: `Sinh viên ${idx} đã có công việc trước đó`,
+              });
+            }
+          });
+        },
+        error: function () {
+          Toast.fire({
+            icon: "error",
+            title: "Giao việc không thành công",
+          });
+        },
+      });
+    }
   });
 }
 
@@ -323,6 +477,7 @@ function load_ChiTietCongViec(id_congviec) {
       <th scope="col" style="text-align: center;" width="25%">Công việc</th>
       <th scope="col" style="text-align: center;" width="15%">Người thực hiện</th>
       <th scope="col" style="text-align: center;">Ghi chú</th>
+      <th scope="col" style="text-align: center;">Tài liệu</th>
       <th scope="col" style="text-align: center;" width="15%">Trạng thái</th>
       <th scope="col" style="text-align: center;" width="10%">Thao tác</th>
     </tr>
@@ -344,9 +499,19 @@ function load_ChiTietCongViec(id_congviec) {
       dataSrc: "",
     },
     columns: [
-      { data: "tencongviec" },
-      { data: "nguoithuchien" },
-      { data: "ghichu" },
+      {data: "tencongviec"},
+      {data: "nguoithuchien"},
+      {data: "ghichu"},
+      {
+        data: "tailieu",
+        render: function (data, type, row) {
+          if (data != null) {
+            return `<a href="${data}" target="_blank">Tài liệu</a>`;
+          } else {
+            return "";
+          }
+        },
+      },
       {
         data: "trangthai",
         render: function (data, type, row) {
@@ -420,6 +585,12 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet) {
     </div>
   </div>
   <div class="form-group">
+    <label>Tài liệu:</label>
+    <div class="input-group">
+      <input className="form-control" id="modal_edit_tailieuchitiet" type="file"/>
+    </div>
+  </div>
+  <div class="form-group">
     <label>Ghi chú</label> 
     <div class="input-group"> 
       <textarea class="form-control" id="modal_edit_ghichu_text" rows="5"></textarea> 
@@ -428,7 +599,7 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet) {
   `;
   $("#modal_body").append(body);
   $("#modal_footer")
-    .append(`<button type="button" class="btn btn-primary" id="modal_edit_luuchitiet_btn">
+      .append(`<button type="button" class="btn btn-primary" id="modal_edit_luuchitiet_btn">
                               <i class="fa-solid fa-floppy-disk"></i> Lưu</button>`);
   $("#modal_id").modal("show");
 
@@ -439,7 +610,7 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet) {
     success: function (res) {
       $.each(res, function (idx, val) {
         $("#modal_edit_sinhvien_select").append(
-          `<option value="${val.id}">${val.hoten}</option>`
+            `<option value="${val.id}">${val.hoten}</option>`
         );
       });
       // Get chi tiết công việc bằng id công việc
@@ -449,7 +620,7 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet) {
         success: function (res) {
           $("#modal_edit_sinhvien_select").val(res[0].id_sinhvien);
           $("#modal_edit_ghichu_text").val(
-            res[0].ghichu.replace(/<br>/g, "\r\n")
+              res[0].ghichu.replace(/<br>/g, "\r\n")
           );
         },
       });
@@ -460,27 +631,76 @@ function capNhatChiTietCongViec(id_congviec, id_chitiet) {
   $("#modal_edit_luuchitiet_btn").on("click", function () {
     let id_sinhvien = $("#modal_edit_sinhvien_select").val();
     let ghichu = $("#modal_edit_ghichu_text")
-      .val()
-      .replace(/[\r\n]+/g, "<br>");
+        .val()
+        .replace(/[\r\n]+/g, "<br>");
+    var formData = new FormData();
+    var fileInput = $('#modal_edit_tailieuchitiet')[0].files[0];
+    var tailieu = null;
+    if (fileInput) {
+      formData.append('file', fileInput);
+      $.ajax({
+        url: 'them_tai_lieu_cong_viec',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          Toast.fire({
+            icon: "success",
+            title: "Thêm tài liệu thành công",
+          });
 
-    $.ajax({
-      type: "POST",
-      url: `update_chi_tiet_cong_viec_by_id?id=${id_chitiet}&svid=${id_sinhvien}&ghichu=${ghichu}`,
-      success: function () {
-        Toast.fire({
-          icon: "success",
-          title: "Đã cập nhật chi tiết công việc",
-        });
-        $("#modal_id").modal("hide");
-        load_ChiTietCongViec(id_congviec);
-      },
-      error: function () {
-        Toast.fire({
-          icon: "error",
-          title: "Cập nhật chi tiết công việc không thành công",
-        });
-      },
-    });
+          tailieu = response.path;
+          $.ajax({
+            type: "POST",
+            url: `update_chi_tiet_cong_viec_by_id?id=${id_chitiet}&svid=${id_sinhvien}&ghichu=${ghichu}`,
+            contentType: 'application/json',
+            data: JSON.stringify({tailieu: tailieu}),
+            success: function () {
+              Toast.fire({
+                icon: "success",
+                title: "Đã cập nhật chi tiết công việc",
+              });
+              $("#modal_id").modal("hide");
+              load_ChiTietCongViec(id_congviec);
+            },
+            error: function () {
+              Toast.fire({
+                icon: "error",
+                title: "Cập nhật chi tiết công việc không thành công",
+              });
+            },
+          });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          Toast.fire({
+            icon: "error",
+            title: "Thêm tài liệu không thành công",
+          });
+        }
+      });
+    } else {
+      $.ajax({
+        type: "POST",
+        url: `update_chi_tiet_cong_viec_by_id?id=${id_chitiet}&svid=${id_sinhvien}&ghichu=${ghichu}`,
+        contentType: 'application/json',
+        data: JSON.stringify({tailieu: tailieu}),
+        success: function () {
+          Toast.fire({
+            icon: "success",
+            title: "Đã cập nhật chi tiết công việc",
+          });
+          $("#modal_id").modal("hide");
+          load_ChiTietCongViec(id_congviec);
+        },
+        error: function () {
+          Toast.fire({
+            icon: "error",
+            title: "Cập nhật chi tiết công việc không thành công",
+          });
+        },
+      });
+    }
   });
 }
 

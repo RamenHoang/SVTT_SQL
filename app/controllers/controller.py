@@ -209,8 +209,8 @@ def get_dssv_by_nhom_id_controller(id: int):
     return get_dssv_by_nhom_id(id)
 
 
-def them_cong_viec_nhom_controller(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str):
-    return them_cong_viec_nhom(id, ngaybatdau, ngayketthuc, ten, mota)
+def them_cong_viec_nhom_controller(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str, tailieu: str|None = None):
+    return them_cong_viec_nhom(id, ngaybatdau, ngayketthuc, ten, mota, tailieu)
 
 
 def get_goi_y_xa_phuong_controller(q: str):
@@ -269,8 +269,8 @@ def xem_thong_tin_sv_controller(email: str):
     return xem_thong_tin_sv(email)
 
 
-def them_chi_tiet_cong_viec_controller(id_congviec: int, id_sinhvien: int, trangthai: int, ghichu: str):
-    return them_chi_tiet_cong_viec(id_congviec, id_sinhvien, trangthai, ghichu)
+def them_chi_tiet_cong_viec_controller(id_congviec: int, id_sinhvien: int, trangthai: int, ghichu: str, tailieu: str|None = None):
+    return them_chi_tiet_cong_viec(id_congviec, id_sinhvien, trangthai, ghichu, tailieu)
 
 
 def get_chi_tiet_cong_viec_by_id_cong_viec_controller(id: int):
@@ -293,8 +293,8 @@ def xoa_chi_tiet_cong_viec_by_id_controller(id: int):
     return xoa_chi_tiet_cong_viec_by_id(id)
 
 
-def update_chi_tiet_cong_viec_by_id_controller(id: int, svid: int, ghichu: str):
-    return update_chi_tiet_cong_viec_by_id(id, svid, ghichu)
+def update_chi_tiet_cong_viec_by_id_controller(id: int, svid: int, ghichu: str, tailieu: str|None = None):
+    return update_chi_tiet_cong_viec_by_id(id, svid, ghichu, tailieu)
 
 
 def insert_danh_gia_thuc_tap_controller(sv_id: int, nhd_id: int, dapan_1: int, dapan_2: int, dapan_3: int, dapan_4: int, gopy: str):

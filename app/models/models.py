@@ -503,6 +503,11 @@ def get_ds_cong_viec_by_id_nhom(id: int):
         result = cursor.execute("EXEC GetCongViecByIDNhom ?", id).fetchall()
         data = [{'id': i[0], 'ngaybatdau': i[1], 'ngayketthuc': i[2],
                  'ten': i[3], 'mota': i[4]} for i in result]
+
+        # Get TaiLieu
+        for i in data:
+            i['tailieu'] = cursor.execute("SELECT TaiLieu FROM CONGVIEC WHERE ID = ?", i['id']).fetchone()[0]
+
         return data
     except Exception as e:
         return e
@@ -514,6 +519,10 @@ def get_chi_tiet_cong_viec_by_id_cong_viec(id: int):
             "EXEC GetChiTietCongViecByIDCongViec ?", id).fetchall()
         data = [{'id': i[0], 'id_congviec': i[1], 'id_sinhvien': i[2], 'trangthai': i[3],
                  'ghichu': i[4], 'tencongviec': i[5], 'nguoithuchien': i[6]} for i in result]
+
+        # Get TaiLieu
+        for i in data:
+            i['tailieu'] = cursor.execute("SELECT TaiLieu FROM CHITIET_CONGVIEC WHERE ID = ?", i['id']).fetchone()[0]
         return data
     except Exception as e:
         return e
@@ -529,15 +538,21 @@ def get_chi_tiet_cong_viec_by_id(id: int):
         return e
 
 
-def update_chi_tiet_cong_viec_by_id(id: int, svid: int, ghichu: str):
+def update_chi_tiet_cong_viec_by_id(id: int, svid: int, ghichu: str, tailieu: str|None = None):
     try:
-        result = cursor.execute(
-            "EXEC UpdateChiTietCongViecByID ?, ?, ?", id, svid, protect_xss(ghichu))
+        # result = cursor.execute("EXEC UpdateChiTietCongViecByID ?, ?, ?", id, svid, protect_xss(ghichu)).fetchone()
+        # cursor.commit()
+        # if result[0] == 1:
+        cursor.execute('UPDATE CHITIET_CONGVIEC SET ID_SinhVien = ?, GhiChu = ? WHERE ID = ?', svid, protect_xss(ghichu), id)
         cursor.commit()
-        if result.fetchone()[0] == 1:
-            return True
-        else:
-            return False
+        if tailieu is not None:
+            cursor.execute('UPDATE CHITIET_CONGVIEC SET TaiLieu = ? WHERE ID = ?', protect_xss(tailieu), id)
+            cursor.commit()
+
+        return True
+        #     return True
+        # else:
+        #     return False
     except Exception as e:
         return e
 
@@ -567,12 +582,17 @@ def xoa_cong_viec_by_id(id: int):
         return e
 
 
-def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str):
+def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mota: str, tailieu: str|None = None):
     try:
         result = cursor.execute("EXEC InsertCongViec ?, ?, ?, ?, ?", id, protect_xss(
             ngaybatdau), protect_xss(ngayketthuc), protect_xss(ten), protect_xss(mota)).fetchone()
         cursor.commit()
         if result[0] == 1:
+            if tailieu is not None:
+                lasted_id = cursor.execute("SELECT MAX(ID) FROM CONGVIEC").fetchone()[0]
+                cursor.execute('EXEC UpdateTaiLieuCongViec ?, ?', lasted_id, protect_xss(tailieu))
+                cursor.commit()
+
             return True
         else:
             return False
@@ -580,13 +600,19 @@ def them_cong_viec_nhom(id: int, ngaybatdau: str, ngayketthuc: str, ten: str, mo
         return e
 
 
-def them_chi_tiet_cong_viec(id_congviec: int, id_sinhvien: int, trangthai: int, ghichu: str):
+def them_chi_tiet_cong_viec(id_congviec: int, id_sinhvien: int, trangthai: int, ghichu: str, tailieu: str|None = None):
     try:
         # Gọi stored procedure và truyền tham số
         result = cursor.execute("EXEC InsertChiTietCongViec ?, ?, ?, ?", id_congviec,
                                 id_sinhvien, trangthai, protect_xss(ghichu)).fetchone()[0]
         # Lấy giá trị của biến đầu ra
         cursor.commit()
+
+        if tailieu is not None:
+            lasted_id = cursor.execute("SELECT MAX(ID) FROM CHITIET_CONGVIEC").fetchone()[0]
+            cursor.execute('UPDATE CHITIET_CONGVIEC SET TaiLieu = ? WHERE ID = ?', protect_xss(tailieu), lasted_id)
+            cursor.commit()
+
         return result
     except Exception as e:
         return e
